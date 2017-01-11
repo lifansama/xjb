@@ -38,11 +38,13 @@ public class SettingsActivity extends AppCompatActivity {
     TextView textSizeTv;
     @InjectView(R.id.activity_settings)
     LinearLayout activitySettings;
+    @InjectView(R.id.supportTv)
+    TextView supportTv;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
 
-    public static void start(Activity activity) {
-        activity.startActivity(new Intent(activity, SettingsActivity.class));
+    public static void start(Context context) {
+        context.startActivity(new Intent(context, SettingsActivity.class));
     }
 
     @Override
@@ -64,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onColorSelected(int color) {
                 backRl.setBackgroundColor(color);
-                BackgroundColorPreferencesDao.set(SettingsActivity.this,color);
+                BackgroundColorPreferencesDao.set(SettingsActivity.this, color);
             }
         });
         textColorPickerDialog = new ColorPickerDialog();
@@ -75,7 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
                 timeTv.setTextColor(color);
                 dateTv.setTextColor(color);
                 weekTv.setTextColor(color);
-                TextColorPreferencesDao.set(SettingsActivity.this,color);
+                TextColorPreferencesDao.set(SettingsActivity.this, color);
             }
         });
         textColorTv.setOnClickListener(new View.OnClickListener() {
@@ -85,12 +87,26 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        textSizeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
+        supportTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SupportActivity.start(view.getContext());
+            }
+        });
         backRl.setBackgroundColor(BackgroundColorPreferencesDao.get(this));
         timeTv.setTextColor(TextColorPreferencesDao.get(this));
         dateTv.setTextColor(TextColorPreferencesDao.get(this));
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
 
+
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

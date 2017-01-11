@@ -20,7 +20,10 @@
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="设置"/>
+            android:label="设置" />
+        <activity android:name=".activity.SupportActivity"
+            android:label="微信打赏"
+            ></activity>
     </application>
 
 </manifest>

@@ -5,17 +5,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     TextView weekTv;
     @InjectView(R.id.activity_main)
     RelativeLayout activityMain;
+    @InjectView(R.id.rootFl)
+    FrameLayout rootFl;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -46,17 +49,17 @@ public class MainActivity extends AppCompatActivity {
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
 
     private DoubleClickExit doubleClickExit;
-    private GestureDetector gestureDetector;
+    private GestureDetectorCompat gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            Window window = getWindow();
-            WindowManager.LayoutParams params = window.getAttributes();
-            params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-            window.setAttributes(params);
-        }
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+//            Window window = getWindow();
+//            WindowManager.LayoutParams params = window.getAttributes();
+//            params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+//            window.setAttributes(params);
+//        }
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/ds_digi.ttf");
@@ -67,63 +70,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-//                if (msg.what == 1) {
-//                    Date now = new Date();
-//                    if (timeTv != null)
-//                        timeTv.setText(timeSDF.format(now));
-//                    if (dateTv != null)
-//                        dateTv.setText(dateSDF.format(now));
-//                    if (weekTv != null)
-//                        weekTv.setText(weekSDF.format(now));
-//                }
+                if (msg.what == 1) {
+                    Date now = new Date();
+                    if (timeTv != null)
+                        timeTv.setText(timeSDF.format(now));
+                    if (dateTv != null)
+                        dateTv.setText(dateSDF.format(now));
+                    if (weekTv != null)
+                        weekTv.setText(weekSDF.format(now));
+                }
             }
         };
         doubleClickExit = new DoubleClickExit(this);
-        gestureDetector = new GestureDetector(this, new GestureDetector.OnGestureListener() {
+        rootFl.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onDown(MotionEvent motionEvent) {
-                Log.v("GestureDetector", "onDown");
-                return false;
-            }
-
-            @Override
-            public void onShowPress(MotionEvent motionEvent) {
-                Log.v("GestureDetector", "onShowPress");
-
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent motionEvent) {
-                Log.v("GestureDetector", "onSingleTapUp");
-                return false;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-                Log.v("GestureDetector", "onScroll");
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent motionEvent) {
-                Log.v("GestureDetector", "onLongPress");
-
-            }
-
-            @Override
-            public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-                Log.v("GestureDetector", "onFling");
+            public boolean onLongClick(View view) {
+                Log.v("activityMain", "onLongClick");
                 SettingsActivity.start(MainActivity.this);
                 return false;
             }
         });
 
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        Log.v("MainActivity", "onTouchEvent");
-        return gestureDetector.onTouchEvent(event);
     }
 
     @Override

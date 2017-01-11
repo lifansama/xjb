@@ -104,7 +104,33 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:text="更改字体大小"
                 android:textColor="@color/grey_800"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="32dp"
+                android:background="@color/grey_400" />
+
+            <TextView
+                android:id="@+id/supportTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:text="求打赏"
+                android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
 
 
         </LinearLayout>
