@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">新机表</string>
+    <string name="txt_select_color">颜色选择</string>
 </resources>
