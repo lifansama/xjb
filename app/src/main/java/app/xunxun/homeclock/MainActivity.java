@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import app.xunxun.homeclock.utils.DoubleClickExit;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private SimpleDateFormat timeSDF = new SimpleDateFormat("HH:mm:ss");
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
+
+    private DoubleClickExit doubleClickExit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +78,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         timer.schedule(timerTask, 1000, 1000);
+        doubleClickExit = new DoubleClickExit(this);
     }
 
     @Override
     public void onBackPressed() {
+        doubleClickExit.doubleClickExit();
     }
 }
