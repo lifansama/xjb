@@ -1,10 +1,15 @@
 package app.xunxun.homeclock;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -35,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            Window window = getWindow();
+            WindowManager.LayoutParams params = window.getAttributes();
+            params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            window.setAttributes(params);
+        }
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/ds_digi.ttf");
