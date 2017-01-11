@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
         backgroundColorPickerDialog = new ColorPickerDialog();
         int[] colors = getResources().getIntArray(R.array.colors);
-        backgroundColorPickerDialog.initialize(R.string.txt_select_color, colors, BackgroundColorPreferencesDao.get(this), 5, 2);
+        backgroundColorPickerDialog.initialize(R.string.txt_select_color, colors, BackgroundColorPreferencesDao.get(this), 4, 2);
         backgroundColorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
             public void onColorSelected(int color) {
@@ -70,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         textColorPickerDialog = new ColorPickerDialog();
-        textColorPickerDialog.initialize(R.string.txt_select_color, colors, Color.BLACK, 5, 2);
+        textColorPickerDialog.initialize(R.string.txt_select_color, colors, TextColorPreferencesDao.get(this), 4, 2);
         textColorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
             public void onColorSelected(int color) {
