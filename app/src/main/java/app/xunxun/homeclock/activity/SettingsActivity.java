@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import com.fourmob.colorpicker.ColorPickerDialog;
 import com.fourmob.colorpicker.ColorPickerSwatch;
+import com.umeng.analytics.MobclickAgent;
 
+import app.xunxun.homeclock.EventNames;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
@@ -67,6 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onColorSelected(int color) {
                 backRl.setBackgroundColor(color);
                 BackgroundColorPreferencesDao.set(SettingsActivity.this, color);
+                MobclickAgent.onEvent(SettingsActivity.this, EventNames.EVENT_CHANGE_BACKGROUND_COLOR);
             }
         });
         textColorPickerDialog = new ColorPickerDialog();
@@ -78,6 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
                 dateTv.setTextColor(color);
                 weekTv.setTextColor(color);
                 TextColorPreferencesDao.set(SettingsActivity.this, color);
+                MobclickAgent.onEvent(SettingsActivity.this, EventNames.EVENT_CHANGE_TEXT_COLOR);
             }
         });
         textColorTv.setOnClickListener(new View.OnClickListener() {
@@ -114,5 +118,13 @@ public class SettingsActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

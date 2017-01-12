@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -127,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
         secondTv.setTextColor(TextColorPreferencesDao.get(this));
         dateTv.setTextColor(TextColorPreferencesDao.get(this));
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
+        MobclickAgent.onResume(this);
+
     }
 
     @Override
@@ -136,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         timerTask.cancel();
         timer = null;
         timerTask = null;
+        MobclickAgent.onPause(this);
     }
 
 }

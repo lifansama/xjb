@@ -28,3 +28,14 @@
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
 }
+#umeng
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keep public class app.xunxun.homeclock.R$*{
+public static final int *;
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}

@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="app.xunxun.homeclock">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_app"
@@ -21,9 +26,16 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="设置" />
-        <activity android:name=".activity.SupportActivity"
-            android:label="微信打赏"
-            ></activity>
+        <activity
+            android:name=".activity.SupportActivity"
+            android:label="微信打赏"></activity>
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="${UMENG_APPKEY}" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="coolapk" />
     </application>
 
 </manifest>
