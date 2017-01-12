@@ -4,7 +4,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -50,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     TextView placeholderMinusTv;
     @InjectView(R.id.placeholderSecondTv)
     TextView placeholderSecondTv;
+    @InjectView(R.id.maohao1Tv)
+    TextView maohao1Tv;
+    @InjectView(R.id.maohao2Tv)
+    TextView maohao2Tv;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -79,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 if (msg.what == 1) {
                     Calendar calendar = Calendar.getInstance();
-                    if (hoursTv != null && minusTv != null && secondTv != null){
+                    if (hoursTv != null && minusTv != null && secondTv != null) {
                         int hours = calendar.get(Calendar.HOUR_OF_DAY);
                         int minute = calendar.get(Calendar.MINUTE);
                         int second = calendar.get(Calendar.SECOND);
-                        hoursTv.setText(String.format("%02d",hours));
-                        minusTv.setText(String.format("%02d",minute));
-                        secondTv.setText(String.format("%02d",second));
+                        hoursTv.setText(String.format("%02d", hours));
+                        minusTv.setText(String.format("%02d", minute));
+                        secondTv.setText(String.format("%02d", second));
                     }
                     Date now = new Date();
                     if (dateTv != null)
@@ -127,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
         hoursTv.setTextColor(TextColorPreferencesDao.get(this));
         minusTv.setTextColor(TextColorPreferencesDao.get(this));
         secondTv.setTextColor(TextColorPreferencesDao.get(this));
+        maohao1Tv.setTextColor(TextColorPreferencesDao.get(this));
+        maohao2Tv.setTextColor(TextColorPreferencesDao.get(this));
         dateTv.setTextColor(TextColorPreferencesDao.get(this));
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
         MobclickAgent.onResume(this);
