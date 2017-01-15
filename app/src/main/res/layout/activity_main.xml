@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="app.xunxun.homeclock.MainActivity">
+    tools:context="app.xunxun.homeclock.activity.MainActivity">
 
     <RelativeLayout
         android:id="@+id/activity_main"

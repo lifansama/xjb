@@ -1,5 +1,7 @@
-package app.xunxun.homeclock;
+package app.xunxun.homeclock.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,6 +9,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,12 +22,14 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import app.xunxun.homeclock.activity.SettingsActivity;
+import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.utils.DoubleClickExit;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,9 +67,18 @@ public class MainActivity extends AppCompatActivity {
 
     private DoubleClickExit doubleClickExit;
 
+    public static void start(Context context) {
+        context.startActivity(new Intent(context, MainActivity.class));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (KeepScreenOnPreferencesDao.get(this)){
+            Log.v("onCreate","FLAG_KEEP_SCREEN_ON");
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        }
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/ds_digi.ttf");
@@ -104,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onLongClick(View view) {
                 Log.v("activityMain", "onLongClick");
                 SettingsActivity.start(MainActivity.this);
+                finish();
                 return false;
             }
         });

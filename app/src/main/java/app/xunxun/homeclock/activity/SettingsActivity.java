@@ -1,13 +1,13 @@
 package app.xunxun.homeclock.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +19,7 @@ import com.umeng.analytics.MobclickAgent;
 import app.xunxun.homeclock.EventNames;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,6 +43,8 @@ public class SettingsActivity extends AppCompatActivity {
     LinearLayout activitySettings;
     @InjectView(R.id.supportTv)
     TextView supportTv;
+    @InjectView(R.id.keepScreenOnCb)
+    CheckBox keepScreenOnCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
 
@@ -107,6 +110,13 @@ public class SettingsActivity extends AppCompatActivity {
         timeTv.setTextColor(TextColorPreferencesDao.get(this));
         dateTv.setTextColor(TextColorPreferencesDao.get(this));
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
+        keepScreenOnCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
+                KeepScreenOnPreferencesDao.set(compoundButton.getContext(),isCheck);
+            }
+        });
+        keepScreenOnCb.setChecked(KeepScreenOnPreferencesDao.get(this));
 
 
     }
@@ -115,16 +125,23 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
+
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
     }
+
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        MainActivity.start(this);
     }
 }

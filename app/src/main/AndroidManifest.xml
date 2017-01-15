@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.AppCompat.NoActionBar.FullScreen">
             <intent-filter>
@@ -28,7 +28,8 @@
             android:label="设置" />
         <activity
             android:name=".activity.SupportActivity"
-            android:label="微信打赏"></activity>
+            android:label="微信打赏"/>
+
 
         <meta-data
             android:name="UMENG_APPKEY"
