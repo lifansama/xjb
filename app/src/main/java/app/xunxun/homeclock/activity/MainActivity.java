@@ -3,11 +3,13 @@ package app.xunxun.homeclock.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -66,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
 
     private DoubleClickExit doubleClickExit;
+    private boolean navigationBarIsVisible;
+    private boolean isUsefullClick;
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
@@ -74,8 +78,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (KeepScreenOnPreferencesDao.get(this)){
-            Log.v("onCreate","FLAG_KEEP_SCREEN_ON");
+        hideNavigationBar();
+        if (KeepScreenOnPreferencesDao.get(this)) {
+            Log.v("onCreate", "FLAG_KEEP_SCREEN_ON");
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         }
@@ -122,8 +127,43 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        rootFl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.requestFocus();
+                if (isUsefullClick && navigationBarIsVisible) {
+                    Log.v("activityMain", "hideNavigationBar");
+                    hideNavigationBar();
+                    isUsefullClick = false;
+                }
+            }
+        });
+        if (Build.VERSION.SDK_INT >= 11) {
+            getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+                @Override
+                public void onSystemUiVisibilityChange(int visibility) {
+                    if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+                        // TODO: The navigation bar is visible. Make any desired
+                        // adjustments to your UI, such as showing the action bar or
+                        // other navigational controls.
+                        Log.v("AA", "The navigation bar is visible");
+                        navigationBarIsVisible = true;
+                        isUsefullClick = true;
+                    } else {
+                        // TODO: The navigation bar is NOT visible. Make any desired
+                        // adjustments to your UI, such as hiding the action bar or
+                        // other navigational controls.
+                        Log.v("AA", "The navigation bar is NOT visible");
+                        navigationBarIsVisible = false;
+                        isUsefullClick = true;
+
+                    }
+                }
+            });
+        }
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -163,4 +203,33 @@ public class MainActivity extends AppCompatActivity {
         MobclickAgent.onPause(this);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.v("BB", "onTouchEvent");
+        return super.onTouchEvent(event);
+    }
+
+    /**
+     * Detects and toggles immersive mode (also known as "hidey bar" mode).
+     */
+    public void hideNavigationBar() {
+
+        View decorView = getWindow().getDecorView();
+        decorView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN;
+                if (Build.VERSION.SDK_INT >= 11) {
+                    getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+                }
+
+            }
+        }, 800);
+    }
 }
