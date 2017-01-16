@@ -11,8 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,6 +28,7 @@ import java.util.TimerTask;
 
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.utils.DoubleClickExit;
@@ -63,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
     TextView maohao2Tv;
     @InjectView(R.id.lunarTv)
     TextView lunarTv;
+    @InjectView(R.id.ampmTv)
+    TextView ampmTv;
+    @InjectView(R.id.dateLl)
+    LinearLayout dateLl;
+    @InjectView(R.id.secondFl)
+    FrameLayout secondFl;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -103,24 +112,7 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if (msg.what == 1) {
-                    Calendar calendar = Calendar.getInstance();
-                    if (hoursTv != null && minusTv != null && secondTv != null) {
-                        int hours = calendar.get(Calendar.HOUR_OF_DAY);
-                        int minute = calendar.get(Calendar.MINUTE);
-                        int second = calendar.get(Calendar.SECOND);
-                        hoursTv.setText(String.format("%02d", hours));
-                        minusTv.setText(String.format("%02d", minute));
-                        secondTv.setText(String.format("%02d", second));
-                    }
-                    Date now = new Date();
-                    if (dateTv != null)
-                        dateTv.setText(dateSDF.format(now));
-                    if (weekTv != null)
-                        weekTv.setText(weekSDF.format(now));
-
-                    LunarCalendar lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-
-                    lunarTv.setText(String.format("%s月%s日", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
+                    setTime();
                 }
             }
         };
@@ -171,6 +163,45 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 更新时间.
+     */
+    private void setTime() {
+        Calendar calendar = Calendar.getInstance();
+        if (hoursTv != null && minusTv != null && secondTv != null) {
+            int hour24 = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+            int second = calendar.get(Calendar.SECOND);
+            int hour12 = calendar.get(Calendar.HOUR);
+
+            if (Is12TimePreferencesDao.get(MainActivity.this)) {
+                hoursTv.setText(String.format("%02d", hour12));
+                minusTv.setText(String.format("%02d", minute));
+                secondFl.setVisibility(View.GONE);
+                maohao2Tv.setVisibility(View.GONE);
+                ampmTv.setVisibility(View.VISIBLE);
+                ampmTv.setText(hour24 >= 12 ? "PM" : "AM");
+
+            } else {
+                hoursTv.setText(String.format("%02d", hour24));
+                minusTv.setText(String.format("%02d", minute));
+                secondTv.setText(String.format("%02d", second));
+                secondFl.setVisibility(View.VISIBLE);
+                maohao2Tv.setVisibility(View.VISIBLE);
+                ampmTv.setVisibility(View.GONE);
+            }
+        }
+        Date now = new Date();
+        if (dateTv != null)
+            dateTv.setText(dateSDF.format(now));
+        if (weekTv != null)
+            weekTv.setText(weekSDF.format(now));
+
+        LunarCalendar lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+
+        lunarTv.setText(String.format("%s月%s日", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -197,6 +228,8 @@ public class MainActivity extends AppCompatActivity {
         dateTv.setTextColor(TextColorPreferencesDao.get(this));
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
         lunarTv.setTextColor(TextColorPreferencesDao.get(this));
+        ampmTv.setTextColor(TextColorPreferencesDao.get(this));
+        setTime();
         MobclickAgent.onResume(this);
 
     }

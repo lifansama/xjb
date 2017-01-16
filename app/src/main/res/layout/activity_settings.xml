@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_300"
     android:orientation="vertical"
     tools:context="app.xunxun.homeclock.activity.SettingsActivity">
 
@@ -11,40 +12,79 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:background="#000"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp">
 
-        <TextView
-            android:id="@+id/timeTv"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="00:00:00"
-            android:textColor="#fff"
-            android:textSize="40sp" />
+            android:gravity="center_vertical|bottom"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/dateTv"
+            <TextView
+                android:id="@+id/timeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="00:00:00"
+                android:textColor="#fff"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/ampmTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:visibility="gone"
+                android:text="AM"
+                android:textColor="#fff"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/dateLl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="0000-00-00"
-            android:textColor="#fff"
-            android:textSize="18sp" />
+            android:gravity="right"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/weekTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/dateTv"
-            android:layout_marginTop="8dp"
-            android:text="周日"
-            android:textColor="#fff"
-            android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dateTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0000-00-00"
+                    android:textColor="#fff"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/weekTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="周日"
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/lunarTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="14sp" />
+        </LinearLayout>
     </RelativeLayout>
 
     <ScrollView
@@ -62,10 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/press_item"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
+                android:padding="16dp"
                 android:text="更改背景色"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
@@ -80,13 +117,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/press_item"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
+                android:padding="16dp"
                 android:text="更改字体颜色"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <RadioGroup
+                android:id="@+id/timeStyleRg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/time_12Rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:text="12小时制"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/time_24Rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:checked="true"
+                    android:text="24小时制"
+                    android:textSize="18sp" />
+            </RadioGroup>
 
             <View
                 android:layout_width="match_parent"
@@ -98,10 +164,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/press_item"
-                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingBottom="8dp"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingTop="8dp"
                 android:text="更改字体大小"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp"
@@ -119,8 +185,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/press_item"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 android:text="保持屏幕常亮"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
@@ -141,10 +207,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/press_item"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
+                android:padding="16dp"
                 android:text="求打赏"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />

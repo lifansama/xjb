@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,13 +18,19 @@ import com.fourmob.colorpicker.ColorPickerDialog;
 import com.fourmob.colorpicker.ColorPickerSwatch;
 import com.umeng.analytics.MobclickAgent;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import app.xunxun.homeclock.EventNames;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.github.xhinliang.lunarcalendar.LunarCalendar;
 
 public class SettingsActivity extends AppCompatActivity {
     @InjectView(R.id.backgroundColorTv)
@@ -45,8 +53,22 @@ public class SettingsActivity extends AppCompatActivity {
     TextView supportTv;
     @InjectView(R.id.keepScreenOnCb)
     CheckBox keepScreenOnCb;
+    @InjectView(R.id.lunarTv)
+    TextView lunarTv;
+    @InjectView(R.id.ampmTv)
+    TextView ampmTv;
+    @InjectView(R.id.time_12Rb)
+    RadioButton time12Rb;
+    @InjectView(R.id.time_24Rb)
+    RadioButton time24Rb;
+    @InjectView(R.id.timeStyleRg)
+    RadioGroup timeStyleRg;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
+    private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat time12SDF = new SimpleDateFormat("hh:mm");
+    private SimpleDateFormat time24SDF = new SimpleDateFormat("HH:mm:ss");
+    private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, SettingsActivity.class));
@@ -83,6 +105,8 @@ public class SettingsActivity extends AppCompatActivity {
                 timeTv.setTextColor(color);
                 dateTv.setTextColor(color);
                 weekTv.setTextColor(color);
+                ampmTv.setTextColor(color);
+
                 TextColorPreferencesDao.set(SettingsActivity.this, color);
                 MobclickAgent.onEvent(SettingsActivity.this, EventNames.EVENT_CHANGE_TEXT_COLOR);
             }
@@ -110,15 +134,62 @@ public class SettingsActivity extends AppCompatActivity {
         timeTv.setTextColor(TextColorPreferencesDao.get(this));
         dateTv.setTextColor(TextColorPreferencesDao.get(this));
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
+        ampmTv.setTextColor(TextColorPreferencesDao.get(this));
         keepScreenOnCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
-                KeepScreenOnPreferencesDao.set(compoundButton.getContext(),isCheck);
+                KeepScreenOnPreferencesDao.set(compoundButton.getContext(), isCheck);
             }
         });
         keepScreenOnCb.setChecked(KeepScreenOnPreferencesDao.get(this));
 
+        Date now = new Date();
+        dateTv.setText(dateSDF.format(now));
+        weekTv.setText(weekSDF.format(now));
+        Calendar calendar = Calendar.getInstance();
+        LunarCalendar lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+        lunarTv.setText(String.format("%s月%s日", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
 
+        timeStyleRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int id) {
+                Is12TimePreferencesDao.set(radioGroup.getContext(), id == R.id.time_12Rb);
+                setTime();
+
+            }
+        });
+        if (Is12TimePreferencesDao.get(this))
+            time12Rb.setChecked(true);
+        else
+            time24Rb.setChecked(true);
+
+        setTime();
+
+    }
+
+    /**
+     * 设置时间.
+     */
+    private void setTime() {
+        Date now = new Date();
+        String timeStr;
+        if (Is12TimePreferencesDao.get(this)) {
+            Calendar calendar = Calendar.getInstance();
+            timeStr = time12SDF.format(now);
+            if (calendar.get(Calendar.HOUR_OF_DAY) >= 12) {
+                ampmTv.setText("PM");
+
+            } else {
+                ampmTv.setText("AM");
+
+            }
+            ampmTv.setVisibility(View.VISIBLE);
+        } else {
+            timeStr = time24SDF.format(now);
+            ampmTv.setVisibility(View.GONE);
+
+        }
+        timeTv.setText(timeStr);
     }
 
 
