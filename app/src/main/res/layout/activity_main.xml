@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:text="00"
                     android:textColor="#fff"
-                    android:textSize="120sp"
+                    android:textSize="140sp"
                     android:visibility="invisible" />
 
                 <TextView
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:text="00"
                     android:textColor="#fff"
-                    android:textSize="120sp" />
+                    android:textSize="140sp" />
             </FrameLayout>
 
 
@@ -101,7 +101,7 @@
                 android:gravity="center_vertical"
                 android:text=":"
                 android:textColor="#fff"
-                android:textSize="120sp" />
+                android:textSize="140sp" />
 
             <FrameLayout
                 android:layout_marginTop="16dp"
@@ -114,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:text="00"
                     android:textColor="#fff"
-                    android:textSize="120sp"
+                    android:textSize="140sp"
                     android:visibility="invisible" />
 
 
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:text="00"
                     android:textColor="#fff"
-                    android:textSize="120sp" />
+                    android:textSize="140sp" />
             </FrameLayout>
 
 
@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:text=":"
                 android:textColor="#fff"
-                android:textSize="120sp" />
+                android:textSize="140sp" />
 
             <FrameLayout
                 android:id="@+id/secondFl"
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:text="00"
                     android:textColor="#fff"
-                    android:textSize="120sp"
+                    android:textSize="140sp"
                     android:visibility="invisible" />
 
 
@@ -159,7 +159,7 @@
                     android:layout_height="wrap_content"
                     android:text="00"
                     android:textColor="#fff"
-                    android:textSize="120sp" />
+                    android:textSize="140sp" />
             </FrameLayout>
 
 
