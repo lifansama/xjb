@@ -135,6 +135,7 @@ public class SettingsActivity extends AppCompatActivity {
         dateTv.setTextColor(TextColorPreferencesDao.get(this));
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
         ampmTv.setTextColor(TextColorPreferencesDao.get(this));
+        lunarTv.setTextColor(TextColorPreferencesDao.get(this));
         keepScreenOnCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
