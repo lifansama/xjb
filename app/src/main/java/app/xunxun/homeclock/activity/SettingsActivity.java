@@ -143,5 +143,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         MainActivity.start(this);
+        finish();
     }
 }
