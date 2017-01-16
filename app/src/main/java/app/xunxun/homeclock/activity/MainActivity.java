@@ -31,6 +31,7 @@ import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.utils.DoubleClickExit;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.github.xhinliang.lunarcalendar.LunarCalendar;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     TextView maohao1Tv;
     @InjectView(R.id.maohao2Tv)
     TextView maohao2Tv;
+    @InjectView(R.id.lunarTv)
+    TextView lunarTv;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -114,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
                         dateTv.setText(dateSDF.format(now));
                     if (weekTv != null)
                         weekTv.setText(weekSDF.format(now));
+
+                    LunarCalendar lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+
+                    lunarTv.setText(String.format("%s月%s日", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
                 }
             }
         };
@@ -189,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         maohao2Tv.setTextColor(TextColorPreferencesDao.get(this));
         dateTv.setTextColor(TextColorPreferencesDao.get(this));
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
+        lunarTv.setTextColor(TextColorPreferencesDao.get(this));
         MobclickAgent.onResume(this);
 
     }
