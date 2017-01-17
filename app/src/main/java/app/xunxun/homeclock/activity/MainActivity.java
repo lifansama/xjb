@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
         hoursTv.setTypeface(typeFace);
         minusTv.setTypeface(typeFace);
         secondTv.setTypeface(typeFace);
+        maohao1Tv.setTypeface(typeFace);
+        maohao2Tv.setTypeface(typeFace);
         placeholderHoursTv.setTypeface(typeFace);
         placeholderMinusTv.setTypeface(typeFace);
         placeholderSecondTv.setTypeface(typeFace);
