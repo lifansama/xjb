@@ -166,7 +166,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="4dp"
-                android:layout_marginBottom="4dp"
                 android:text="AM"
                 android:textColor="#fff"
                 android:textSize="80sp"
