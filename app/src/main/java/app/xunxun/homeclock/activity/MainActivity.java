@@ -8,7 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,35 +52,20 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout activityMain;
     @InjectView(R.id.rootFl)
     FrameLayout rootFl;
-    @InjectView(R.id.hoursTv)
-    TextView hoursTv;
-    @InjectView(R.id.minusTv)
-    TextView minusTv;
-    @InjectView(R.id.secondTv)
-    TextView secondTv;
-    @InjectView(R.id.placeholderHoursTv)
-    TextView placeholderHoursTv;
-    @InjectView(R.id.placeholderMinusTv)
-    TextView placeholderMinusTv;
-    @InjectView(R.id.placeholderSecondTv)
-    TextView placeholderSecondTv;
-    @InjectView(R.id.maohao1Tv)
-    TextView maohao1Tv;
-    @InjectView(R.id.maohao2Tv)
-    TextView maohao2Tv;
     @InjectView(R.id.lunarTv)
     TextView lunarTv;
     @InjectView(R.id.ampmTv)
     TextView ampmTv;
     @InjectView(R.id.dateLl)
     LinearLayout dateLl;
-    @InjectView(R.id.secondFl)
-    FrameLayout secondFl;
+    @InjectView(R.id.timeTv)
+    TextView timeTv;
 
     private Timer timer;
     private TimerTask timerTask;
     private Handler handler;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat time24SDF = new SimpleDateFormat("HH:mm:ss");
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
 
     private DoubleClickExit doubleClickExit;
@@ -98,14 +88,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/ds_digi.ttf");
-        hoursTv.setTypeface(typeFace);
-        minusTv.setTypeface(typeFace);
-        secondTv.setTypeface(typeFace);
-        maohao1Tv.setTypeface(typeFace);
-        maohao2Tv.setTypeface(typeFace);
-        placeholderHoursTv.setTypeface(typeFace);
-        placeholderMinusTv.setTypeface(typeFace);
-        placeholderSecondTv.setTypeface(typeFace);
+        timeTv.setTypeface(typeFace);
         dateTv.setTypeface(typeFace);
 
         handler = new Handler() {
@@ -122,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View view) {
                 Log.v("activityMain", "onLongClick");
-                SettingsActivity.start(MainActivity.this);
-                finish();
+                trans2Settins();
                 return false;
             }
         });
@@ -164,35 +146,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void trans2Settins() {
+        SettingsActivity.start(MainActivity.this);
+        finish();
+    }
+
     /**
      * 更新时间.
      */
     private void setTime() {
+        Date now = new Date();
         Calendar calendar = Calendar.getInstance();
-        if (hoursTv != null && minusTv != null && secondTv != null) {
-            int hour24 = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
-            int second = calendar.get(Calendar.SECOND);
-            int hour12 = calendar.get(Calendar.HOUR);
+        int hour24 = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int hour12 = calendar.get(Calendar.HOUR);
 
-            if (Is12TimePreferencesDao.get(MainActivity.this)) {
-                hoursTv.setText(String.format("%02d", hour12));
-                minusTv.setText(String.format("%02d", minute));
-                secondFl.setVisibility(View.GONE);
-                maohao2Tv.setVisibility(View.GONE);
-                ampmTv.setVisibility(View.VISIBLE);
-                ampmTv.setText(hour24 >= 12 ? "PM" : "AM");
+        if (Is12TimePreferencesDao.get(MainActivity.this)) {
+            if (timeTv != null) {
+                if (hour12 == 0 && hour24 == 12) {
+                    hour12 = 12;
+                }
+                String ampm = hour24 >= 12 ? "PM" : "AM";
+                String time = String.format("%02d:%02d%s", hour12, minute, ampm);
+                Spannable spannable = new SpannableString(time);
+                int start = 5;
+                int end = 7;
+                spannable.setSpan(new RelativeSizeSpan(0.6f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new TypefaceSpan("default"), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            } else {
-                hoursTv.setText(String.format("%02d", hour24));
-                minusTv.setText(String.format("%02d", minute));
-                secondTv.setText(String.format("%02d", second));
-                secondFl.setVisibility(View.VISIBLE);
-                maohao2Tv.setVisibility(View.VISIBLE);
-                ampmTv.setVisibility(View.GONE);
+                timeTv.setText(spannable);
+            }
+
+        } else {
+            if (timeTv != null) {
+                timeTv.setText(time24SDF.format(now));
             }
         }
-        Date now = new Date();
+//        }
         if (dateTv != null)
             dateTv.setText(dateSDF.format(now));
         if (weekTv != null)
@@ -221,11 +211,7 @@ public class MainActivity extends AppCompatActivity {
         };
         timer.schedule(timerTask, 1000, 1000);
         activityMain.setBackgroundColor(BackgroundColorPreferencesDao.get(this));
-        hoursTv.setTextColor(TextColorPreferencesDao.get(this));
-        minusTv.setTextColor(TextColorPreferencesDao.get(this));
-        secondTv.setTextColor(TextColorPreferencesDao.get(this));
-        maohao1Tv.setTextColor(TextColorPreferencesDao.get(this));
-        maohao2Tv.setTextColor(TextColorPreferencesDao.get(this));
+        timeTv.setTextColor(TextColorPreferencesDao.get(this));
         dateTv.setTextColor(TextColorPreferencesDao.get(this));
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
         lunarTv.setTextColor(TextColorPreferencesDao.get(this));
@@ -273,5 +259,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }, 800);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_MENU:
+                Log.v("AA","menu");
+                trans2Settins();
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
