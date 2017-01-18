@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HomeClock.iml" filepath="$PROJECT_DIR$/HomeClock.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autofittextview/autofittextview.iml" filepath="$PROJECT_DIR$/autofittextview/autofittextview.iml" />
       <module fileurl="file://$PROJECT_DIR$/colorpickerlibrary/colorpickerlibrary.iml" filepath="$PROJECT_DIR$/colorpickerlibrary/colorpickerlibrary.iml" />
     </modules>
   </component>

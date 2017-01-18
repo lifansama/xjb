@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "app.xunxun.homeclock"
-        minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 11
-        versionName "1.4.4"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 12
+        versionName "1.4.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
 
@@ -43,7 +43,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile project(':colorpickerlibrary')
+    compile project(':autofittextview')
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.XhinLiang:LunarCalendar:1.2.2'
-    compile 'me.grantland:autofittextview:0.2.+'
 }
+
