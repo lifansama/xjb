@@ -1,7 +1,9 @@
 package app.xunxun.homeclock.activity;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -26,6 +28,7 @@ import app.xunxun.homeclock.EventNames;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
+import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import butterknife.ButterKnife;
@@ -33,6 +36,9 @@ import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
 
 public class SettingsActivity extends AppCompatActivity {
+    public static final String REQUEST_CODE = "requestCode";
+    public static final int REQUEST_MAIN = 1;
+    public static final int REQUEST_LAUNCHER = 2;
     @InjectView(R.id.backgroundColorTv)
     TextView backgroundColorTv;
     @InjectView(R.id.timeTv)
@@ -63,6 +69,10 @@ public class SettingsActivity extends AppCompatActivity {
     RadioButton time24Rb;
     @InjectView(R.id.timeStyleRg)
     RadioGroup timeStyleRg;
+    @InjectView(R.id.dateLl)
+    LinearLayout dateLl;
+    @InjectView(R.id.setLauncherCb)
+    CheckBox setLauncherCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -70,8 +80,10 @@ public class SettingsActivity extends AppCompatActivity {
     private SimpleDateFormat time24SDF = new SimpleDateFormat("HH:mm:ss");
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
 
-    public static void start(Context context) {
-        context.startActivity(new Intent(context, SettingsActivity.class));
+    public static void start(Context context, int requestCode) {
+        Intent intent = new Intent(context, SettingsActivity.class);
+        intent.putExtra(REQUEST_CODE, requestCode);
+        context.startActivity(intent);
     }
 
     @Override
@@ -166,6 +178,32 @@ public class SettingsActivity extends AppCompatActivity {
 
         setTime();
 
+        setLauncher(IsLauncherPreferencesDao.get(this));
+        setLauncherCb.setChecked(IsLauncherPreferencesDao.get(this));
+        setLauncherCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
+                IsLauncherPreferencesDao.set(compoundButton.getContext(), isCheck);
+
+
+                setLauncher(isCheck);
+
+                if (isCheck) {
+                    Intent selector = new Intent(Intent.ACTION_MAIN);
+                    selector.addCategory(Intent.CATEGORY_HOME);
+                    compoundButton.getContext().startActivity(selector);
+                }
+            }
+        });
+
+
+    }
+
+    private void setLauncher(boolean isCheck) {
+        PackageManager packageManager = getPackageManager();
+        ComponentName componentName = new ComponentName(SettingsActivity.this, LauncherActivity.class);
+        int flag = isCheck ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+        packageManager.setComponentEnabledSetting(componentName, flag, PackageManager.DONT_KILL_APP);
     }
 
     /**
@@ -214,7 +252,22 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        MainActivity.start(this);
-        finish();
+        if (IsLauncherPreferencesDao.get(this)) {
+            int requestCode = getIntent().getIntExtra(REQUEST_CODE, -1);
+            if (requestCode == REQUEST_MAIN) {
+                MainActivity.start(this);
+                finish();
+            } else if (requestCode == REQUEST_LAUNCHER) {
+                LauncherActivity.start(this);
+                finish();
+            }else {
+                finish();
+            }
+
+        } else {
+            MainActivity.start(this);
+            finish();
+
+        }
     }
 }

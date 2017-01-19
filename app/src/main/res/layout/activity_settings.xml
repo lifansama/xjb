@@ -38,10 +38,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
-                android:visibility="gone"
                 android:text="AM"
                 android:textColor="#fff"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:visibility="gone" />
         </LinearLayout>
 
 
@@ -138,8 +138,8 @@
                     android:id="@+id/time_12Rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
                     android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
                     android:text="12小时制"
                     android:textSize="18sp" />
 
@@ -147,9 +147,9 @@
                     android:id="@+id/time_24Rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
                     android:checked="true"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
                     android:text="24小时制"
                     android:textSize="18sp" />
             </RadioGroup>
@@ -188,6 +188,22 @@
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:text="保持屏幕常亮"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <CheckBox
+                android:id="@+id/setLauncherCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="设为桌面启动器"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
 

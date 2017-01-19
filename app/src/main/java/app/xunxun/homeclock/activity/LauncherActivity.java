@@ -3,38 +3,30 @@ package app.xunxun.homeclock.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
 import com.umeng.analytics.MobclickAgent;
 
 import app.xunxun.homeclock.ClockViewController;
-import app.xunxun.homeclock.utils.DoubleClickExit;
 
+/**
+ * Created by fengdianxun on 2017/1/19.
+ */
 
-public class MainActivity extends AppCompatActivity {
-
-
-    private DoubleClickExit doubleClickExit;
-
-    private ClockViewController clockViewController;
+public class LauncherActivity extends AppCompatActivity {
+    ClockViewController clockViewController;
 
     public static void start(Context context) {
-        context.startActivity(new Intent(context, MainActivity.class));
+        context.startActivity(new Intent(context, LauncherActivity.class));
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         clockViewController = new ClockViewController(this);
         clockViewController.onCreate(savedInstanceState);
-        doubleClickExit = new DoubleClickExit(this);
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        doubleClickExit.doubleClickExit();
     }
 
     @Override
@@ -63,5 +55,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         clockViewController = null;
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }
