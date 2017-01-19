@@ -100,14 +100,6 @@ public class ClockViewController {
                 }
             }
         };
-        rootFl.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Log.v("activityMain", "onLongClick");
-                trans2Settins();
-                return false;
-            }
-        });
         rootFl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
