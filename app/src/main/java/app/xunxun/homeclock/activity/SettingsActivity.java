@@ -31,6 +31,7 @@ import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
+import app.xunxun.homeclock.utils.LauncherSettings;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
@@ -118,6 +119,7 @@ public class SettingsActivity extends AppCompatActivity {
                 dateTv.setTextColor(color);
                 weekTv.setTextColor(color);
                 ampmTv.setTextColor(color);
+                lunarTv.setTextColor(color);
 
                 TextColorPreferencesDao.set(SettingsActivity.this, color);
                 MobclickAgent.onEvent(SettingsActivity.this, EventNames.EVENT_CHANGE_TEXT_COLOR);
@@ -177,8 +179,8 @@ public class SettingsActivity extends AppCompatActivity {
             time24Rb.setChecked(true);
 
         setTime();
+        LauncherSettings.setLauncher(this,IsLauncherPreferencesDao.get(this));
 
-        setLauncher(IsLauncherPreferencesDao.get(this));
         setLauncherCb.setChecked(IsLauncherPreferencesDao.get(this));
         setLauncherCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -186,7 +188,7 @@ public class SettingsActivity extends AppCompatActivity {
                 IsLauncherPreferencesDao.set(compoundButton.getContext(), isCheck);
 
 
-                setLauncher(isCheck);
+                LauncherSettings.setLauncher(compoundButton.getContext(),isCheck);
 
                 if (isCheck) {
                     Intent selector = new Intent(Intent.ACTION_MAIN);

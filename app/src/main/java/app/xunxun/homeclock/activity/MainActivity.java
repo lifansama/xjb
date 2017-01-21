@@ -9,7 +9,9 @@ import android.view.KeyEvent;
 import com.umeng.analytics.MobclickAgent;
 
 import app.xunxun.homeclock.ClockViewController;
+import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
 import app.xunxun.homeclock.utils.DoubleClickExit;
+import app.xunxun.homeclock.utils.LauncherSettings;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
         clockViewController = new ClockViewController(this);
         clockViewController.onCreate(savedInstanceState);
         doubleClickExit = new DoubleClickExit(this);
+        LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this));
     }
+
 
 
     @Override
