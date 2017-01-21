@@ -116,7 +116,6 @@
             android:layout_height="wrap_content"
             android:textColor="#fff"
             android:textSize="24sp"
-            android:ellipsize="marquee"
             android:layout_marginBottom="8dp"
             android:maxLines="2"
             />
