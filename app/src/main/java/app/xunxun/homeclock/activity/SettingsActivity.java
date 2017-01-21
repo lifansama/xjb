@@ -1,9 +1,7 @@
 package app.xunxun.homeclock.activity;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -29,6 +27,9 @@ import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
+import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
+import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
+import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.utils.LauncherSettings;
@@ -74,6 +75,12 @@ public class SettingsActivity extends AppCompatActivity {
     LinearLayout dateLl;
     @InjectView(R.id.setLauncherCb)
     CheckBox setLauncherCb;
+    @InjectView(R.id.showDateCb)
+    CheckBox showDateCb;
+    @InjectView(R.id.showLunarCb)
+    CheckBox showLunarCb;
+    @InjectView(R.id.showWeekCb)
+    CheckBox showWeekCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -179,7 +186,7 @@ public class SettingsActivity extends AppCompatActivity {
             time24Rb.setChecked(true);
 
         setTime();
-        LauncherSettings.setLauncher(this,IsLauncherPreferencesDao.get(this));
+        LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this));
 
         setLauncherCb.setChecked(IsLauncherPreferencesDao.get(this));
         setLauncherCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -188,7 +195,7 @@ public class SettingsActivity extends AppCompatActivity {
                 IsLauncherPreferencesDao.set(compoundButton.getContext(), isCheck);
 
 
-                LauncherSettings.setLauncher(compoundButton.getContext(),isCheck);
+                LauncherSettings.setLauncher(compoundButton.getContext(), isCheck);
 
                 if (isCheck) {
                     Intent selector = new Intent(Intent.ACTION_MAIN);
@@ -197,16 +204,54 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+        showDateCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                IsShowDatePreferencesDao.set(buttonView.getContext(), isChecked);
+                setShowDateCb(isChecked);
+
+            }
+        });
+        showLunarCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                IsShowLunarPreferencesDao.set(buttonView.getContext(), isChecked);
+                setShowLunarCb(isChecked);
+
+            }
+        });
+        showWeekCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                IsShowWeekPreferencesDao.set(buttonView.getContext(), isChecked);
+                setShowWeekCb(isChecked);
+            }
+        });
+        setShowDateCb(IsShowDatePreferencesDao.get(this));
+        setShowLunarCb(IsShowLunarPreferencesDao.get(this));
+        setShowWeekCb(IsShowWeekPreferencesDao.get(this));
 
 
     }
 
-    private void setLauncher(boolean isCheck) {
-        PackageManager packageManager = getPackageManager();
-        ComponentName componentName = new ComponentName(SettingsActivity.this, LauncherActivity.class);
-        int flag = isCheck ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-        packageManager.setComponentEnabledSetting(componentName, flag, PackageManager.DONT_KILL_APP);
+    private void setShowDateCb(boolean isShow) {
+        showDateCb.setChecked(isShow);
+        dateTv.setVisibility(isShow ? View.VISIBLE : View.GONE);
+
     }
+
+    private void setShowWeekCb(boolean isShow) {
+
+        weekTv.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        showWeekCb.setChecked(isShow);
+    }
+
+    private void setShowLunarCb(boolean isShow) {
+        showLunarCb.setChecked(isShow);
+        lunarTv.setVisibility(isShow ? View.VISIBLE : View.GONE);
+
+    }
+
 
     /**
      * 设置时间.
@@ -262,7 +307,7 @@ public class SettingsActivity extends AppCompatActivity {
             } else if (requestCode == REQUEST_LAUNCHER) {
                 LauncherActivity.start(this);
                 finish();
-            }else {
+            } else {
                 finish();
             }
 

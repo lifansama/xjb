@@ -30,6 +30,9 @@ import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
+import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
+import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
+import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import butterknife.ButterKnife;
@@ -142,6 +145,9 @@ public class ClockViewController {
                 }
             });
         }
+        dateTv.setVisibility(IsShowDatePreferencesDao.get(activity)?View.VISIBLE:View.GONE);
+        weekTv.setVisibility(IsShowWeekPreferencesDao.get(activity)?View.VISIBLE:View.GONE);
+        lunarTv.setVisibility(IsShowLunarPreferencesDao.get(activity)?View.VISIBLE:View.GONE);
     }
 
     public void onResume() {
