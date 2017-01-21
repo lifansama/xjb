@@ -4,10 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -33,6 +37,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
+import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import app.xunxun.homeclock.utils.LauncherSettings;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -86,6 +91,8 @@ public class SettingsActivity extends AppCompatActivity {
     TextView batteryTv;
     @InjectView(R.id.showBatteryCb)
     CheckBox showBatteryCb;
+    @InjectView(R.id.textSpaceEt)
+    EditText textSpaceEt;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -133,6 +140,7 @@ public class SettingsActivity extends AppCompatActivity {
                 ampmTv.setTextColor(color);
                 lunarTv.setTextColor(color);
                 batteryTv.setTextColor(color);
+                textSpaceEt.setTextColor(color);
 
                 TextColorPreferencesDao.set(SettingsActivity.this, color);
                 MobclickAgent.onEvent(SettingsActivity.this, EventNames.EVENT_CHANGE_TEXT_COLOR);
@@ -164,6 +172,7 @@ public class SettingsActivity extends AppCompatActivity {
         ampmTv.setTextColor(TextColorPreferencesDao.get(this));
         lunarTv.setTextColor(TextColorPreferencesDao.get(this));
         batteryTv.setTextColor(TextColorPreferencesDao.get(this));
+        textSpaceEt.setTextColor(TextColorPreferencesDao.get(this));
         keepScreenOnCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
@@ -237,17 +246,35 @@ public class SettingsActivity extends AppCompatActivity {
         showBatteryCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                IsShowBatteryPreferencesDao.set(buttonView.getContext(),isChecked);
-                batteryTv.setVisibility(isChecked?View.VISIBLE:View.GONE);
+                IsShowBatteryPreferencesDao.set(buttonView.getContext(), isChecked);
+                batteryTv.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 
             }
         });
         setShowDateCb(IsShowDatePreferencesDao.get(this));
         setShowLunarCb(IsShowLunarPreferencesDao.get(this));
         setShowWeekCb(IsShowWeekPreferencesDao.get(this));
-        batteryTv.setVisibility(IsShowBatteryPreferencesDao.get(this)?View.VISIBLE:View.GONE);
+        batteryTv.setVisibility(IsShowBatteryPreferencesDao.get(this) ? View.VISIBLE : View.GONE);
+        if (!TextUtils.isEmpty(TextSpaceContentPreferencesDao.get(this))) {
+            textSpaceEt.setText(TextSpaceContentPreferencesDao.get(this));
+        }
+        textSpaceEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                TextSpaceContentPreferencesDao.set(SettingsActivity.this, s.toString());
+
+            }
+        });
 
     }
 

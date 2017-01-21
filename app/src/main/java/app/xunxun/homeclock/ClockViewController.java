@@ -40,6 +40,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
+import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
@@ -71,6 +72,8 @@ public class ClockViewController {
     FrameLayout rootFl;
     @InjectView(R.id.batteryTv)
     TextView batteryTv;
+    @InjectView(R.id.textSpaceTv)
+    TextView textSpaceTv;
     private Activity activity;
 
 
@@ -157,6 +160,7 @@ public class ClockViewController {
         weekTv.setVisibility(IsShowWeekPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
         lunarTv.setVisibility(IsShowLunarPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
         batteryTv.setVisibility(IsShowBatteryPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
+        textSpaceTv.setText(TextSpaceContentPreferencesDao.get(activity));
     }
 
     public void onResume() {
@@ -175,6 +179,7 @@ public class ClockViewController {
         lunarTv.setTextColor(TextColorPreferencesDao.get(activity));
         ampmTv.setTextColor(TextColorPreferencesDao.get(activity));
         batteryTv.setTextColor(TextColorPreferencesDao.get(activity));
+        textSpaceTv.setTextColor(TextColorPreferencesDao.get(activity));
         setTime();
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         batteryChangeReceiver = new BatteryChangeReceiver();

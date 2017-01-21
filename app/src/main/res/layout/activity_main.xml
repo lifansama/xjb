@@ -107,6 +107,19 @@
             android:textColor="#fff"
             android:textSize="12sp"
             />
+        <TextView
+            android:id="@+id/textSpaceTv"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="24sp"
+            android:ellipsize="marquee"
+            android:layout_marginBottom="8dp"
+            android:maxLines="2"
+            />
 
     </RelativeLayout>
 </FrameLayout>

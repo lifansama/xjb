@@ -95,6 +95,20 @@
             android:text="电量:100%"
             android:textColor="#fff"
             android:textSize="10sp" />
+        <EditText
+            android:id="@+id/textSpaceEt"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="写写"
+            android:textColor="#fff"
+            android:textSize="24sp"
+            android:textColorHint="@color/grey_500"
+            android:layout_marginBottom="8dp"
+            android:maxLines="2"
+            />
     </RelativeLayout>
 
     <ScrollView
