@@ -1,6 +1,10 @@
 package app.xunxun.homeclock;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +34,7 @@ import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
+import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
@@ -64,6 +69,8 @@ public class ClockViewController {
     RelativeLayout activityMain;
     @InjectView(R.id.rootFl)
     FrameLayout rootFl;
+    @InjectView(R.id.batteryTv)
+    TextView batteryTv;
     private Activity activity;
 
 
@@ -75,6 +82,7 @@ public class ClockViewController {
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
     private boolean navigationBarIsVisible;
     private boolean isUsefullClick;
+    private BatteryChangeReceiver batteryChangeReceiver;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -145,9 +153,10 @@ public class ClockViewController {
                 }
             });
         }
-        dateTv.setVisibility(IsShowDatePreferencesDao.get(activity)?View.VISIBLE:View.GONE);
-        weekTv.setVisibility(IsShowWeekPreferencesDao.get(activity)?View.VISIBLE:View.GONE);
-        lunarTv.setVisibility(IsShowLunarPreferencesDao.get(activity)?View.VISIBLE:View.GONE);
+        dateTv.setVisibility(IsShowDatePreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
+        weekTv.setVisibility(IsShowWeekPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
+        lunarTv.setVisibility(IsShowLunarPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
+        batteryTv.setVisibility(IsShowBatteryPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
     }
 
     public void onResume() {
@@ -165,7 +174,12 @@ public class ClockViewController {
         weekTv.setTextColor(TextColorPreferencesDao.get(activity));
         lunarTv.setTextColor(TextColorPreferencesDao.get(activity));
         ampmTv.setTextColor(TextColorPreferencesDao.get(activity));
+        batteryTv.setTextColor(TextColorPreferencesDao.get(activity));
         setTime();
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        batteryChangeReceiver = new BatteryChangeReceiver();
+        activity.registerReceiver(batteryChangeReceiver, intentFilter);
+
     }
 
     public void onPause() {
@@ -173,6 +187,7 @@ public class ClockViewController {
         timerTask.cancel();
         timer = null;
         timerTask = null;
+        activity.unregisterReceiver(batteryChangeReceiver);
     }
 
     public void onKeyDown(int keyCode, KeyEvent event) {
@@ -255,6 +270,22 @@ public class ClockViewController {
             SettingsActivity.start(activity, SettingsActivity.REQUEST_LAUNCHER);
             activity.finish();
 
+        }
+    }
+
+    public class BatteryChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
+                //获取当前电量
+                int level = intent.getIntExtra("level", 0);
+                //电量的总刻度
+                int scale = intent.getIntExtra("scale", 100);
+                //把它转成百分比
+                if (batteryTv != null) {
+                    batteryTv.setText(String.format("电量:%d%%", (level * 100) / scale));
+                }
+            }
         }
     }
 

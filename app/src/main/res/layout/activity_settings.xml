@@ -85,6 +85,16 @@
                 android:textColor="#fff"
                 android:textSize="14sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/batteryTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="电量:100%"
+            android:textColor="#fff"
+            android:textSize="10sp" />
     </RelativeLayout>
 
     <ScrollView
@@ -208,10 +218,11 @@
                 android:textSize="18sp" />
 
             <View
-                android:layout_marginTop="32dp"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
+                android:layout_marginTop="32dp"
                 android:background="@color/grey_400" />
+
             <CheckBox
                 android:id="@+id/showDateCb"
                 android:layout_width="match_parent"
@@ -222,10 +233,12 @@
                 android:text="显示日期"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/grey_400" />
+
             <CheckBox
                 android:id="@+id/showWeekCb"
                 android:layout_width="match_parent"
@@ -236,10 +249,12 @@
                 android:text="显示星期"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/grey_400" />
+
             <CheckBox
                 android:id="@+id/showLunarCb"
                 android:layout_width="match_parent"
@@ -248,6 +263,27 @@
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:text="显示农历"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <CheckBox
+                android:id="@+id/showBatteryCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="显示电量"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
 

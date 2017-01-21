@@ -27,6 +27,7 @@ import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
+import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
@@ -81,6 +82,10 @@ public class SettingsActivity extends AppCompatActivity {
     CheckBox showLunarCb;
     @InjectView(R.id.showWeekCb)
     CheckBox showWeekCb;
+    @InjectView(R.id.batteryTv)
+    TextView batteryTv;
+    @InjectView(R.id.showBatteryCb)
+    CheckBox showBatteryCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -127,6 +132,7 @@ public class SettingsActivity extends AppCompatActivity {
                 weekTv.setTextColor(color);
                 ampmTv.setTextColor(color);
                 lunarTv.setTextColor(color);
+                batteryTv.setTextColor(color);
 
                 TextColorPreferencesDao.set(SettingsActivity.this, color);
                 MobclickAgent.onEvent(SettingsActivity.this, EventNames.EVENT_CHANGE_TEXT_COLOR);
@@ -157,6 +163,7 @@ public class SettingsActivity extends AppCompatActivity {
         weekTv.setTextColor(TextColorPreferencesDao.get(this));
         ampmTv.setTextColor(TextColorPreferencesDao.get(this));
         lunarTv.setTextColor(TextColorPreferencesDao.get(this));
+        batteryTv.setTextColor(TextColorPreferencesDao.get(this));
         keepScreenOnCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
@@ -227,9 +234,19 @@ public class SettingsActivity extends AppCompatActivity {
                 setShowWeekCb(isChecked);
             }
         });
+        showBatteryCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                IsShowBatteryPreferencesDao.set(buttonView.getContext(),isChecked);
+                batteryTv.setVisibility(isChecked?View.VISIBLE:View.GONE);
+
+            }
+        });
         setShowDateCb(IsShowDatePreferencesDao.get(this));
         setShowLunarCb(IsShowLunarPreferencesDao.get(this));
         setShowWeekCb(IsShowWeekPreferencesDao.get(this));
+        batteryTv.setVisibility(IsShowBatteryPreferencesDao.get(this)?View.VISIBLE:View.GONE);
+
 
 
     }

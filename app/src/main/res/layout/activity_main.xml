@@ -97,6 +97,16 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/batteryTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="电量:100%"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textColor="#fff"
+            android:textSize="12sp"
+            />
 
     </RelativeLayout>
 </FrameLayout>
