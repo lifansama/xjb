@@ -81,9 +81,9 @@ public class ClockViewController {
     private Timer timer;
     private TimerTask timerTask;
     private Handler handler;
-    private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
-    private SimpleDateFormat time24SDF = new SimpleDateFormat("HH:mm:ss");
-    private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
+    private static final SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat time24SDF = new SimpleDateFormat("HH:mm:ss");
+    private static final SimpleDateFormat weekSDF = new SimpleDateFormat("E");
     private boolean navigationBarIsVisible;
     private boolean isUsefullClick;
     private BatteryChangeReceiver batteryChangeReceiver;
@@ -104,15 +104,7 @@ public class ClockViewController {
         initTypeFace();
 
 
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == 1) {
-                    setDateTime();
-                }
-            }
-        };
+        handler = new MyHandler();
         initListner();
         init();
     }
@@ -170,7 +162,7 @@ public class ClockViewController {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                handler.sendEmptyMessage(WHAT_TIME);
+                    handler.sendEmptyMessage(WHAT_TIME);
             }
         };
         timer.schedule(timerTask, 1000, 1000);
@@ -180,6 +172,11 @@ public class ClockViewController {
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         batteryChangeReceiver = new BatteryChangeReceiver();
         activity.registerReceiver(batteryChangeReceiver, intentFilter);
+
+
+    }
+
+    public void onDestroy() {
 
     }
 
@@ -205,6 +202,7 @@ public class ClockViewController {
     }
 
     public void onPause() {
+
         timer.cancel();
         timerTask.cancel();
         timer = null;
@@ -297,6 +295,7 @@ public class ClockViewController {
 
     /**
      * 设置时间.
+     *
      * @param now
      * @param hour24
      * @param minute
@@ -319,6 +318,7 @@ public class ClockViewController {
 
     /**
      * 获取ampm模式应该显示的文字.
+     *
      * @param hour24
      * @param minute
      * @param hour12
@@ -370,6 +370,17 @@ public class ClockViewController {
                 if (batteryTv != null) {
                     batteryTv.setText(String.format("电量:%d%%", (level * 100) / scale));
                 }
+            }
+        }
+    }
+
+    private class MyHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                setDateTime();
             }
         }
     }

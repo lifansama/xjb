@@ -44,7 +44,6 @@
             android:name=".activity.SupportActivity"
             android:label="微信打赏" />
 
-
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="${UMENG_APPKEY}" />

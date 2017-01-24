@@ -55,6 +55,7 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        clockViewController.onDestroy();
         clockViewController = null;
     }
 
