@@ -10,6 +10,9 @@ import com.umeng.analytics.MobclickAgent;
 
 import app.xunxun.homeclock.R;
 
+/**
+ * 打赏页面.
+ */
 public class SupportActivity extends AppCompatActivity {
     public static void start(Context context) {
         context.startActivity(new Intent(context, SupportActivity.class));

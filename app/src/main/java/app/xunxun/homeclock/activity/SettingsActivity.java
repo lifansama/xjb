@@ -43,6 +43,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
 
+/**
+ * 设置页面.
+ */
 public class SettingsActivity extends AppCompatActivity {
     public static final String REQUEST_CODE = "requestCode";
     public static final int REQUEST_MAIN = 1;
@@ -99,6 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
     private SimpleDateFormat time12SDF = new SimpleDateFormat("hh:mm");
     private SimpleDateFormat time24SDF = new SimpleDateFormat("HH:mm:ss");
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
+    private int[] colors;
 
     public static void start(Context context, int requestCode) {
         Intent intent = new Intent(context, SettingsActivity.class);
@@ -112,14 +116,27 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         ButterKnife.inject(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        backgroundColorPickerDialog = new ColorPickerDialog();
+        colors = getResources().getIntArray(R.array.colors);
+        textColorPickerDialog = new ColorPickerDialog();
+        textColorPickerDialog.initialize(R.string.txt_select_color, colors, TextColorPreferencesDao.get(this), 4, 2);
+
+        initListener();
+
+        init();
+
+    }
+
+    /**
+     * 设置监听器.
+     */
+    private void initListener() {
         backgroundColorTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 backgroundColorPickerDialog.show(getSupportFragmentManager(), "colorpicker1");
             }
         });
-        backgroundColorPickerDialog = new ColorPickerDialog();
-        int[] colors = getResources().getIntArray(R.array.colors);
         backgroundColorPickerDialog.initialize(R.string.txt_select_color, colors, BackgroundColorPreferencesDao.get(this), 4, 2);
         backgroundColorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
@@ -129,20 +146,11 @@ public class SettingsActivity extends AppCompatActivity {
                 MobclickAgent.onEvent(SettingsActivity.this, EventNames.EVENT_CHANGE_BACKGROUND_COLOR);
             }
         });
-        textColorPickerDialog = new ColorPickerDialog();
-        textColorPickerDialog.initialize(R.string.txt_select_color, colors, TextColorPreferencesDao.get(this), 4, 2);
         textColorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
             public void onColorSelected(int color) {
-                timeTv.setTextColor(color);
-                dateTv.setTextColor(color);
-                weekTv.setTextColor(color);
-                ampmTv.setTextColor(color);
-                lunarTv.setTextColor(color);
-                batteryTv.setTextColor(color);
-                textSpaceEt.setTextColor(color);
-
                 TextColorPreferencesDao.set(SettingsActivity.this, color);
+                setForegroundColor();
                 MobclickAgent.onEvent(SettingsActivity.this, EventNames.EVENT_CHANGE_TEXT_COLOR);
             }
         });
@@ -165,14 +173,6 @@ public class SettingsActivity extends AppCompatActivity {
                 SupportActivity.start(view.getContext());
             }
         });
-        backRl.setBackgroundColor(BackgroundColorPreferencesDao.get(this));
-        timeTv.setTextColor(TextColorPreferencesDao.get(this));
-        dateTv.setTextColor(TextColorPreferencesDao.get(this));
-        weekTv.setTextColor(TextColorPreferencesDao.get(this));
-        ampmTv.setTextColor(TextColorPreferencesDao.get(this));
-        lunarTv.setTextColor(TextColorPreferencesDao.get(this));
-        batteryTv.setTextColor(TextColorPreferencesDao.get(this));
-        textSpaceEt.setTextColor(TextColorPreferencesDao.get(this));
         keepScreenOnCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
@@ -181,12 +181,6 @@ public class SettingsActivity extends AppCompatActivity {
         });
         keepScreenOnCb.setChecked(KeepScreenOnPreferencesDao.get(this));
 
-        Date now = new Date();
-        dateTv.setText(dateSDF.format(now));
-        weekTv.setText(weekSDF.format(now));
-        Calendar calendar = Calendar.getInstance();
-        LunarCalendar lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-        lunarTv.setText(String.format("%s月%s日", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
 
         timeStyleRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -196,13 +190,6 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-        if (Is12TimePreferencesDao.get(this))
-            time12Rb.setChecked(true);
-        else
-            time24Rb.setChecked(true);
-
-        setTime();
-        LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this));
 
         setLauncherCb.setChecked(IsLauncherPreferencesDao.get(this));
         setLauncherCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -251,6 +238,22 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * 初始化设置.
+     */
+    private void init() {
+        setBackgroundColor();
+        setForegroundColor();
+        setDate();
+        if (Is12TimePreferencesDao.get(this))
+            time12Rb.setChecked(true);
+        else
+            time24Rb.setChecked(true);
+
+        setTime();
+        LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this));
         setShowDateCb(IsShowDatePreferencesDao.get(this));
         setShowLunarCb(IsShowLunarPreferencesDao.get(this));
         setShowWeekCb(IsShowWeekPreferencesDao.get(this));
@@ -276,6 +279,18 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * 设置当前日期.
+     */
+    private void setDate() {
+        Date now = new Date();
+        dateTv.setText(dateSDF.format(now));
+        weekTv.setText(weekSDF.format(now));
+        Calendar calendar = Calendar.getInstance();
+        LunarCalendar lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+        lunarTv.setText(String.format("%s月%s日", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
     }
 
     private void setShowDateCb(boolean isShow) {
@@ -320,6 +335,27 @@ public class SettingsActivity extends AppCompatActivity {
 
         }
         timeTv.setText(timeStr);
+    }
+
+    /**
+     * 设置前景色.
+     */
+    private void setForegroundColor() {
+        int color = TextColorPreferencesDao.get(this);
+        timeTv.setTextColor(color);
+        dateTv.setTextColor(color);
+        weekTv.setTextColor(color);
+        ampmTv.setTextColor(color);
+        lunarTv.setTextColor(color);
+        batteryTv.setTextColor(color);
+        textSpaceEt.setTextColor(color);
+    }
+
+    /**
+     * 设置背景色.
+     */
+    private void setBackgroundColor() {
+        backRl.setBackgroundColor(BackgroundColorPreferencesDao.get(this));
     }
 
 

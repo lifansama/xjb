@@ -13,7 +13,9 @@ import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
 import app.xunxun.homeclock.utils.DoubleClickExit;
 import app.xunxun.homeclock.utils.LauncherSettings;
 
-
+/**
+ * 主界面.
+ */
 public class MainActivity extends AppCompatActivity {
 
 

@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -100,25 +101,31 @@ public class ClockViewController {
 
         }
         ButterKnife.inject(this, activity);
+        initTypeFace();
 
-        Typeface typeFace = Typeface.createFromAsset(activity.getAssets(), "fonts/ds_digi.ttf");
-        timeTv.setTypeface(typeFace);
-        dateTv.setTypeface(typeFace);
 
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if (msg.what == 1) {
-                    setTime();
+                    setDateTime();
                 }
             }
         };
+        initListner();
+        init();
+    }
+
+    /**
+     * 初始化监听器.
+     */
+    private void initListner() {
         rootFl.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 Log.v("activityMain", "onLongClick");
-                trans2Settins();
+                trans2Settings();
                 return false;
             }
         });
@@ -156,11 +163,6 @@ public class ClockViewController {
                 }
             });
         }
-        dateTv.setVisibility(IsShowDatePreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
-        weekTv.setVisibility(IsShowWeekPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
-        lunarTv.setVisibility(IsShowLunarPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
-        batteryTv.setVisibility(IsShowBatteryPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
-        textSpaceTv.setText(TextSpaceContentPreferencesDao.get(activity));
     }
 
     public void onResume() {
@@ -172,19 +174,34 @@ public class ClockViewController {
             }
         };
         timer.schedule(timerTask, 1000, 1000);
-        activityMain.setBackgroundColor(BackgroundColorPreferencesDao.get(activity));
-        timeTv.setTextColor(TextColorPreferencesDao.get(activity));
-        dateTv.setTextColor(TextColorPreferencesDao.get(activity));
-        weekTv.setTextColor(TextColorPreferencesDao.get(activity));
-        lunarTv.setTextColor(TextColorPreferencesDao.get(activity));
-        ampmTv.setTextColor(TextColorPreferencesDao.get(activity));
-        batteryTv.setTextColor(TextColorPreferencesDao.get(activity));
-        textSpaceTv.setTextColor(TextColorPreferencesDao.get(activity));
-        setTime();
+        setBackgroundColor();
+        setForegroundColor();
+        setDateTime();
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         batteryChangeReceiver = new BatteryChangeReceiver();
         activity.registerReceiver(batteryChangeReceiver, intentFilter);
 
+    }
+
+    /**
+     * 设置前景色.
+     */
+    private void setForegroundColor() {
+        int color = TextColorPreferencesDao.get(activity);
+        timeTv.setTextColor(color);
+        dateTv.setTextColor(color);
+        weekTv.setTextColor(color);
+        lunarTv.setTextColor(color);
+        ampmTv.setTextColor(color);
+        batteryTv.setTextColor(color);
+        textSpaceTv.setTextColor(color);
+    }
+
+    /**
+     * 设置背景色.
+     */
+    private void setBackgroundColor() {
+        activityMain.setBackgroundColor(BackgroundColorPreferencesDao.get(activity));
     }
 
     public void onPause() {
@@ -199,7 +216,7 @@ public class ClockViewController {
         switch (keyCode) {
             case KeyEvent.KEYCODE_MENU:
                 Log.v("AA", "menu");
-                trans2Settins();
+                trans2Settings();
                 break;
         }
     }
@@ -224,37 +241,50 @@ public class ClockViewController {
     }
 
     /**
+     * 设置字体.
+     */
+    private void initTypeFace() {
+
+        Typeface typeFace = Typeface.createFromAsset(activity.getAssets(), "fonts/ds_digi.ttf");
+        timeTv.setTypeface(typeFace);
+        dateTv.setTypeface(typeFace);
+
+    }
+
+    /**
+     * 初始化.
+     */
+    private void init() {
+        setTextViewVisibility(dateTv, IsShowDatePreferencesDao.get(activity));
+        setTextViewVisibility(weekTv, IsShowWeekPreferencesDao.get(activity));
+        setTextViewVisibility(lunarTv, IsShowLunarPreferencesDao.get(activity));
+        setTextViewVisibility(batteryTv, IsShowBatteryPreferencesDao.get(activity));
+
+        textSpaceTv.setText(TextSpaceContentPreferencesDao.get(activity));
+    }
+
+    /**
+     * 设置控件的显隐.
+     *
+     * @param textView
+     * @param isShow
+     */
+    private void setTextViewVisibility(TextView textView, boolean isShow) {
+        textView.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    /**
      * 更新时间.
      */
-    private void setTime() {
+    private void setDateTime() {
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         int hour24 = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         int hour12 = calendar.get(Calendar.HOUR);
 
-        if (Is12TimePreferencesDao.get(activity)) {
-            if (timeTv != null) {
-                if (hour12 == 0 && hour24 == 12) {
-                    hour12 = 12;
-                }
-                String ampm = hour24 >= 12 ? "PM" : "AM";
-                String time = String.format("%02d:%02d%s", hour12, minute, ampm);
-                Spannable spannable = new SpannableString(time);
-                int start = 5;
-                int end = 7;
-                spannable.setSpan(new RelativeSizeSpan(0.6f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannable.setSpan(new TypefaceSpan("default"), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        setTime(now, hour24, minute, hour12);
 
-                timeTv.setText(spannable);
-            }
-
-        } else {
-            if (timeTv != null) {
-                timeTv.setText(time24SDF.format(now));
-            }
-        }
-//        }
         if (dateTv != null)
             dateTv.setText(dateSDF.format(now));
         if (weekTv != null)
@@ -265,8 +295,55 @@ public class ClockViewController {
         lunarTv.setText(String.format("%s月%s日", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
     }
 
+    /**
+     * 设置时间.
+     * @param now
+     * @param hour24
+     * @param minute
+     * @param hour12
+     */
+    private void setTime(Date now, int hour24, int minute, int hour12) {
+        if (Is12TimePreferencesDao.get(activity)) {
+            if (timeTv != null) {
+                Spannable spannable = getAmPmTextSpannable(hour24, minute, hour12);
 
-    private void trans2Settins() {
+                timeTv.setText(spannable);
+            }
+
+        } else {
+            if (timeTv != null) {
+                timeTv.setText(time24SDF.format(now));
+            }
+        }
+    }
+
+    /**
+     * 获取ampm模式应该显示的文字.
+     * @param hour24
+     * @param minute
+     * @param hour12
+     * @return
+     */
+    @NonNull
+    private Spannable getAmPmTextSpannable(int hour24, int minute, int hour12) {
+        if (hour12 == 0 && hour24 == 12) {
+            hour12 = 12;
+        }
+        String ampm = hour24 >= 12 ? "PM" : "AM";
+        String time = String.format("%02d:%02d%s", hour12, minute, ampm);
+        Spannable spannable = new SpannableString(time);
+        int start = 5;
+        int end = 7;
+        spannable.setSpan(new RelativeSizeSpan(0.6f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new TypefaceSpan("default"), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
+
+    /**
+     * 跳转到设置页面.
+     */
+    private void trans2Settings() {
         if (activity instanceof MainActivity) {
             SettingsActivity.start(activity, SettingsActivity.REQUEST_MAIN);
             activity.finish();
@@ -278,6 +355,9 @@ public class ClockViewController {
         }
     }
 
+    /**
+     * 电量监听器.
+     */
     public class BatteryChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import app.xunxun.homeclock.activity.LauncherActivity;
 
 /**
+ * 设置为launcher.
  * Created by fengdianxun on 2017/1/21.
  */
 

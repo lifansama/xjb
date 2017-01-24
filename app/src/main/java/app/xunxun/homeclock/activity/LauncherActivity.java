@@ -12,6 +12,7 @@ import com.umeng.analytics.MobclickAgent;
 import app.xunxun.homeclock.ClockViewController;
 
 /**
+ * 启动器.
  * Created by fengdianxun on 2017/1/19.
  */
 
