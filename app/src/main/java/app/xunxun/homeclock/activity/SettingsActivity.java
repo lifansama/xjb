@@ -3,6 +3,7 @@ package app.xunxun.homeclock.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -132,6 +133,8 @@ public class SettingsActivity extends AppCompatActivity {
         colors = getResources().getIntArray(R.array.colors);
         textColorPickerDialog = new ColorPickerDialog();
         textColorPickerDialog.initialize(R.string.txt_select_color, colors, TextColorPreferencesDao.get(this), 4, 2);
+
+        protectScreenCb.setChecked(EnableProtectScreenPreferencesDao.get(this));
 
         initListener();
 
@@ -272,9 +275,23 @@ public class SettingsActivity extends AppCompatActivity {
         protectScreenCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                EnableProtectScreenPreferencesDao.set(buttonView.getContext(),isChecked);
+                EnableProtectScreenPreferencesDao.set(buttonView.getContext(), isChecked);
+                if (isChecked)
+                    showProtectScreenAlert();
             }
         });
+    }
+
+    /**
+     * 显示防烧屏提示.
+     */
+    private void showProtectScreenAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("温馨提醒");
+        builder.setMessage("开启防烧屏后背景色和字体颜色会在整点时互换，及每隔1小时颜色互换一次，这样可以让屏幕里的发光体做到轮询休息。但是如果是A屏，黑色不发光，颜色互换后假如白色作为背景色了，可能会增加耗电量，请谨慎开启。");
+        builder.setPositiveButton("知道了", null);
+        builder.show();
+
     }
 
     /**
@@ -318,7 +335,6 @@ public class SettingsActivity extends AppCompatActivity {
         enableShakeFeedbackCb.setChecked(EnableShakeFeedbackPreferencesDao.get(this));
         enableSpeakWholeTimeCb.setChecked(EnableSeapkWholeTimePreferencesDao.get(this));
         showBatteryCb.setChecked(IsShowBatteryPreferencesDao.get(this));
-        protectScreenCb.setChecked(EnableProtectScreenPreferencesDao.get(this));
 
     }
 
