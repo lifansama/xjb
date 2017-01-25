@@ -30,6 +30,7 @@ import java.util.Date;
 import app.xunxun.homeclock.EventNames;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
@@ -102,6 +103,8 @@ public class SettingsActivity extends AppCompatActivity {
     TextView feedbackTv;
     @InjectView(R.id.enableShakeFeedbackCb)
     CheckBox enableShakeFeedbackCb;
+    @InjectView(R.id.enableSpeakWholeTimeCb)
+    CheckBox enableSpeakWholeTimeCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -253,8 +256,14 @@ public class SettingsActivity extends AppCompatActivity {
         enableShakeFeedbackCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                EnableShakeFeedbackPreferencesDao.set(buttonView.getContext(),isChecked);
+                EnableShakeFeedbackPreferencesDao.set(buttonView.getContext(), isChecked);
 
+            }
+        });
+        enableSpeakWholeTimeCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EnableSeapkWholeTimePreferencesDao.set(buttonView.getContext(),isChecked);
             }
         });
     }
@@ -298,6 +307,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         enableShakeFeedbackCb.setChecked(EnableShakeFeedbackPreferencesDao.get(this));
+        enableSpeakWholeTimeCb.setChecked(EnableSeapkWholeTimePreferencesDao.get(this));
 
     }
 

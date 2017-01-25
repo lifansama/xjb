@@ -41,6 +41,7 @@ import app.xunxun.homeclock.activity.LauncherActivity;
 import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
@@ -409,7 +410,9 @@ public class ClockViewController {
 
         if (isWholeTime(minute, second)) {
             String txt = time2SpeakContent(hour24, hour12);
-            speak(txt);
+            if (EnableSeapkWholeTimePreferencesDao.get(activity)) {
+                speak(txt);
+            }
         }
     }
 
