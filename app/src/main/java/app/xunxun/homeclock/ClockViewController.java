@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.baidu.speechsynthesizer.SpeechSynthesizer;
+import com.baidu.speechsynthesizer.SpeechSynthesizerListener;
+import com.baidu.speechsynthesizer.publicutility.SpeechError;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.feedback.PgyFeedbackShakeManager;
 
@@ -91,6 +95,7 @@ public class ClockViewController {
     private boolean navigationBarIsVisible;
     private boolean isUsefullClick;
     private BatteryChangeReceiver batteryChangeReceiver;
+    private SpeechSynthesizer speechSynthesizer;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -112,6 +117,94 @@ public class ClockViewController {
         initListner();
         init();
         PgyCrashManager.register(activity);
+        initSpeaker();
+
+    }
+
+    /**
+     * 初始化百度语音合成.
+     */
+    private void initSpeaker() {
+        speechSynthesizer = new SpeechSynthesizer(activity, "holer", new SpeechSynthesizerListener() {
+            @Override
+            public void onStartWorking(SpeechSynthesizer speechSynthesizer) {
+
+            }
+
+            @Override
+            public void onSpeechStart(SpeechSynthesizer speechSynthesizer) {
+
+            }
+
+            @Override
+            public void onNewDataArrive(SpeechSynthesizer speechSynthesizer, byte[] bytes, boolean b) {
+
+            }
+
+            @Override
+            public void onBufferProgressChanged(SpeechSynthesizer speechSynthesizer, int i) {
+
+            }
+
+            @Override
+            public void onSpeechProgressChanged(SpeechSynthesizer speechSynthesizer, int i) {
+
+            }
+
+            @Override
+            public void onSpeechPause(SpeechSynthesizer speechSynthesizer) {
+
+            }
+
+            @Override
+            public void onSpeechResume(SpeechSynthesizer speechSynthesizer) {
+
+            }
+
+            @Override
+            public void onCancel(SpeechSynthesizer speechSynthesizer) {
+
+            }
+
+            @Override
+            public void onSynthesizeFinish(SpeechSynthesizer speechSynthesizer) {
+
+            }
+
+            @Override
+            public void onSpeechFinish(SpeechSynthesizer speechSynthesizer) {
+
+            }
+
+            @Override
+            public void onError(SpeechSynthesizer speechSynthesizer, SpeechError speechError) {
+
+            }
+        });
+        speechSynthesizer.setApiKey("oVo6NGBYqmOombGMaHuB6Eui", "ddb89bf64cc39c1a28e253e154c09af9");
+        speechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "0");
+        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_VOLUME, "9");
+        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEED, "5");
+        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_PITCH, "5");
+        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_AUDIO_ENCODE, SpeechSynthesizer.AUDIO_ENCODE_AMR);
+        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_AUDIO_RATE, SpeechSynthesizer.AUDIO_BITRATE_AMR_15K85);
+    }
+
+    /**
+     * 说话.
+     *
+     * @param txt
+     */
+    private void speak(final String txt) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                speechSynthesizer.speak(txt);
+
+            }
+        }).start();
     }
 
     /**
@@ -167,7 +260,7 @@ public class ClockViewController {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                    handler.sendEmptyMessage(WHAT_TIME);
+                handler.sendEmptyMessage(WHAT_TIME);
             }
         };
         timer.schedule(timerTask, 1000, 1000);
@@ -187,7 +280,7 @@ public class ClockViewController {
     /**
      * 摇一摇反馈.
      */
-    private void shakeFeedback(){
+    private void shakeFeedback() {
         PgyFeedbackShakeManager.setShakingThreshold(1000);
         PgyFeedbackShakeManager.register(activity);
 
@@ -300,6 +393,7 @@ public class ClockViewController {
         Calendar calendar = Calendar.getInstance();
         int hour24 = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
         int hour12 = calendar.get(Calendar.HOUR);
 
         setTime(now, hour24, minute, hour12);
@@ -312,6 +406,42 @@ public class ClockViewController {
         LunarCalendar lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
 
         lunarTv.setText(String.format("%s月%s日", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
+
+        if (isWholeTime(minute, second)) {
+            String txt = time2SpeakContent(hour24, hour12);
+            speak(txt);
+        }
+    }
+
+    /**
+     * 到整点了.
+     *
+     * @return
+     */
+    private boolean isWholeTime(int minute, int second) {
+        return minute == 0 && second == 0;
+    }
+
+    /**
+     * 时间转报时的话.
+     *
+     * @param hour24
+     * @param hour12
+     * @return
+     */
+    private String time2SpeakContent(int hour24, int hour12) {
+        String result;
+        if (Is12TimePreferencesDao.get(activity)) {
+            if (hour12 == 0 && hour24 == 12) {
+                hour12 = 12;
+            }
+            String ampm = hour24 >= 12 ? "下午" : "上午";
+            result = String.format("%s%d点整", ampm, hour12);
+        } else {
+            result = String.format("%d点整", hour24);
+        }
+        return result;
+
     }
 
     /**
