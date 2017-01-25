@@ -122,6 +122,14 @@
             android:orientation="vertical">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="常规配置"
+                android:textColor="@color/grey_600"
+                android:textSize="14sp" />
+
+            <TextView
                 android:id="@+id/backgroundColorTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -268,11 +276,14 @@
                 android:visibility="gone" />
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginTop="32dp"
-                android:background="@color/grey_400" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="功能选择"
+                android:textColor="@color/grey_600"
+                android:textSize="14sp" />
 
             <CheckBox
                 android:id="@+id/keepScreenOnCb"
