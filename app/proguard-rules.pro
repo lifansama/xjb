@@ -39,3 +39,6 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+#pgy
+-dontwarn com.pgyersdk.**
+-keep class com.pgyersdk.** { *; }

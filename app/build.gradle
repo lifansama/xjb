@@ -46,5 +46,6 @@ dependencies {
     compile project(':autofittextview')
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.XhinLiang:LunarCalendar:1.2.2'
+    compile 'com.pgyersdk:sdk:2.4.0'
 }
 

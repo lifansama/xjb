@@ -95,20 +95,20 @@
             android:text="电量:100%"
             android:textColor="#fff"
             android:textSize="10sp" />
+
         <EditText
             android:id="@+id/textSpaceEt"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="写写"
-            android:textColor="#fff"
-            android:textSize="24sp"
-            android:textColorHint="@color/grey_500"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:hint="写写"
             android:maxLines="2"
-            />
+            android:textColor="#fff"
+            android:textColorHint="@color/grey_500"
+            android:textSize="24sp" />
     </RelativeLayout>
 
     <ScrollView
@@ -183,60 +183,6 @@
                 android:layout_height="0.5dp"
                 android:background="@color/grey_400" />
 
-            <TextView
-                android:id="@+id/textSizeTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/press_item"
-                android:paddingBottom="8dp"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="8dp"
-                android:text="更改字体大小"
-                android:textColor="@color/grey_800"
-                android:textSize="18sp"
-                android:visibility="gone" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginTop="32dp"
-                android:background="@color/grey_400" />
-
-            <CheckBox
-                android:id="@+id/keepScreenOnCb"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/press_item"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:text="保持屏幕常亮"
-                android:textColor="@color/grey_800"
-                android:textSize="18sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/grey_400" />
-
-            <CheckBox
-                android:id="@+id/setLauncherCb"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/press_item"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:text="设为桌面启动器"
-                android:textColor="@color/grey_800"
-                android:textSize="18sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginTop="32dp"
-                android:background="@color/grey_400" />
-
             <CheckBox
                 android:id="@+id/showDateCb"
                 android:layout_width="match_parent"
@@ -285,10 +231,6 @@
                 android:layout_height="0.5dp"
                 android:background="@color/grey_400" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/grey_400" />
 
             <CheckBox
                 android:id="@+id/showBatteryCb"
@@ -298,6 +240,98 @@
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:text="显示电量"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <TextView
+                android:id="@+id/textSizeTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="8dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="8dp"
+                android:text="更改字体大小"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="32dp"
+                android:background="@color/grey_400" />
+
+            <CheckBox
+                android:id="@+id/keepScreenOnCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="保持屏幕常亮"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <CheckBox
+                android:id="@+id/setLauncherCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="设为桌面启动器"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <CheckBox
+                android:id="@+id/enableShakeFeedbackCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="摇一摇反馈"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="32dp"
+                android:background="@color/grey_400" />
+
+            <TextView
+                android:id="@+id/feedbackTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:padding="16dp"
+                android:text="意见反馈"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
 

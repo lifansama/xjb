@@ -24,6 +24,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.pgyersdk.crash.PgyCrashManager;
+import com.pgyersdk.feedback.PgyFeedbackShakeManager;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,6 +37,7 @@ import app.xunxun.homeclock.activity.LauncherActivity;
 import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
@@ -107,6 +111,7 @@ public class ClockViewController {
         handler = new MyHandler();
         initListner();
         init();
+        PgyCrashManager.register(activity);
     }
 
     /**
@@ -172,11 +177,24 @@ public class ClockViewController {
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         batteryChangeReceiver = new BatteryChangeReceiver();
         activity.registerReceiver(batteryChangeReceiver, intentFilter);
+        if (EnableShakeFeedbackPreferencesDao.get(activity)) {
+            shakeFeedback();
+        }
 
 
     }
 
+    /**
+     * 摇一摇反馈.
+     */
+    private void shakeFeedback(){
+        PgyFeedbackShakeManager.setShakingThreshold(1000);
+        PgyFeedbackShakeManager.register(activity);
+
+    }
+
     public void onDestroy() {
+        PgyCrashManager.unregister();
 
     }
 
@@ -208,6 +226,9 @@ public class ClockViewController {
         timer = null;
         timerTask = null;
         activity.unregisterReceiver(batteryChangeReceiver);
+        if (EnableShakeFeedbackPreferencesDao.get(activity)) {
+            PgyFeedbackShakeManager.unregister();
+        }
     }
 
     public void onKeyDown(int keyCode, KeyEvent event) {

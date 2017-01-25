@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.fourmob.colorpicker.ColorPickerDialog;
 import com.fourmob.colorpicker.ColorPickerSwatch;
+import com.pgyersdk.feedback.PgyFeedback;
 import com.umeng.analytics.MobclickAgent;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +30,7 @@ import java.util.Date;
 import app.xunxun.homeclock.EventNames;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
@@ -96,6 +98,10 @@ public class SettingsActivity extends AppCompatActivity {
     CheckBox showBatteryCb;
     @InjectView(R.id.textSpaceEt)
     EditText textSpaceEt;
+    @InjectView(R.id.feedbackTv)
+    TextView feedbackTv;
+    @InjectView(R.id.enableShakeFeedbackCb)
+    CheckBox enableShakeFeedbackCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -238,6 +244,19 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        feedbackTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PgyFeedback.getInstance().showDialog(SettingsActivity.this);
+            }
+        });
+        enableShakeFeedbackCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EnableShakeFeedbackPreferencesDao.set(buttonView.getContext(),isChecked);
+
+            }
+        });
     }
 
     /**
@@ -278,6 +297,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        enableShakeFeedbackCb.setChecked(EnableShakeFeedbackPreferencesDao.get(this));
 
     }
 
