@@ -42,3 +42,6 @@ public static final int *;
 #pgy
 -dontwarn com.pgyersdk.**
 -keep class com.pgyersdk.** { *; }
+#baidu
+-keep class com.baidu.** { *; }
+-keep class android.content.pm.** { *; }
