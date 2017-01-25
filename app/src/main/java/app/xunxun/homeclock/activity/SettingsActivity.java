@@ -308,6 +308,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
         enableShakeFeedbackCb.setChecked(EnableShakeFeedbackPreferencesDao.get(this));
         enableSpeakWholeTimeCb.setChecked(EnableSeapkWholeTimePreferencesDao.get(this));
+        showBatteryCb.setChecked(IsShowBatteryPreferencesDao.get(this));
 
     }
 
