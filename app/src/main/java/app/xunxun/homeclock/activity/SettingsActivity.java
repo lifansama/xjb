@@ -30,6 +30,7 @@ import java.util.Date;
 import app.xunxun.homeclock.EventNames;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
@@ -105,6 +106,8 @@ public class SettingsActivity extends AppCompatActivity {
     CheckBox enableShakeFeedbackCb;
     @InjectView(R.id.enableSpeakWholeTimeCb)
     CheckBox enableSpeakWholeTimeCb;
+    @InjectView(R.id.protectScreenCb)
+    CheckBox protectScreenCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -263,7 +266,13 @@ public class SettingsActivity extends AppCompatActivity {
         enableSpeakWholeTimeCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                EnableSeapkWholeTimePreferencesDao.set(buttonView.getContext(),isChecked);
+                EnableSeapkWholeTimePreferencesDao.set(buttonView.getContext(), isChecked);
+            }
+        });
+        protectScreenCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EnableProtectScreenPreferencesDao.set(buttonView.getContext(),isChecked);
             }
         });
     }
@@ -309,6 +318,7 @@ public class SettingsActivity extends AppCompatActivity {
         enableShakeFeedbackCb.setChecked(EnableShakeFeedbackPreferencesDao.get(this));
         enableSpeakWholeTimeCb.setChecked(EnableSeapkWholeTimePreferencesDao.get(this));
         showBatteryCb.setChecked(IsShowBatteryPreferencesDao.get(this));
+        protectScreenCb.setChecked(EnableProtectScreenPreferencesDao.get(this));
 
     }
 

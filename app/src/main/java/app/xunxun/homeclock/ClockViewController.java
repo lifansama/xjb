@@ -41,6 +41,7 @@ import app.xunxun.homeclock.activity.LauncherActivity;
 import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
@@ -97,6 +98,8 @@ public class ClockViewController {
     private boolean isUsefullClick;
     private BatteryChangeReceiver batteryChangeReceiver;
     private SpeechSynthesizer speechSynthesizer;
+    private int backgroundColor;
+    private int foregroundColor;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -296,7 +299,16 @@ public class ClockViewController {
      * 设置前景色.
      */
     private void setForegroundColor() {
-        int color = TextColorPreferencesDao.get(activity);
+        int color = foregroundColor;
+        setForegroundColor(color);
+    }
+
+    /**
+     * 设置前景色.
+     *
+     * @param color
+     */
+    private void setForegroundColor(int color) {
         timeTv.setTextColor(color);
         dateTv.setTextColor(color);
         weekTv.setTextColor(color);
@@ -310,7 +322,31 @@ public class ClockViewController {
      * 设置背景色.
      */
     private void setBackgroundColor() {
-        activityMain.setBackgroundColor(BackgroundColorPreferencesDao.get(activity));
+        int color = backgroundColor;
+        setBackgroundColor(color);
+    }
+
+    /**
+     * 设置背景色.
+     *
+     * @param color
+     */
+    private void setBackgroundColor(int color) {
+        activityMain.setBackgroundColor(color);
+    }
+
+    /**
+     * 反转颜色.
+     */
+    private void toggleColor() {
+        if (backgroundColor == BackgroundColorPreferencesDao.get(activity)) {
+            backgroundColor = TextColorPreferencesDao.get(activity);
+            foregroundColor = BackgroundColorPreferencesDao.get(activity);
+        } else {
+            backgroundColor = BackgroundColorPreferencesDao.get(activity);
+            foregroundColor = TextColorPreferencesDao.get(activity);
+        }
+
     }
 
     public void onPause() {
@@ -374,6 +410,10 @@ public class ClockViewController {
         setTextViewVisibility(batteryTv, IsShowBatteryPreferencesDao.get(activity));
 
         textSpaceTv.setText(TextSpaceContentPreferencesDao.get(activity));
+
+        backgroundColor = BackgroundColorPreferencesDao.get(activity);
+        foregroundColor = TextColorPreferencesDao.get(activity);
+
     }
 
     /**
@@ -412,6 +452,11 @@ public class ClockViewController {
             String txt = time2SpeakContent(hour24, hour12);
             if (EnableSeapkWholeTimePreferencesDao.get(activity)) {
                 speak(txt);
+            }
+            if (EnableProtectScreenPreferencesDao.get(activity)) {
+                toggleColor();
+                setBackgroundColor();
+                setForegroundColor();
             }
         }
     }

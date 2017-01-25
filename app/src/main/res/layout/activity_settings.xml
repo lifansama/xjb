@@ -344,6 +344,21 @@
                 android:text="摇一摇反馈"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <CheckBox
+                android:id="@+id/protectScreenCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="烧屏保护（试验,A屏可忽略）"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
 
 
             <View
