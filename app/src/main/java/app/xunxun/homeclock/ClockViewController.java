@@ -83,7 +83,7 @@ public class ClockViewController {
     @InjectView(R.id.batteryTv)
     TextView batteryTv;
     @InjectView(R.id.textSpaceTv)
-    TextView textSpaceTv;
+    AutofitTextView textSpaceTv;
     private Activity activity;
 
 

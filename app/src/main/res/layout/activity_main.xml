@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:singleLine="true"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:text="00:00:00"
                 android:textColor="#fff"
                 android:textSize="140sp" />
@@ -107,12 +107,12 @@
             android:textColor="#fff"
             android:textSize="18sp"
             />
-        <TextView
+        <me.grantland.widget.AutofitTextView
             android:id="@+id/textSpaceTv"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#fff"
             android:textSize="24sp"
