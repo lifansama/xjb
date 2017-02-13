@@ -40,6 +40,8 @@ import java.util.TimerTask;
 import app.xunxun.homeclock.activity.LauncherActivity;
 import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
+import app.xunxun.homeclock.api.WeatherApiClient;
+import app.xunxun.homeclock.model.RealWeatherResp;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
@@ -56,6 +58,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
 import me.grantland.widget.AutofitTextView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by fengdianxun on 2017/1/19.
@@ -85,6 +90,8 @@ public class ClockViewController {
     TextView batteryTv;
     @InjectView(R.id.textSpaceTv)
     AutofitTextView textSpaceTv;
+    @InjectView(R.id.weatherTv)
+    TextView weatherTv;
     private Activity activity;
 
 
@@ -202,6 +209,7 @@ public class ClockViewController {
      * @param txt
      */
     private void speak(final String txt) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -446,7 +454,7 @@ public class ClockViewController {
 
         LunarCalendar lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
 
-        lunarTv.setText(String.format("%s月%s日", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
+        lunarTv.setText(String.format("%s月%s", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
 
         if (isWholeTime(minute, second)) {
             String txt = time2SpeakContent(hour24, hour12);
@@ -459,6 +467,43 @@ public class ClockViewController {
                 setForegroundColor();
             }
         }
+        if (isNeedGetWeather(hour24, minute,second)) {
+
+            getWeather("117.117160,39.044822");
+
+        }
+    }
+
+    private void getWeather(String location) {
+        WeatherApiClient.get().realtime(location).enqueue(new Callback<RealWeatherResp>() {
+            @Override
+            public void onResponse(Call<RealWeatherResp> call, Response<RealWeatherResp> response) {
+                RealWeatherResp resp = response.body();
+                if (resp.getStatus().equals("ok")) {
+                    String weather = String.format("%s %s℃", resp.getResult().getSkyconText(), resp.getResult().getTemperature());
+                    weatherTv.setText(weather);
+                    String speakWeatherText = "现在的天气为:" + weather;
+                    speak(speakWeatherText);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RealWeatherResp> call, Throwable t) {
+
+            }
+        });
+    }
+
+    /**
+     * 是否需要更新天气.
+     *
+     * @return
+     */
+    private boolean isNeedGetWeather(int hour24, int minute, int second) {
+
+        //TODO
+        return hour24 == 7 && minute == 10 && second == 0;
     }
 
     /**

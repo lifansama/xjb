@@ -7,8 +7,8 @@ android {
         applicationId "app.xunxun.homeclock"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 17
-        versionName "1.7"
+        versionCode 18
+        versionName "1.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
 
@@ -49,5 +49,7 @@ dependencies {
     compile 'com.pgyersdk:sdk:2.4.0'
     compile files('libs/com.baidu.speechsynthesizer_1.1.3.jar')
     compile files('libs/galaxy_lite.jar')
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 }
 
