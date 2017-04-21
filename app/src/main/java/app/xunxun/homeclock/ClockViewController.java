@@ -55,10 +55,6 @@ import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
-import me.grantland.widget.AutofitTextView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by fengdianxun on 2017/1/19.

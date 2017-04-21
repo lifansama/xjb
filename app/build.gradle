@@ -43,11 +43,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile project(':colorpickerlibrary')
-    compile project(':autofittextview')
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.XhinLiang:LunarCalendar:1.2.2'
     compile 'com.pgyersdk:sdk:2.4.0'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 }
 
