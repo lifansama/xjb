@@ -71,7 +71,7 @@
             android:orientation="horizontal">
 
 
-            <me.grantland.widget.AutofitTextView
+            <TextView
                 android:id="@+id/timeTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,17 +111,9 @@
                 android:text="电量:100%"
                 android:textColor="#fff"
                 android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/weatherTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="霾 1℃ 重度污染"
-                android:textColor="#fff"
-                android:textSize="20sp" />
         </LinearLayout>
 
-        <me.grantland.widget.AutofitTextView
+        <TextView
             android:id="@+id/textSpaceTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

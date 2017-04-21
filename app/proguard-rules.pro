@@ -42,9 +42,6 @@ public static final int *;
 #pgy
 -dontwarn com.pgyersdk.**
 -keep class com.pgyersdk.** { *; }
-#baidu
--keep class com.baidu.** { *; }
--keep class android.content.pm.** { *; }
 #retrofit
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform

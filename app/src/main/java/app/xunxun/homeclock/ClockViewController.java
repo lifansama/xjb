@@ -1,6 +1,7 @@
 package app.xunxun.homeclock;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -25,9 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.baidu.speechsynthesizer.SpeechSynthesizer;
-import com.baidu.speechsynthesizer.SpeechSynthesizerListener;
-import com.baidu.speechsynthesizer.publicutility.SpeechError;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.feedback.PgyFeedbackShakeManager;
 
@@ -40,8 +39,6 @@ import java.util.TimerTask;
 import app.xunxun.homeclock.activity.LauncherActivity;
 import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
-import app.xunxun.homeclock.api.WeatherApiClient;
-import app.xunxun.homeclock.model.RealWeatherResp;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
@@ -53,6 +50,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
+import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -79,7 +77,7 @@ public class ClockViewController {
     @InjectView(R.id.dateLl)
     LinearLayout dateLl;
     @InjectView(R.id.timeTv)
-    AutofitTextView timeTv;
+    TextView timeTv;
     @InjectView(R.id.ampmTv)
     TextView ampmTv;
     @InjectView(R.id.activity_main)
@@ -89,9 +87,7 @@ public class ClockViewController {
     @InjectView(R.id.batteryTv)
     TextView batteryTv;
     @InjectView(R.id.textSpaceTv)
-    AutofitTextView textSpaceTv;
-    @InjectView(R.id.weatherTv)
-    TextView weatherTv;
+    TextView textSpaceTv;
     private Activity activity;
 
 
@@ -104,9 +100,9 @@ public class ClockViewController {
     private boolean navigationBarIsVisible;
     private boolean isUsefullClick;
     private BatteryChangeReceiver batteryChangeReceiver;
-    private SpeechSynthesizer speechSynthesizer;
     private int backgroundColor;
     private int foregroundColor;
+    private Vibrator vibrator;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -128,80 +124,12 @@ public class ClockViewController {
         initListner();
         init();
         PgyCrashManager.register(activity);
-        initSpeaker();
-
+        vibrator = (Vibrator)activity.getSystemService(Service.VIBRATOR_SERVICE);
     }
 
     /**
      * 初始化百度语音合成.
      */
-    private void initSpeaker() {
-        speechSynthesizer = new SpeechSynthesizer(activity, "holer", new SpeechSynthesizerListener() {
-            @Override
-            public void onStartWorking(SpeechSynthesizer speechSynthesizer) {
-
-            }
-
-            @Override
-            public void onSpeechStart(SpeechSynthesizer speechSynthesizer) {
-
-            }
-
-            @Override
-            public void onNewDataArrive(SpeechSynthesizer speechSynthesizer, byte[] bytes, boolean b) {
-
-            }
-
-            @Override
-            public void onBufferProgressChanged(SpeechSynthesizer speechSynthesizer, int i) {
-
-            }
-
-            @Override
-            public void onSpeechProgressChanged(SpeechSynthesizer speechSynthesizer, int i) {
-
-            }
-
-            @Override
-            public void onSpeechPause(SpeechSynthesizer speechSynthesizer) {
-
-            }
-
-            @Override
-            public void onSpeechResume(SpeechSynthesizer speechSynthesizer) {
-
-            }
-
-            @Override
-            public void onCancel(SpeechSynthesizer speechSynthesizer) {
-
-            }
-
-            @Override
-            public void onSynthesizeFinish(SpeechSynthesizer speechSynthesizer) {
-
-            }
-
-            @Override
-            public void onSpeechFinish(SpeechSynthesizer speechSynthesizer) {
-
-            }
-
-            @Override
-            public void onError(SpeechSynthesizer speechSynthesizer, SpeechError speechError) {
-
-            }
-        });
-        speechSynthesizer.setApiKey("oVo6NGBYqmOombGMaHuB6Eui", "ddb89bf64cc39c1a28e253e154c09af9");
-        speechSynthesizer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "0");
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_VOLUME, "9");
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEED, "5");
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_PITCH, "5");
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_AUDIO_ENCODE, SpeechSynthesizer.AUDIO_ENCODE_AMR);
-        speechSynthesizer.setParam(SpeechSynthesizer.PARAM_AUDIO_RATE, SpeechSynthesizer.AUDIO_BITRATE_AMR_15K85);
-    }
 
     /**
      * 说话.
@@ -210,13 +138,7 @@ public class ClockViewController {
      */
     private void speak(final String txt) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                speechSynthesizer.speak(txt);
-
-            }
-        }).start();
+        vibrator.vibrate(1000);
     }
 
     /**
@@ -422,6 +344,14 @@ public class ClockViewController {
         backgroundColor = BackgroundColorPreferencesDao.get(activity);
         foregroundColor = TextColorPreferencesDao.get(activity);
 
+        timeTv.setTextSize(TextSizePreferencesDao.get(activity));
+        batteryTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.1));
+        lunarTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.15));
+        dateTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.2));
+        weekTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.15));
+        ampmTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.5));
+        textSpaceTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.25));
+
     }
 
     /**
@@ -467,43 +397,6 @@ public class ClockViewController {
                 setForegroundColor();
             }
         }
-        if (isNeedGetWeather(hour24, minute,second)) {
-
-            getWeather("117.117160,39.044822");
-
-        }
-    }
-
-    private void getWeather(String location) {
-        WeatherApiClient.get().realtime(location).enqueue(new Callback<RealWeatherResp>() {
-            @Override
-            public void onResponse(Call<RealWeatherResp> call, Response<RealWeatherResp> response) {
-                RealWeatherResp resp = response.body();
-                if (resp.getStatus().equals("ok")) {
-                    String weather = String.format("%s %s℃", resp.getResult().getSkyconText(), resp.getResult().getTemperature());
-                    weatherTv.setText(weather);
-                    String speakWeatherText = "现在的天气为:" + weather;
-                    speak(speakWeatherText);
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RealWeatherResp> call, Throwable t) {
-
-            }
-        });
-    }
-
-    /**
-     * 是否需要更新天气.
-     *
-     * @return
-     */
-    private boolean isNeedGetWeather(int hour24, int minute, int second) {
-
-        //TODO
-        return hour24 == 7 && minute == 10 && second == 0;
     }
 
     /**

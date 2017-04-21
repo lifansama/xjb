@@ -2,14 +2,17 @@ package app.xunxun.homeclock.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -17,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.fourmob.colorpicker.ColorPickerDialog;
@@ -42,6 +46,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
+import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import app.xunxun.homeclock.utils.LauncherSettings;
 import butterknife.ButterKnife;
@@ -67,8 +72,6 @@ public class SettingsActivity extends AppCompatActivity {
     RelativeLayout backRl;
     @InjectView(R.id.textColorTv)
     TextView textColorTv;
-    @InjectView(R.id.textSizeTv)
-    TextView textSizeTv;
     @InjectView(R.id.activity_settings)
     LinearLayout activitySettings;
     @InjectView(R.id.supportTv)
@@ -109,6 +112,8 @@ public class SettingsActivity extends AppCompatActivity {
     CheckBox enableSpeakWholeTimeCb;
     @InjectView(R.id.protectScreenCb)
     CheckBox protectScreenCb;
+    @InjectView(R.id.textSizeTv)
+    TextView textSizeTv;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -278,6 +283,47 @@ public class SettingsActivity extends AppCompatActivity {
                 EnableProtectScreenPreferencesDao.set(buttonView.getContext(), isChecked);
                 if (isChecked)
                     showProtectScreenAlert();
+            }
+        });
+        textSizeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout linearLayout = new LinearLayout(SettingsActivity.this);
+                linearLayout.setPadding(0,64,0,64);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                SeekBar seekBar = new SeekBar(SettingsActivity.this);
+                seekBar.setMax(300);
+                final TextView textView = new TextView(SettingsActivity.this);
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                        textView.setText(String.valueOf(seekBar.getProgress()));
+                        TextSizePreferencesDao.set(SettingsActivity.this,seekBar.getProgress());
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.topMargin = 16;
+                seekBar.setLayoutParams(params);
+
+                textView.setGravity(Gravity.CENTER);
+                textView.setTextSize(32);
+                textView.setTextColor(Color.BLACK);
+                textView.setText(String.valueOf(TextSizePreferencesDao.get(SettingsActivity.this)));
+                seekBar.setProgress(TextSizePreferencesDao.get(SettingsActivity.this));
+                linearLayout.addView(textView);
+                linearLayout.addView(seekBar);
+                new AlertDialog.Builder(SettingsActivity.this).setView(linearLayout).show();
             }
         });
     }

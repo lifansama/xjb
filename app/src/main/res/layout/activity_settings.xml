@@ -159,6 +159,22 @@
                 android:layout_height="0.5dp"
                 android:background="@color/grey_400" />
 
+            <TextView
+                android:id="@+id/textSizeTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:padding="16dp"
+                android:text="更改字体大小"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
             <RadioGroup
                 android:id="@+id/timeStyleRg"
                 android:layout_width="match_parent"
@@ -256,26 +272,6 @@
                 android:layout_height="0.5dp"
                 android:background="@color/grey_400" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/grey_400" />
-
-            <TextView
-                android:id="@+id/textSizeTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/press_item"
-                android:paddingBottom="8dp"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="8dp"
-                android:text="更改字体大小"
-                android:textColor="@color/grey_800"
-                android:textSize="18sp"
-                android:visibility="gone" />
-
-
 
             <TextView
                 android:layout_width="wrap_content"
@@ -308,7 +304,7 @@
                 android:background="@drawable/press_item"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
-                android:text="整点语音报时"
+                android:text="整点震动"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
 

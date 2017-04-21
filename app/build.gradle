@@ -47,8 +47,6 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.XhinLiang:LunarCalendar:1.2.2'
     compile 'com.pgyersdk:sdk:2.4.0'
-    compile files('libs/com.baidu.speechsynthesizer_1.1.3.jar')
-    compile files('libs/galaxy_lite.jar')
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 }
