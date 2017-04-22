@@ -16,7 +16,7 @@ import app.xunxun.homeclock.ClockViewController;
  * Created by fengdianxun on 2017/1/19.
  */
 
-public class LauncherActivity extends AppCompatActivity {
+public class LauncherActivity extends BaseActivity {
     ClockViewController clockViewController;
 
     public static void start(Context context) {

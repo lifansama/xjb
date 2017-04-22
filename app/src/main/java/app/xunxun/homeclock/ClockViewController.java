@@ -6,8 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -120,8 +120,8 @@ public class ClockViewController {
         initListner();
         init();
         PgyCrashManager.register(activity);
-        vibrator = (Vibrator)activity.getSystemService(Service.VIBRATOR_SERVICE);
-        activity.startService(new Intent(activity,MyService.class));
+        vibrator = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
+        activity.startService(new Intent(activity, MyService.class));
     }
 
     /**
@@ -341,13 +341,18 @@ public class ClockViewController {
         backgroundColor = BackgroundColorPreferencesDao.get(activity);
         foregroundColor = TextColorPreferencesDao.get(activity);
 
-        timeTv.setTextSize(TextSizePreferencesDao.get(activity));
-        batteryTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.1));
-        lunarTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.15));
-        dateTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.2));
-        weekTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.15));
-        ampmTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.5));
-        textSpaceTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.25));
+        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            timeTv.setTextSize(TextSizePreferencesDao.get(activity));
+        } else if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            timeTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.7));
+        }
+
+        batteryTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.1));
+        lunarTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.15));
+        dateTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.2));
+        weekTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.15));
+        ampmTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.5));
+        textSpaceTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.25));
 
     }
 

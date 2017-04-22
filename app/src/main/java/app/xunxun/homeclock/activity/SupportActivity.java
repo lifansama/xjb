@@ -13,7 +13,7 @@ import app.xunxun.homeclock.R;
 /**
  * 打赏页面.
  */
-public class SupportActivity extends AppCompatActivity {
+public class SupportActivity extends BaseActivity {
     public static void start(Context context) {
         context.startActivity(new Intent(context, SupportActivity.class));
     }

@@ -56,7 +56,7 @@ import io.github.xhinliang.lunarcalendar.LunarCalendar;
 /**
  * 设置页面.
  */
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
     public static final String REQUEST_CODE = "requestCode";
     public static final int REQUEST_MAIN = 1;
     public static final int REQUEST_LAUNCHER = 2;

@@ -20,7 +20,7 @@ import app.xunxun.homeclock.utils.LauncherSettings;
 /**
  * 主界面.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
 
     private DoubleClickExit doubleClickExit;
@@ -42,16 +42,6 @@ public class MainActivity extends AppCompatActivity {
         clockViewController.onCreate(savedInstanceState);
         doubleClickExit = new DoubleClickExit(this);
         LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this));
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Log.v("MainActivity", "onNewIntent: " + intent.getAction());
-        if (intent.getAction() != null &&
-                intent.getAction().equals("app.xunxun.homeclock.finish.activity")) {
-            finish();
-        }
     }
 
     @Override
