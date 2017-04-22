@@ -2,18 +2,28 @@ package app.xunxun.homeclock.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.umeng.analytics.MobclickAgent;
 
 import app.xunxun.homeclock.R;
+import app.xunxun.homeclock.utils.FloatToast;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * 打赏页面.
  */
 public class SupportActivity extends BaseActivity {
+    @InjectView(R.id.alipay)
+    ImageView alipay;
+    @InjectView(R.id.wechat)
+    ImageView wechat;
+
     public static void start(Context context) {
         context.startActivity(new Intent(context, SupportActivity.class));
     }
@@ -22,7 +32,26 @@ public class SupportActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_support);
+        ButterKnife.inject(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        alipay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("alipayqr://platformapi/startapp?saId=10000007&qrcode=https://qr.alipay.com/FKX08261G0CFCMFFPUH102"));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        wechat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override

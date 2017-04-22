@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -481,6 +482,8 @@ public class SettingsActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
+        }else if (item.getItemId() == R.id.action_support){
+            SupportActivity.start(this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -514,5 +517,11 @@ public class SettingsActivity extends BaseActivity {
             finish();
 
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings,menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

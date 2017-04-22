@@ -49,7 +49,7 @@
             android:label="设置" />
         <activity
             android:name=".activity.SupportActivity"
-            android:label="微信打赏" />
+            android:label="打赏碗泡面给开发者" />
         <activity android:name="com.pgyersdk.activity.FeedbackActivity" />
 
         <meta-data
