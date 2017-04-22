@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.support.annotation.IntDef;
 
 public class MyService extends Service {
 
@@ -28,6 +29,11 @@ public class MyService extends Service {
         intentFilter.addAction("android.intent.action.SCREEN_OFF");
         intentFilter.addAction("android.intent.action.USER_PRESENT");
         registerReceiver(receiver,intentFilter);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent,int flags, int startId) {
+        return START_STICKY_COMPATIBILITY;
     }
 
     @Override

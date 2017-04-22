@@ -3,6 +3,7 @@ package app.xunxun.homeclock;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import app.xunxun.homeclock.activity.MainActivity;
@@ -20,15 +21,17 @@ public class LockScreenReceiver extends BroadcastReceiver {
         Log.v("LockScreenReceiver", "onReceive: " + intent.getAction());
         Log.v("LockScreenReceiver", "onReceive lastAction: " + lastAction);
         if (intent.getAction().equals("android.intent.action.SCREEN_OFF")) {
-            if (lastAction != null && lastAction.equals("android.intent.action.USER_PRESENT")) {
-                MyApplication app = (MyApplication) context.getApplicationContext();
-                app.clearActivities();
-            } else {
-                Intent intent1 = new Intent(context, MainActivity.class);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                context.startActivity(intent1);
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+                if (lastAction != null && lastAction.equals("android.intent.action.USER_PRESENT")) {
+                    MyApplication app = (MyApplication) context.getApplicationContext();
+                    app.clearActivities();
+                } else {
+                    Intent intent1 = new Intent(context, MainActivity.class);
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent1);
 
+                }
             }
 
         } else if (intent.getAction().equals("android.intent.action.USER_PRESENT")) {
