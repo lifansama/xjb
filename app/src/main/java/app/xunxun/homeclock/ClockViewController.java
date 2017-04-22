@@ -121,6 +121,7 @@ public class ClockViewController {
         init();
         PgyCrashManager.register(activity);
         vibrator = (Vibrator)activity.getSystemService(Service.VIBRATOR_SERVICE);
+        activity.startService(new Intent(activity,MyService.class));
     }
 
     /**

@@ -12,7 +12,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -23,7 +26,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleInstance"
-            android:screenOrientation="sensorLandscape"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.AppCompat.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,8 +52,7 @@
         <activity
             android:name=".activity.SupportActivity"
             android:label="微信打赏" />
-        <activity android:name="com.pgyersdk.activity.FeedbackActivity"/>
-
+        <activity android:name="com.pgyersdk.activity.FeedbackActivity" />
 
         <meta-data
             android:name="UMENG_APPKEY"
@@ -60,8 +62,12 @@
             android:value="coolapk" />
         <meta-data
             android:name="PGYER_APPID"
-            android:value="f2e2c87c2f08308ae15a80b94f8350c8" >
-        </meta-data>
+            android:value="f2e2c87c2f08308ae15a80b94f8350c8"></meta-data>
+
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

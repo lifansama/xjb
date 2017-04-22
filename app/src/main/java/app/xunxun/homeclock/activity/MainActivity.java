@@ -1,10 +1,14 @@
 package app.xunxun.homeclock.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.WindowManager;
 
 import com.umeng.analytics.MobclickAgent;
 
@@ -30,13 +34,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         clockViewController = new ClockViewController(this);
         clockViewController.onCreate(savedInstanceState);
         doubleClickExit = new DoubleClickExit(this);
         LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this));
     }
 
-
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.v("MainActivity", "onNewIntent: " + intent.getAction());
+        if (intent.getAction() != null &&
+                intent.getAction().equals("app.xunxun.homeclock.finish.activity")) {
+            finish();
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -71,4 +87,5 @@ public class MainActivity extends AppCompatActivity {
         clockViewController.onDestroy();
         clockViewController = null;
     }
+
 }
