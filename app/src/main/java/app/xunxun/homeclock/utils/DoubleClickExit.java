@@ -13,10 +13,12 @@ public class DoubleClickExit {
     private static final int TIME = 2000;//间隔的时间
     private Activity activity;//传入的Activity
     boolean isExit;//判断是否退出
+    private FloatToast floatToast;
 
     public DoubleClickExit(Activity activity) {
         this.activity = activity;
         isExit = false;
+        floatToast = new FloatToast();
     }
 
     /**
@@ -28,7 +30,8 @@ public class DoubleClickExit {
         Timer tTask = null;
         if (!isExit) {
             isExit = true;
-            Toast.makeText(activity, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            floatToast.show(activity,"再按一次退出程序",activity.getWindow().getDecorView());
+//            Toast.makeText(activity, "再按一次退出程序", Toast.LENGTH_SHORT).show();
             tTask = new Timer();
             tTask.schedule(new TimerTask() {
                 @Override
