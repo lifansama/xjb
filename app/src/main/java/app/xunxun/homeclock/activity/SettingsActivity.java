@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -33,6 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import app.xunxun.homeclock.EventNames;
+import app.xunxun.homeclock.MyService;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
@@ -45,6 +45,7 @@ import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
+import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
@@ -114,6 +115,8 @@ public class SettingsActivity extends BaseActivity {
     CheckBox protectScreenCb;
     @InjectView(R.id.textSizeTv)
     TextView textSizeTv;
+    @InjectView(R.id.lockScreenShowCb)
+    CheckBox lockScreenShowCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -289,7 +292,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 LinearLayout linearLayout = new LinearLayout(SettingsActivity.this);
-                linearLayout.setPadding(0,64,0,64);
+                linearLayout.setPadding(0, 64, 0, 64);
                 linearLayout.setOrientation(LinearLayout.VERTICAL);
                 SeekBar seekBar = new SeekBar(SettingsActivity.this);
                 seekBar.setMax(300);
@@ -299,7 +302,7 @@ public class SettingsActivity extends BaseActivity {
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                         textView.setText(String.valueOf(seekBar.getProgress()));
-                        TextSizePreferencesDao.set(SettingsActivity.this,seekBar.getProgress());
+                        TextSizePreferencesDao.set(SettingsActivity.this, seekBar.getProgress());
                     }
 
                     @Override
@@ -324,6 +327,17 @@ public class SettingsActivity extends BaseActivity {
                 linearLayout.addView(textView);
                 linearLayout.addView(seekBar);
                 new AlertDialog.Builder(SettingsActivity.this).setView(linearLayout).show();
+            }
+        });
+        lockScreenShowCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                LockScreenShowOnPreferencesDao.set(buttonView.getContext(), isChecked);
+                if (isChecked) {
+                    startService(new Intent(SettingsActivity.this, MyService.class));
+                } else {
+                    stopService(new Intent(SettingsActivity.this, MyService.class));
+                }
             }
         });
     }
@@ -382,6 +396,7 @@ public class SettingsActivity extends BaseActivity {
         enableSpeakWholeTimeCb.setChecked(EnableSeapkWholeTimePreferencesDao.get(this));
         showBatteryCb.setChecked(IsShowBatteryPreferencesDao.get(this));
 
+        lockScreenShowCb.setChecked(LockScreenShowOnPreferencesDao.get(this));
     }
 
     /**

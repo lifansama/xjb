@@ -49,6 +49,7 @@ import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
+import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
@@ -121,7 +122,9 @@ public class ClockViewController {
         init();
         PgyCrashManager.register(activity);
         vibrator = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
-        activity.startService(new Intent(activity, MyService.class));
+        if (LockScreenShowOnPreferencesDao.get(activity)) {
+            activity.startService(new Intent(activity, MyService.class));
+        }
     }
 
     /**

@@ -35,9 +35,6 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         clockViewController = new ClockViewController(this);
         clockViewController.onCreate(savedInstanceState);
         doubleClickExit = new DoubleClickExit(this);
