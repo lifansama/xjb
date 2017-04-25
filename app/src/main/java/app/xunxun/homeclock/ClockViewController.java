@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -350,7 +351,7 @@ public class ClockViewController {
             timeTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.7));
         }
 
-        batteryTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.1));
+        batteryTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.13));
         lunarTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.15));
         dateTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.2));
         weekTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.15));
@@ -505,13 +506,20 @@ public class ClockViewController {
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
                 //获取当前电量
-                int level = intent.getIntExtra("level", 0);
+                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
                 //电量的总刻度
-                int scale = intent.getIntExtra("scale", 100);
+                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
+
+                int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+                boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                        status == BatteryManager.BATTERY_STATUS_FULL;
+
+
                 //把它转成百分比
                 if (batteryTv != null) {
-                    batteryTv.setText(String.format("电量:%d%%", (level * 100) / scale));
+                    batteryTv.setText(String.format("%s:%d%%", isCharging?"充电中":"电量",(level * 100) / scale));
                 }
+
             }
         }
     }
