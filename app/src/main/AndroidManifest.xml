@@ -25,6 +25,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
+            android:screenOrientation="sensor"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.AppCompat.NoActionBar.FullScreen">
             <intent-filter>
@@ -36,6 +37,7 @@
         <activity
             android:name=".activity.LauncherActivity"
             android:launchMode="singleInstance"
+            android:screenOrientation="sensor"
             android:theme="@style/Theme.AppCompat.NoActionBar.FullScreen">
             <intent-filter>
                 <category android:name="android.intent.category.HOME" />
