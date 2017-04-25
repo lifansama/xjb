@@ -132,6 +132,14 @@ public class SettingsActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    public static void startNewTask(Context context, int requestCode){
+        Intent intent = new Intent(context, SettingsActivity.class);
+        intent.putExtra(REQUEST_CODE, requestCode);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -335,9 +343,9 @@ public class SettingsActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 LockScreenShowOnPreferencesDao.set(buttonView.getContext(), isChecked);
                 if (isChecked) {
-                    startService(new Intent(SettingsActivity.this, MyService.class));
+                    MyService.startService(SettingsActivity.this);
                 } else {
-                    stopService(new Intent(SettingsActivity.this, MyService.class));
+                    MyService.stopService(SettingsActivity.this);
                 }
             }
         });

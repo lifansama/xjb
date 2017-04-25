@@ -124,7 +124,7 @@ public class ClockViewController {
         PgyCrashManager.register(activity);
         vibrator = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
         if (LockScreenShowOnPreferencesDao.get(activity)) {
-            activity.startService(new Intent(activity, MyService.class));
+            MyService.startService(activity);
         }
     }
 

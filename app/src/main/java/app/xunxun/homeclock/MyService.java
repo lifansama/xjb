@@ -1,15 +1,35 @@
 package app.xunxun.homeclock;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
+import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
+import android.support.v4.app.NotificationCompat;
+import android.widget.RemoteViews;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import app.xunxun.homeclock.activity.SettingsActivity;
 
 public class MyService extends Service {
 
     private BroadcastReceiver receiver;
+
+    public static void startService(Context context) {
+        context.startService(new Intent(context, MyService.class));
+
+    }
+
+    public static void stopService(Context context) {
+        context.stopService(new Intent(context, MyService.class));
+    }
 
     public MyService() {
     }
@@ -28,11 +48,18 @@ public class MyService extends Service {
         intentFilter.addAction("android.intent.action.SCREEN_ON");
         intentFilter.addAction("android.intent.action.SCREEN_OFF");
         intentFilter.addAction("android.intent.action.USER_PRESENT");
-        registerReceiver(receiver,intentFilter);
+        registerReceiver(receiver, intentFilter);
     }
 
     @Override
-    public int onStartCommand(Intent intent,int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.activity_notify);
+        remoteViews.setOnClickPendingIntent(R.id.rootFl, PendingIntent.getActivity(this, 1, new Intent(this, SettingsActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContent(remoteViews)
+                .setSmallIcon(R.mipmap.ic_app)
+                .build();
+        startForeground(1, notification);
         return START_STICKY_COMPATIBILITY;
     }
 
@@ -40,5 +67,6 @@ public class MyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
+        stopForeground(true);
     }
 }

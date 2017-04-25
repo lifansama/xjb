@@ -121,7 +121,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
-            android:maxLines="2"
             android:textColor="#fff"
             android:textSize="24sp" />
 
