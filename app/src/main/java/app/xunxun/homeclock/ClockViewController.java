@@ -103,6 +103,7 @@ public class ClockViewController {
     private int backgroundColor;
     private int foregroundColor;
     private Vibrator vibrator;
+    private long lastTime;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -480,16 +481,19 @@ public class ClockViewController {
         }
         String ampm = hour24 >= 12 ? "PM" : "AM";
         String time = null;
+        int start = 5;
+        int end = 7;
         if (ShowSecondPreferencesDao.get(activity)) {
             time = String.format("%02d:%02d:%02d%s", hour12, minute,second, ampm);
+            start = 8;
+            end = 10;
 
         }else {
             time = String.format("%02d:%02d%s", hour12, minute, ampm);
-
+            start = 5;
+            end = 7;
         }
         Spannable spannable = new SpannableString(time);
-        int start = 5;
-        int end = 7;
         spannable.setSpan(new RelativeSizeSpan(0.6f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new TypefaceSpan("default"), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
@@ -544,6 +548,12 @@ public class ClockViewController {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 setDateTime();
+                if ((System.currentTimeMillis() - lastTime)>1000*60){
+
+
+
+                    lastTime = System.currentTimeMillis();
+                }
             }
         }
     }
