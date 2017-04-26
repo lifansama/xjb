@@ -11,12 +11,14 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import app.xunxun.homeclock.activity.SettingsActivity;
+import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 
 public class MyService extends Service {
 
@@ -54,6 +56,8 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.activity_notify);
+        String text = TextUtils.isEmpty(TextSpaceContentPreferencesDao.get(this))?"点击写下提醒":TextSpaceContentPreferencesDao.get(this);
+        remoteViews.setTextViewText(R.id.textSpaceTv, text);
         remoteViews.setOnClickPendingIntent(R.id.rootFl, PendingIntent.getActivity(this, 1, new Intent(this, SettingsActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
         Notification notification = new NotificationCompat.Builder(this)
                 .setContent(remoteViews)
