@@ -18,6 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import app.xunxun.homeclock.activity.SettingsActivity;
+import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 
 public class MyService extends Service {
@@ -55,15 +56,17 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.activity_notify);
-        String text = TextUtils.isEmpty(TextSpaceContentPreferencesDao.get(this))?"点击写下提醒":TextSpaceContentPreferencesDao.get(this);
-        remoteViews.setTextViewText(R.id.textSpaceTv, text);
-        remoteViews.setOnClickPendingIntent(R.id.rootFl, PendingIntent.getActivity(this, 1, new Intent(this, SettingsActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
-        Notification notification = new NotificationCompat.Builder(this)
-                .setContent(remoteViews)
-                .setSmallIcon(R.mipmap.ic_app)
-                .build();
-        startForeground(1, notification);
+        if (LockScreenShowOnPreferencesDao.get(this)) {
+            RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.activity_notify);
+            String text = TextUtils.isEmpty(TextSpaceContentPreferencesDao.get(this))?"点击写下提醒":TextSpaceContentPreferencesDao.get(this);
+            remoteViews.setTextViewText(R.id.textSpaceTv, text);
+            remoteViews.setOnClickPendingIntent(R.id.rootFl, PendingIntent.getActivity(this, 1, new Intent(this, SettingsActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
+            Notification notification = new NotificationCompat.Builder(this)
+                    .setContent(remoteViews)
+                    .setSmallIcon(R.mipmap.ic_app)
+                    .build();
+            startForeground(1, notification);
+        }
         return START_STICKY_COMPATIBILITY;
     }
 
@@ -71,6 +74,8 @@ public class MyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
-        stopForeground(true);
+        if (LockScreenShowOnPreferencesDao.get(this)) {
+            stopForeground(true);
+        }
     }
 }
