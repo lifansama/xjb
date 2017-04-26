@@ -19,7 +19,9 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.TypefaceSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,6 +36,7 @@ import com.pgyersdk.feedback.PgyFeedbackShakeManager;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -87,6 +90,10 @@ public class ClockViewController {
     TextView batteryTv;
     @InjectView(R.id.textSpaceTv)
     TextView textSpaceTv;
+    @InjectView(R.id.timeLl)
+    LinearLayout timeLl;
+    @InjectView(R.id.centerRl)
+    RelativeLayout centerRl;
     private Activity activity;
 
 
@@ -351,7 +358,7 @@ public class ClockViewController {
         if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             timeTv.setTextSize(TextSizePreferencesDao.get(activity));
         } else if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            timeTv.setTextSize((float) (TextSizePreferencesDao.get(activity)*0.7));
+            timeTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.7));
         }
 
         batteryTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.13));
@@ -384,7 +391,7 @@ public class ClockViewController {
         int second = calendar.get(Calendar.SECOND);
         int hour12 = calendar.get(Calendar.HOUR);
 
-        setTime(now, hour24, minute, hour12,second);
+        setTime(now, hour24, minute, hour12, second);
 
         if (dateTv != null)
             dateTv.setText(dateSDF.format(now));
@@ -447,10 +454,10 @@ public class ClockViewController {
      * @param minute
      * @param hour12
      */
-    private void setTime(Date now, int hour24, int minute, int hour12,int second) {
+    private void setTime(Date now, int hour24, int minute, int hour12, int second) {
         if (Is12TimePreferencesDao.get(activity)) {
             if (timeTv != null) {
-                Spannable spannable = getAmPmTextSpannable(hour24, minute, hour12,second);
+                Spannable spannable = getAmPmTextSpannable(hour24, minute, hour12, second);
 
                 timeTv.setText(spannable);
             }
@@ -459,7 +466,7 @@ public class ClockViewController {
             if (timeTv != null) {
                 if (ShowSecondPreferencesDao.get(activity)) {
                     timeTv.setText(time24SDF.format(now));
-                }else {
+                } else {
                     timeTv.setText(time24NoSecondSDF.format(now));
                 }
             }
@@ -475,7 +482,7 @@ public class ClockViewController {
      * @return
      */
     @NonNull
-    private Spannable getAmPmTextSpannable(int hour24, int minute, int hour12,int second) {
+    private Spannable getAmPmTextSpannable(int hour24, int minute, int hour12, int second) {
         if (hour12 == 0 && hour24 == 12) {
             hour12 = 12;
         }
@@ -484,11 +491,11 @@ public class ClockViewController {
         int start = 5;
         int end = 7;
         if (ShowSecondPreferencesDao.get(activity)) {
-            time = String.format("%02d:%02d:%02d%s", hour12, minute,second, ampm);
+            time = String.format("%02d:%02d:%02d%s", hour12, minute, second, ampm);
             start = 8;
             end = 10;
 
-        }else {
+        } else {
             time = String.format("%02d:%02d%s", hour12, minute, ampm);
             start = 5;
             end = 7;
@@ -534,7 +541,7 @@ public class ClockViewController {
 
                 //把它转成百分比
                 if (batteryTv != null) {
-                    batteryTv.setText(String.format("%s:%d%%", isCharging?"充电中":"电量",(level * 100) / scale));
+                    batteryTv.setText(String.format("%s:%d%%", isCharging ? "充电中" : "电量", (level * 100) / scale));
                 }
 
             }
@@ -548,14 +555,31 @@ public class ClockViewController {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 setDateTime();
-                if ((System.currentTimeMillis() - lastTime)>1000*60){
+                if (lastTime != 0) {
+                    if ((System.currentTimeMillis() - lastTime) > 1000) {
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) timeLl.getLayoutParams();
+                        Random random = new Random();
+                        Display display = activity.getWindowManager().getDefaultDisplay();
+                        DisplayMetrics metrics = new DisplayMetrics();
+                        display.getMetrics(metrics);
+                        params.topMargin = random.nextInt(centerRl.getHeight()-timeLl.getHeight());
+                        params.leftMargin = random.nextInt(centerRl.getWidth()-timeLl.getWidth());
+                        timeLl.setLayoutParams(params);
+                        params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                        lastTime = System.currentTimeMillis();
 
 
+                    }
+                } else {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) timeLl.getLayoutParams();
+                    params.addRule(RelativeLayout.CENTER_IN_PARENT);
 
                     lastTime = System.currentTimeMillis();
+                    Log.v("xxx", "params.topMargin:" + params.topMargin);
                 }
+
             }
         }
-    }
 
+    }
 }
