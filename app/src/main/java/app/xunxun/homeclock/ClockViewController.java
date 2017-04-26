@@ -22,6 +22,7 @@ import android.text.style.TypefaceSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -94,6 +95,8 @@ public class ClockViewController {
     LinearLayout timeLl;
     @InjectView(R.id.centerRl)
     RelativeLayout centerRl;
+    @InjectView(R.id.battery2Tv)
+    TextView battery2Tv;
     private Activity activity;
 
 
@@ -256,6 +259,7 @@ public class ClockViewController {
         lunarTv.setTextColor(color);
         ampmTv.setTextColor(color);
         batteryTv.setTextColor(color);
+        battery2Tv.setTextColor(color);
         textSpaceTv.setTextColor(color);
     }
 
@@ -362,6 +366,7 @@ public class ClockViewController {
         }
 
         batteryTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.13));
+        battery2Tv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.13));
         lunarTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.15));
         dateTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.2));
         weekTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.15));
@@ -542,6 +547,7 @@ public class ClockViewController {
                 //把它转成百分比
                 if (batteryTv != null) {
                     batteryTv.setText(String.format("%s:%d%%", isCharging ? "充电中" : "电量", (level * 100) / scale));
+                    battery2Tv.setText(String.format("%s:%d%%", isCharging ? "充电中" : "电量", (level * 100) / scale));
                 }
 
             }
@@ -555,27 +561,32 @@ public class ClockViewController {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 setDateTime();
-                if (lastTime != 0) {
-                    if ((System.currentTimeMillis() - lastTime) > 1000) {
-                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) timeLl.getLayoutParams();
-                        Random random = new Random();
-                        Display display = activity.getWindowManager().getDefaultDisplay();
-                        DisplayMetrics metrics = new DisplayMetrics();
-                        display.getMetrics(metrics);
-                        params.topMargin = random.nextInt(centerRl.getHeight()-timeLl.getHeight());
-                        params.leftMargin = random.nextInt(centerRl.getWidth()-timeLl.getWidth());
-                        timeLl.setLayoutParams(params);
-                        params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-                        lastTime = System.currentTimeMillis();
-
-
-                    }
-                } else {
+                if (EnableProtectScreenPreferencesDao.get(activity) && (System.currentTimeMillis() - lastTime) > 1000*60*5) {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) timeLl.getLayoutParams();
-                    params.addRule(RelativeLayout.CENTER_IN_PARENT);
-
+                    Random random = new Random();
+                    Display display = activity.getWindowManager().getDefaultDisplay();
+                    DisplayMetrics metrics = new DisplayMetrics();
+                    display.getMetrics(metrics);
+                    params.topMargin = random.nextInt(centerRl.getHeight() - timeLl.getHeight());
+                    params.leftMargin = random.nextInt(centerRl.getWidth() - timeLl.getWidth());
+                    timeLl.setLayoutParams(params);
+                    params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                     lastTime = System.currentTimeMillis();
-                    Log.v("xxx", "params.topMargin:" + params.topMargin);
+
+
+                    batteryTv.setVisibility(View.GONE);
+                    battery2Tv.setVisibility(IsShowBatteryPreferencesDao.get(activity)?View.VISIBLE:View.GONE);
+
+
+                    RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) dateLl.getLayoutParams();
+                    int align = random.nextInt(2);
+                    Log.v("xxx", "params.topMargin:" + align);
+                    params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+                    params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                    params1.addRule(align == 0 ? RelativeLayout.ALIGN_PARENT_LEFT : RelativeLayout.ALIGN_PARENT_RIGHT);
+                    dateLl.setLayoutParams(params1);
+                    dateLl.setGravity(align == 0 ? Gravity.LEFT : Gravity.RIGHT);
+
                 }
 
             }

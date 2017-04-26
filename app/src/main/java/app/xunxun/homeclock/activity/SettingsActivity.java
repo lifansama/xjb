@@ -369,7 +369,7 @@ public class SettingsActivity extends BaseActivity {
     private void showProtectScreenAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("温馨提醒");
-        builder.setMessage("开启防烧屏后背景色和字体颜色会在整点时互换，及每隔1小时颜色互换一次，这样可以让屏幕里的发光体做到轮询休息。但是如果是A屏，黑色不发光，颜色互换后假如白色作为背景色了，可能会增加耗电量，请谨慎开启。");
+        builder.setMessage("开启防烧屏后文字会5分钟换一次位置，如果字太大影响移动后的显示请自行调小。");
         builder.setPositiveButton("知道了", null);
         builder.show();
 

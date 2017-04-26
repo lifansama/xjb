@@ -386,7 +386,7 @@
                 android:background="@drawable/press_item"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
-                android:text="烧屏保护（试验）"
+                android:text="烧屏保护（移动模式）"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
 
