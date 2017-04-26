@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.feedback.PgyFeedbackShakeManager;
+import com.pgyersdk.update.PgyUpdateManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -139,6 +140,7 @@ public class ClockViewController {
         if (LockScreenShowOnPreferencesDao.get(activity)) {
             MyService.startService(activity);
         }
+        PgyUpdateManager.register(activity, "app.xunxun.homeclock");
     }
 
     /**
