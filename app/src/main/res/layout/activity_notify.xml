@@ -14,8 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000"
-        android:padding="16dp"
-        >
+        android:padding="16dp">
 
         <LinearLayout
             android:id="@+id/dateLl"
@@ -28,9 +27,9 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:gravity="left"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/dateTv"
@@ -48,6 +47,7 @@
                     android:text="周日"
                     android:textColor="#fff"
                     android:textSize="14sp" />
+
                 <TextView
                     android:id="@+id/lunarTv"
                     android:layout_width="wrap_content"
@@ -61,8 +61,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -81,10 +80,10 @@
                         android:gravity="left"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:visibility="gone"
                         android:text="00:00:00"
                         android:textColor="#fff"
-                        android:textSize="48sp" />
+                        android:textSize="48sp"
+                        android:visibility="gone" />
 
 
                     <TextView
@@ -104,10 +103,10 @@
                 <TextView
                     android:id="@+id/textSpaceTv"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:gravity="left|bottom"
                     android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:gravity="left|bottom"
                     android:text="测试"
                     android:textColor="#fff"
                     android:textSize="20sp" />
@@ -118,14 +117,13 @@
         </LinearLayout>
 
 
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/batteryTv"
@@ -135,7 +133,6 @@
                 android:textColor="#fff"
                 android:textSize="12sp" />
         </LinearLayout>
-
 
 
     </RelativeLayout>
