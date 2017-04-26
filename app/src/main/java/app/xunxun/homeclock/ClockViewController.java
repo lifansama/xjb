@@ -51,6 +51,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
+import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
@@ -94,6 +95,7 @@ public class ClockViewController {
     private Handler handler;
     private static final SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat time24SDF = new SimpleDateFormat("HH:mm:ss");
+    private static final SimpleDateFormat time24NoSecondSDF = new SimpleDateFormat("HH:mm");
     private static final SimpleDateFormat weekSDF = new SimpleDateFormat("E");
     private boolean navigationBarIsVisible;
     private boolean isUsefullClick;
@@ -381,7 +383,7 @@ public class ClockViewController {
         int second = calendar.get(Calendar.SECOND);
         int hour12 = calendar.get(Calendar.HOUR);
 
-        setTime(now, hour24, minute, hour12);
+        setTime(now, hour24, minute, hour12,second);
 
         if (dateTv != null)
             dateTv.setText(dateSDF.format(now));
@@ -444,17 +446,21 @@ public class ClockViewController {
      * @param minute
      * @param hour12
      */
-    private void setTime(Date now, int hour24, int minute, int hour12) {
+    private void setTime(Date now, int hour24, int minute, int hour12,int second) {
         if (Is12TimePreferencesDao.get(activity)) {
             if (timeTv != null) {
-                Spannable spannable = getAmPmTextSpannable(hour24, minute, hour12);
+                Spannable spannable = getAmPmTextSpannable(hour24, minute, hour12,second);
 
                 timeTv.setText(spannable);
             }
 
         } else {
             if (timeTv != null) {
-                timeTv.setText(time24SDF.format(now));
+                if (ShowSecondPreferencesDao.get(activity)) {
+                    timeTv.setText(time24SDF.format(now));
+                }else {
+                    timeTv.setText(time24NoSecondSDF.format(now));
+                }
             }
         }
     }
@@ -468,12 +474,19 @@ public class ClockViewController {
      * @return
      */
     @NonNull
-    private Spannable getAmPmTextSpannable(int hour24, int minute, int hour12) {
+    private Spannable getAmPmTextSpannable(int hour24, int minute, int hour12,int second) {
         if (hour12 == 0 && hour24 == 12) {
             hour12 = 12;
         }
         String ampm = hour24 >= 12 ? "PM" : "AM";
-        String time = String.format("%02d:%02d%s", hour12, minute, ampm);
+        String time = null;
+        if (ShowSecondPreferencesDao.get(activity)) {
+            time = String.format("%02d:%02d:%02d%s", hour12, minute,second, ampm);
+
+        }else {
+            time = String.format("%02d:%02d%s", hour12, minute, ampm);
+
+        }
         Spannable spannable = new SpannableString(time);
         int start = 5;
         int end = 7;

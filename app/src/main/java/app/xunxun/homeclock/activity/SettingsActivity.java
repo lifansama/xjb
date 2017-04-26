@@ -47,6 +47,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
+import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
@@ -118,11 +119,15 @@ public class SettingsActivity extends BaseActivity {
     TextView textSizeTv;
     @InjectView(R.id.lockScreenShowCb)
     CheckBox lockScreenShowCb;
+    @InjectView(R.id.showSecondCb)
+    CheckBox showSecondCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
-    private SimpleDateFormat time12SDF = new SimpleDateFormat("hh:mm");
+    private SimpleDateFormat time12SDF = new SimpleDateFormat("hh:mm:ss");
+    private SimpleDateFormat time12NoSecondSDF = new SimpleDateFormat("hh:mm");
     private SimpleDateFormat time24SDF = new SimpleDateFormat("HH:mm:ss");
+    private SimpleDateFormat time24NoSecondSDF = new SimpleDateFormat("HH:mm");
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
     private int[] colors;
 
@@ -132,7 +137,7 @@ public class SettingsActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    public static void startNewTask(Context context, int requestCode){
+    public static void startNewTask(Context context, int requestCode) {
         Intent intent = new Intent(context, SettingsActivity.class);
         intent.putExtra(REQUEST_CODE, requestCode);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -349,6 +354,13 @@ public class SettingsActivity extends BaseActivity {
                 }
             }
         });
+        showSecondCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                ShowSecondPreferencesDao.set(buttonView.getContext(),isChecked);
+                setTime();
+            }
+        });
     }
 
     /**
@@ -406,6 +418,7 @@ public class SettingsActivity extends BaseActivity {
         showBatteryCb.setChecked(IsShowBatteryPreferencesDao.get(this));
 
         lockScreenShowCb.setChecked(LockScreenShowOnPreferencesDao.get(this));
+        showSecondCb.setChecked(ShowSecondPreferencesDao.get(this));
     }
 
     /**
@@ -447,7 +460,11 @@ public class SettingsActivity extends BaseActivity {
         String timeStr;
         if (Is12TimePreferencesDao.get(this)) {
             Calendar calendar = Calendar.getInstance();
-            timeStr = time12SDF.format(now);
+            if (ShowSecondPreferencesDao.get(this)) {
+                timeStr = time12SDF.format(now);
+            }else {
+                timeStr = time12NoSecondSDF.format(now);
+            }
             if (calendar.get(Calendar.HOUR_OF_DAY) >= 12) {
                 ampmTv.setText("PM");
 
@@ -457,7 +474,11 @@ public class SettingsActivity extends BaseActivity {
             }
             ampmTv.setVisibility(View.VISIBLE);
         } else {
-            timeStr = time24SDF.format(now);
+            if (ShowSecondPreferencesDao.get(this)) {
+                timeStr = time24SDF.format(now);
+            }else {
+                timeStr = time24NoSecondSDF.format(now);
+            }
             ampmTv.setVisibility(View.GONE);
 
         }
@@ -490,7 +511,7 @@ public class SettingsActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
-        }else if (item.getItemId() == R.id.action_support){
+        } else if (item.getItemId() == R.id.action_support) {
             SupportActivity.start(this);
         }
         return super.onOptionsItemSelected(item);
@@ -529,7 +550,7 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings,menu);
+        getMenuInflater().inflate(R.menu.settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 }

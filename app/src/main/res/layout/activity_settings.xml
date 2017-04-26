@@ -208,6 +208,22 @@
                 android:background="@color/grey_400" />
 
             <CheckBox
+                android:id="@+id/showSecondCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="显示秒"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <CheckBox
                 android:id="@+id/showDateCb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -217,6 +233,7 @@
                 android:text="显示日期"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
 
             <View
                 android:layout_width="match_parent"
@@ -323,6 +340,7 @@
                 android:text="设为桌面启动器"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -355,6 +373,7 @@
                 android:text="摇一摇反馈"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
