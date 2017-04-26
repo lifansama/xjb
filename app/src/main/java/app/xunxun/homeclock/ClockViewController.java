@@ -414,11 +414,6 @@ public class ClockViewController {
             if (EnableSeapkWholeTimePreferencesDao.get(activity)) {
                 speak(txt);
             }
-            if (EnableProtectScreenPreferencesDao.get(activity)) {
-                toggleColor();
-                setBackgroundColor();
-                setForegroundColor();
-            }
         }
     }
 
