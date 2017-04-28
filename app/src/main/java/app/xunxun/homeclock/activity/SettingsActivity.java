@@ -427,7 +427,8 @@ public class SettingsActivity extends BaseActivity {
 
                             @Override
                             public void onNoUpdateAvailable() {
-                                Toast.makeText(SettingsActivity.this,"已是最新版",Toast.LENGTH_SHORT).show();
+                                FloatToast floatToast = new FloatToast();
+                                floatToast.show(SettingsActivity.this,"已是最新版",SettingsActivity.this.getWindow().getDecorView());
                                 PgyUpdateManager.unregister();
                             }
                         });
