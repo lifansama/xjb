@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
  * Created by fengdianxun on 15-6-24.
  */
 public class TextColorPreferencesDao {
-    private static String KEY = TextColorPreferencesDao.class.getSimpleName();
+    private static final String KEY = "TextColorPreferencesDao";
 
     public static void set(Context context, int color) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

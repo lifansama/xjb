@@ -8,7 +8,8 @@ import android.preference.PreferenceManager;
  * Created by fengdianxun on 15-6-24.
  */
 public class LockScreenShowOnPreferencesDao {
-    private static String KEY = LockScreenShowOnPreferencesDao.class.getSimpleName();
+    private static final String KEY = "LockScreenShowOnPreferencesDao";
+
 
     public static void set(Context context, boolean isOn) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

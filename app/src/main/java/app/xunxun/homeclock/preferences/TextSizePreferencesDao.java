@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
  * Created by fengdianxun on 15-6-24.
  */
 public class TextSizePreferencesDao {
-    private static String KEY = TextSizePreferencesDao.class.getSimpleName();
+    private static final String KEY = "TextSizePreferencesDao";
 
     public static void set(Context context, int size) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

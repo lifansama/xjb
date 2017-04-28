@@ -8,7 +8,8 @@ import android.preference.PreferenceManager;
  * Created by fengdianxun on 15-6-24.
  */
 public class Is12TimePreferencesDao {
-    private static String KEY = Is12TimePreferencesDao.class.getSimpleName();
+    private static final String KEY = "Is12TimePreferencesDao";
+
 
     public static void set(Context context, boolean is12) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

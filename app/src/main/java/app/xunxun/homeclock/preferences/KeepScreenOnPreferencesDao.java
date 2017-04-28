@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
  * Created by fengdianxun on 15-6-24.
  */
 public class KeepScreenOnPreferencesDao {
-    private static String KEY = KeepScreenOnPreferencesDao.class.getSimpleName();
+    private static final String KEY = "KeepScreenOnPreferencesDao";
 
     public static void set(Context context, boolean isOn) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

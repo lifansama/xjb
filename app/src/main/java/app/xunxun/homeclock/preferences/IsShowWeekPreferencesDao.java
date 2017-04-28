@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
  * Created by fengdianxun on 15-6-24.
  */
 public class IsShowWeekPreferencesDao {
-    private static String KEY = IsShowWeekPreferencesDao.class.getSimpleName();
+    private static final String KEY = "IsShowWeekPreferencesDao";
 
     public static void set(Context context, boolean isShow) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

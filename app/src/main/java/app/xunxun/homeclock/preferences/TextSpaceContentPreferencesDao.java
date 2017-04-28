@@ -10,7 +10,7 @@ import android.util.Log;
  * Created by fengdianxun on 15-6-24.
  */
 public class TextSpaceContentPreferencesDao {
-    private static String KEY = TextSpaceContentPreferencesDao.class.getSimpleName();
+    private static final String KEY = "TextSpaceContentPreferencesDao";
 
     public static void set(Context context, String text) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

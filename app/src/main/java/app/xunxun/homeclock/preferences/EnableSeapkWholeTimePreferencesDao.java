@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
  * Created by fengdianxun on 15-6-24.
  */
 public class EnableSeapkWholeTimePreferencesDao {
-    private static String KEY = EnableSeapkWholeTimePreferencesDao.class.getSimpleName();
+    private static final String KEY = "EnableSeapkWholeTimePreferencesDao";
 
     public static void set(Context context, boolean flag) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

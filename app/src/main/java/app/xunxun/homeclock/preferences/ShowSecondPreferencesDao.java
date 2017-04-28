@@ -5,11 +5,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 /**
- * 烧屏保护.
+ * 显示秒针.
  * Created by fengdianxun on 15-6-24.
  */
 public class ShowSecondPreferencesDao {
-    private static String KEY = ShowSecondPreferencesDao.class.getSimpleName();
+    private static final String KEY = "ShowSecondPreferencesDao";
 
     public static void set(Context context, boolean flag) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

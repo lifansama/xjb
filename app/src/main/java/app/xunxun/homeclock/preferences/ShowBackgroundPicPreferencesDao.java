@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
  * Created by fengdianxun on 15-6-24.
  */
 public class ShowBackgroundPicPreferencesDao {
-    private static String KEY = ShowBackgroundPicPreferencesDao.class.getSimpleName();
+    private static final String KEY = "ShowBackgroundPicPreferencesDao";
 
     public static void set(Context context, boolean flag) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

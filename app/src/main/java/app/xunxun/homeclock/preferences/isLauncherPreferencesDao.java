@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
  * Created by fengdianxun on 15-6-24.
  */
 public class IsLauncherPreferencesDao {
-    private static String KEY = IsLauncherPreferencesDao.class.getSimpleName();
+    private static final String KEY = "IsLauncherPreferencesDao";
 
     public static void set(Context context, boolean islauncher) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
