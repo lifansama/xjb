@@ -1,7 +1,10 @@
 package app.xunxun.homeclock.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -23,10 +26,14 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fourmob.colorpicker.ColorPickerDialog;
 import com.fourmob.colorpicker.ColorPickerSwatch;
 import com.pgyersdk.feedback.PgyFeedback;
+import com.pgyersdk.javabean.AppBean;
+import com.pgyersdk.update.PgyUpdateManager;
+import com.pgyersdk.update.UpdateManagerListener;
 import com.umeng.analytics.MobclickAgent;
 
 import java.text.SimpleDateFormat;
@@ -53,6 +60,7 @@ import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
+import app.xunxun.homeclock.utils.FloatToast;
 import app.xunxun.homeclock.utils.LauncherSettings;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -129,6 +137,8 @@ public class SettingsActivity extends BaseActivity {
     RadioButton backgroundPicRb;
     @InjectView(R.id.backgroundStyleRg)
     RadioGroup backgroundStyleRg;
+    @InjectView(R.id.versionTv)
+    TextView versionTv;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -382,6 +392,47 @@ public class SettingsActivity extends BaseActivity {
 
             }
         });
+        versionTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PgyUpdateManager.register(SettingsActivity.this, "app.xunxun.homeclock",
+                        new UpdateManagerListener() {
+
+                            @Override
+                            public void onUpdateAvailable(final String result) {
+
+                                // 将新版本信息封装到AppBean中
+                                final AppBean appBean = getAppBeanFromString(result);
+                                new AlertDialog.Builder(SettingsActivity.this)
+                                        .setTitle("更新")
+                                        .setMessage(appBean.getReleaseNote())
+                                        .setPositiveButton(
+                                                "确定",
+                                                new DialogInterface.OnClickListener() {
+
+                                                    @Override
+                                                    public void onClick(
+                                                            DialogInterface dialog,
+                                                            int which) {
+                                                        startDownloadTask(
+                                                                SettingsActivity.this,
+                                                                appBean.getDownloadURL());
+                                                    }
+                                                })
+                                        .setNegativeButton("取消",null)
+                                        .show();
+                                PgyUpdateManager.unregister();
+
+                            }
+
+                            @Override
+                            public void onNoUpdateAvailable() {
+                                Toast.makeText(SettingsActivity.this,"已是最新版",Toast.LENGTH_SHORT).show();
+                                PgyUpdateManager.unregister();
+                            }
+                        });
+            }
+        });
     }
 
     /**
@@ -454,6 +505,14 @@ public class SettingsActivity extends BaseActivity {
         } else {
             backgroundColorRb.setChecked(true);
         }
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
+            versionTv.setText(String.format("检查更新(v%s)",packageInfo.versionName));
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

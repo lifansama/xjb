@@ -436,11 +436,26 @@
                 android:text="意见反馈"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <TextView
+                android:id="@+id/versionTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:padding="16dp"
+                android:text="检查更新"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/grey_400" />
+
 
             <View
                 android:layout_width="match_parent"

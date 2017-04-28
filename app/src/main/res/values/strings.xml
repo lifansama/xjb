@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">新机表</string>
     <string name="txt_select_color">颜色选择</string>
+    <string name="com.optimizely.api_key" translatable="false">AANedy0ByKjZQNgSrBY4fc6rNPLzRZCQ~8355860731</string>
 </resources>

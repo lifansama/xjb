@@ -1,7 +1,6 @@
 package app.xunxun.homeclock.utils;
 
 import android.app.Activity;
-import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,8 +29,9 @@ public class DoubleClickExit {
         Timer tTask = null;
         if (!isExit) {
             isExit = true;
-            floatToast.show(activity,"再按一次退出程序",activity.getWindow().getDecorView());
-//            Toast.makeText(activity, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            if (activity != null && !activity.isFinishing()) {
+                floatToast.show(activity, "再按一次退出程序", activity.getWindow().getDecorView());
+            }
             tTask = new Timer();
             tTask.schedule(new TimerTask() {
                 @Override

@@ -2,11 +2,11 @@ package app.xunxun.homeclock;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
 
-import com.pgyersdk.crash.PgyCrashManager;
+import com.crashlytics.android.Crashlytics;
+import com.umeng.analytics.MobclickAgent;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,8 @@ public class MyApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        PgyCrashManager.register(this);
+        MobclickAgent.setCatchUncaughtExceptions(false);
+        Fabric.with(this, new Crashlytics());
     }
 
     public void pushActivity(Activity activity){

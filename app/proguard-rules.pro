@@ -53,3 +53,19 @@ public static final int *;
 -keepattributes Signature
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+
+#picasso
+-dontwarn com.squareup.okhttp.**
+#okhttp
+-dontwarn com.squareup.okhttp.**
+-keep class com.squareup.okhttp.* { *;}
+-dontwarn okio.**
+#fabric
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+
+# all classes in a package
+-keep class app.xunxun.homeclock.model.** { *; }
