@@ -610,8 +610,10 @@ public class ClockViewController {
                     Display display = activity.getWindowManager().getDefaultDisplay();
                     DisplayMetrics metrics = new DisplayMetrics();
                     display.getMetrics(metrics);
-                    params.topMargin = random.nextInt(centerRl.getHeight() - timeLl.getHeight());
-                    params.leftMargin = random.nextInt(centerRl.getWidth() - timeLl.getWidth());
+                    int newTopMarginMax = centerRl.getHeight() <= 0 || timeLl.getHeight() <= 0 ? metrics.heightPixels / 2 : centerRl.getHeight() - timeLl.getHeight();
+                    params.topMargin = random.nextInt(newTopMarginMax);
+                    int newLeftMarginMax = centerRl.getWidth() <= 0 || timeLl.getWidth() <= 0? metrics.widthPixels / 2 : centerRl.getWidth() - timeLl.getWidth();
+                    params.leftMargin = random.nextInt(newLeftMarginMax);
                     timeLl.setLayoutParams(params);
                     params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                     lastTime = System.currentTimeMillis();
