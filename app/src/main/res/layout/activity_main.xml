@@ -9,6 +9,12 @@
     android:focusableInTouchMode="true"
     tools:context="app.xunxun.homeclock.activity.MainActivity">
 
+    <ImageView
+        android:id="@+id/backIv"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <RelativeLayout
         android:id="@+id/activity_main"
         android:layout_width="match_parent"

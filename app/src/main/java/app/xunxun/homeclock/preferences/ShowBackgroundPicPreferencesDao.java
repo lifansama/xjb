@@ -2,25 +2,25 @@ package app.xunxun.homeclock.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.preference.PreferenceManager;
 
 /**
+ * 整点语音报时.
  * Created by fengdianxun on 15-6-24.
  */
-public class TextSizePreferencesDao {
-    private static String KEY = TextSizePreferencesDao.class.getSimpleName();
+public class ShowBackgroundPicPreferencesDao {
+    private static String KEY = ShowBackgroundPicPreferencesDao.class.getSimpleName();
 
-    public static void set(Context context, int size) {
+    public static void set(Context context, boolean flag) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(KEY, size);
+        editor.putBoolean(KEY, flag);
         editor.apply();
     }
 
-    public static int get(Context context) {
+    public static boolean get(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getInt(KEY, 100);
+        return prefs.getBoolean(KEY, false);
     }
 
 }

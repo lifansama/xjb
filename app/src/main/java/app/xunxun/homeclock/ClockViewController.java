@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -27,6 +28,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import android.widget.TextView;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.feedback.PgyFeedbackShakeManager;
 import com.pgyersdk.update.PgyUpdateManager;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,6 +48,8 @@ import java.util.TimerTask;
 import app.xunxun.homeclock.activity.LauncherActivity;
 import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
+import app.xunxun.homeclock.api.Api;
+import app.xunxun.homeclock.model.Pic;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
@@ -56,6 +61,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
+import app.xunxun.homeclock.preferences.ShowBackgroundPicPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
@@ -63,6 +69,11 @@ import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by fengdianxun on 2017/1/19.
@@ -98,6 +109,8 @@ public class ClockViewController {
     RelativeLayout centerRl;
     @InjectView(R.id.battery2Tv)
     TextView battery2Tv;
+    @InjectView(R.id.backIv)
+    ImageView backIv;
     private Activity activity;
 
 
@@ -279,7 +292,40 @@ public class ClockViewController {
      * @param color
      */
     private void setBackgroundColor(int color) {
-        activityMain.setBackgroundColor(color);
+
+        if (ShowBackgroundPicPreferencesDao.get(activity)) {
+            getPic();
+        } else {
+            activityMain.setBackgroundColor(color);
+        }
+
+    }
+
+    private void getPic() {
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://www.bing.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        Api api = retrofit.create(Api.class);
+        api.getPic().enqueue(new Callback<Pic>() {
+            @Override
+            public void onResponse(Call<Pic> call, Response<Pic> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().getImages().isEmpty()) {
+
+                    Pic.ImagesEntity imagesEntity = response.body().getImages().get(0);
+                    String url = imagesEntity.getUrl();
+
+                    activityMain.setBackgroundColor(Color.argb(100, 0, 0, 0));
+                    Picasso.with(activity).load(String.format("%s%s", "http://www.bing.com/", url)).into(backIv);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pic> call, Throwable t) {
+
+            }
+        });
     }
 
     /**
@@ -558,7 +604,7 @@ public class ClockViewController {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 setDateTime();
-                if (EnableProtectScreenPreferencesDao.get(activity) && (System.currentTimeMillis() - lastTime) > 1000*60*5) {
+                if (EnableProtectScreenPreferencesDao.get(activity) && (System.currentTimeMillis() - lastTime) > 1000 * 60 * 5) {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) timeLl.getLayoutParams();
                     Random random = new Random();
                     Display display = activity.getWindowManager().getDefaultDisplay();
@@ -572,7 +618,7 @@ public class ClockViewController {
 
 
                     batteryTv.setVisibility(View.GONE);
-                    battery2Tv.setVisibility(IsShowBatteryPreferencesDao.get(activity)?View.VISIBLE:View.GONE);
+                    battery2Tv.setVisibility(IsShowBatteryPreferencesDao.get(activity) ? View.VISIBLE : View.GONE);
 
 
                     RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) dateLl.getLayoutParams();

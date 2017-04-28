@@ -128,7 +128,37 @@
                 android:text="常规配置"
                 android:textColor="@color/grey_600"
                 android:textSize="14sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
 
+            <RadioGroup
+                android:id="@+id/backgroundStyleRg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/backgroundColorRb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    android:text="颜色背景"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/backgroundPicRb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    android:text="图片背景"
+                    android:textSize="18sp" />
+            </RadioGroup>
             <TextView
                 android:id="@+id/backgroundColorTv"
                 android:layout_width="match_parent"

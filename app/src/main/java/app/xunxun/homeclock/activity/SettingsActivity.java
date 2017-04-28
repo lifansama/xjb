@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -47,6 +48,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
+import app.xunxun.homeclock.preferences.ShowBackgroundPicPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
@@ -121,6 +123,12 @@ public class SettingsActivity extends BaseActivity {
     CheckBox lockScreenShowCb;
     @InjectView(R.id.showSecondCb)
     CheckBox showSecondCb;
+    @InjectView(R.id.backgroundColorRb)
+    RadioButton backgroundColorRb;
+    @InjectView(R.id.backgroundPicRb)
+    RadioButton backgroundPicRb;
+    @InjectView(R.id.backgroundStyleRg)
+    RadioGroup backgroundStyleRg;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -179,6 +187,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onColorSelected(int color) {
                 backRl.setBackgroundColor(color);
+                backgroundColorRb.setChecked(true);
                 BackgroundColorPreferencesDao.set(SettingsActivity.this, color);
                 MobclickAgent.onEvent(SettingsActivity.this, EventNames.EVENT_CHANGE_BACKGROUND_COLOR);
             }
@@ -357,8 +366,20 @@ public class SettingsActivity extends BaseActivity {
         showSecondCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ShowSecondPreferencesDao.set(buttonView.getContext(),isChecked);
+                ShowSecondPreferencesDao.set(buttonView.getContext(), isChecked);
                 setTime();
+            }
+        });
+        backgroundStyleRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                ShowBackgroundPicPreferencesDao.set(group.getContext(), checkedId == R.id.backgroundPicRb);
+                setBackgroundColor();
+
+                if (checkedId == R.id.backgroundPicRb) {
+                    showBackgroundPicAlert();
+                }
+
             }
         });
     }
@@ -370,6 +391,15 @@ public class SettingsActivity extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("温馨提醒");
         builder.setMessage("开启防烧屏后文字会5分钟换一次位置，如果字太大影响移动后的显示请自行调小。");
+        builder.setPositiveButton("知道了", null);
+        builder.show();
+
+    }
+
+    private void showBackgroundPicAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("温馨提醒");
+        builder.setMessage("背景图片一天一换");
         builder.setPositiveButton("知道了", null);
         builder.show();
 
@@ -419,6 +449,11 @@ public class SettingsActivity extends BaseActivity {
 
         lockScreenShowCb.setChecked(LockScreenShowOnPreferencesDao.get(this));
         showSecondCb.setChecked(ShowSecondPreferencesDao.get(this));
+        if (ShowBackgroundPicPreferencesDao.get(this)) {
+            backgroundPicRb.setChecked(true);
+        } else {
+            backgroundColorRb.setChecked(true);
+        }
     }
 
     /**
@@ -462,7 +497,7 @@ public class SettingsActivity extends BaseActivity {
             Calendar calendar = Calendar.getInstance();
             if (ShowSecondPreferencesDao.get(this)) {
                 timeStr = time12SDF.format(now);
-            }else {
+            } else {
                 timeStr = time12NoSecondSDF.format(now);
             }
             if (calendar.get(Calendar.HOUR_OF_DAY) >= 12) {
@@ -476,7 +511,7 @@ public class SettingsActivity extends BaseActivity {
         } else {
             if (ShowSecondPreferencesDao.get(this)) {
                 timeStr = time24SDF.format(now);
-            }else {
+            } else {
                 timeStr = time24NoSecondSDF.format(now);
             }
             ampmTv.setVisibility(View.GONE);
@@ -503,7 +538,10 @@ public class SettingsActivity extends BaseActivity {
      * 设置背景色.
      */
     private void setBackgroundColor() {
-        backRl.setBackgroundColor(BackgroundColorPreferencesDao.get(this));
+        if (ShowBackgroundPicPreferencesDao.get(this)) {
+            backRl.setBackgroundResource(R.drawable.pic_background);
+        } else
+            backRl.setBackgroundColor(BackgroundColorPreferencesDao.get(this));
     }
 
 
