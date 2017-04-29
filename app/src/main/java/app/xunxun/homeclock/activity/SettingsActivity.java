@@ -26,7 +26,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fourmob.colorpicker.ColorPickerDialog;
 import com.fourmob.colorpicker.ColorPickerSwatch;
@@ -189,7 +188,9 @@ public class SettingsActivity extends BaseActivity {
         backgroundColorTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                backgroundColorPickerDialog.show(getSupportFragmentManager(), "colorpicker1");
+                if (!backgroundColorPickerDialog.isAdded()) {
+                    backgroundColorPickerDialog.show(getSupportFragmentManager(), "colorpicker1");
+                }
             }
         });
         backgroundColorPickerDialog.initialize(R.string.txt_select_color, colors, BackgroundColorPreferencesDao.get(this), 4, 2);
@@ -213,7 +214,8 @@ public class SettingsActivity extends BaseActivity {
         textColorTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textColorPickerDialog.show(getSupportFragmentManager(), "colorpicker2");
+                if (!textColorPickerDialog.isAdded())
+                    textColorPickerDialog.show(getSupportFragmentManager(), "colorpicker2");
 
             }
         });
@@ -419,7 +421,7 @@ public class SettingsActivity extends BaseActivity {
                                                                 appBean.getDownloadURL());
                                                     }
                                                 })
-                                        .setNegativeButton("取消",null)
+                                        .setNegativeButton("取消", null)
                                         .show();
                                 PgyUpdateManager.unregister();
 
@@ -428,7 +430,7 @@ public class SettingsActivity extends BaseActivity {
                             @Override
                             public void onNoUpdateAvailable() {
                                 FloatToast floatToast = new FloatToast();
-                                floatToast.show(SettingsActivity.this,"已是最新版",SettingsActivity.this.getWindow().getDecorView());
+                                floatToast.show(SettingsActivity.this, "已是最新版", SettingsActivity.this.getWindow().getDecorView());
                                 PgyUpdateManager.unregister();
                             }
                         });
@@ -508,7 +510,7 @@ public class SettingsActivity extends BaseActivity {
         }
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
-            versionTv.setText(String.format("检查更新(v%s)",packageInfo.versionName));
+            versionTv.setText(String.format("检查更新(v%s)", packageInfo.versionName));
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
