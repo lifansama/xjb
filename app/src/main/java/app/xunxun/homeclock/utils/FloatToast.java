@@ -1,5 +1,6 @@
 package app.xunxun.homeclock.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.Gravity;
@@ -18,10 +19,10 @@ public class FloatToast {
     private PopupWindow popupWindow;
     private Handler handler = new Handler();
 
-    public void show(Context context, String text, View view) {
+    public void show(final Activity activity, String text, View view) {
 
         popupWindow = new PopupWindow(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        TextView textView = new TextView(context);
+        TextView textView = new TextView(activity);
         textView.setTextSize(16);
         textView.setGravity(Gravity.CENTER);
         textView.setPadding(0,16,0,16);
@@ -32,7 +33,7 @@ public class FloatToast {
             @Override
             public void run() {
 
-                if (popupWindow != null && popupWindow.isShowing()) {
+                if (activity != null && !activity.isFinishing()&&popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 }
             }
