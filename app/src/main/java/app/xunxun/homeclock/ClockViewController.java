@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.feedback.PgyFeedbackShakeManager;
 import com.pgyersdk.update.PgyUpdateManager;
@@ -128,6 +129,8 @@ public class ClockViewController {
     private int foregroundColor;
     private Vibrator vibrator;
     private long lastTime;
+    private int screenWidth;
+    private int screenHeight;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -153,6 +156,12 @@ public class ClockViewController {
             MyService.startService(activity);
         }
         PgyUpdateManager.register(activity, "app.xunxun.homeclock");
+
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        screenWidth = metrics.widthPixels;
+        screenHeight = metrics.heightPixels;
     }
 
     /**
@@ -606,12 +615,13 @@ public class ClockViewController {
                 if (EnableProtectScreenPreferencesDao.get(activity) && (System.currentTimeMillis() - lastTime) > 1000 * 60 * 5) {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) timeLl.getLayoutParams();
                     Random random = new Random();
-                    Display display = activity.getWindowManager().getDefaultDisplay();
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    display.getMetrics(metrics);
-                    int newTopMarginMax = centerRl.getHeight() <= 0 || timeLl.getHeight() <= 0 ? metrics.heightPixels / 2 : centerRl.getHeight() - timeLl.getHeight();
+                    int newTopMarginMax = centerRl.getHeight() <= 0 || timeLl.getHeight() <= 0 ? screenHeight / 2 : centerRl.getHeight() - timeLl.getHeight();
+
+                    Crashlytics.setInt("newTopMarginMax",newTopMarginMax);
                     params.topMargin = random.nextInt(newTopMarginMax);
-                    int newLeftMarginMax = centerRl.getWidth() <= 0 || timeLl.getWidth() <= 0? metrics.widthPixels / 2 : centerRl.getWidth() - timeLl.getWidth();
+                    int newLeftMarginMax = centerRl.getWidth() <= 0 || timeLl.getWidth() <= 0? screenWidth / 2 : centerRl.getWidth() - timeLl.getWidth();
+
+                    Crashlytics.setInt("newLeftMarginMax",newLeftMarginMax);
                     params.leftMargin = random.nextInt(newLeftMarginMax);
                     timeLl.setLayoutParams(params);
                     params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
