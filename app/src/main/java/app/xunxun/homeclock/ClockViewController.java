@@ -1,11 +1,13 @@
 package app.xunxun.homeclock;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -16,6 +18,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -50,6 +54,7 @@ import app.xunxun.homeclock.activity.LauncherActivity;
 import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
 import app.xunxun.homeclock.api.Api;
+import app.xunxun.homeclock.helper.UpdateHelper;
 import app.xunxun.homeclock.model.Pic;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
@@ -136,6 +141,7 @@ public class ClockViewController {
     private long lastTime;
     private int screenWidth;
     private int screenHeight;
+    private UpdateHelper updateHelper;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -160,13 +166,14 @@ public class ClockViewController {
         if (LockScreenShowOnPreferencesDao.get(activity)) {
             MyService.startService(activity);
         }
-        PgyUpdateManager.register(activity, "app.xunxun.homeclock");
-
         Display display = activity.getWindowManager().getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         screenWidth = metrics.widthPixels;
         screenHeight = metrics.heightPixels;
+        ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+        updateHelper = new UpdateHelper(activity);
+        updateHelper.check(false);
     }
 
     /**

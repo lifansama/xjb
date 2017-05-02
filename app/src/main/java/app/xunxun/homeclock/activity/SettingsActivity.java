@@ -42,6 +42,7 @@ import java.util.Date;
 import app.xunxun.homeclock.EventNames;
 import app.xunxun.homeclock.MyService;
 import app.xunxun.homeclock.R;
+import app.xunxun.homeclock.helper.UpdateHelper;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
@@ -158,6 +159,7 @@ public class SettingsActivity extends BaseActivity {
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
     private int[] colors;
     private DateTimePickerDialog dateTimePickerDialog;
+    private UpdateHelper updateHelper;
 
     public static void start(Context context, int requestCode) {
         Intent intent = new Intent(context, SettingsActivity.class);
@@ -214,6 +216,7 @@ public class SettingsActivity extends BaseActivity {
             setDateTv.setText("点击设置到期时间");
         }
 
+        updateHelper = new UpdateHelper(this);
     }
 
     /**
@@ -432,43 +435,7 @@ public class SettingsActivity extends BaseActivity {
         versionTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PgyUpdateManager.register(SettingsActivity.this, "app.xunxun.homeclock",
-                        new UpdateManagerListener() {
-
-                            @Override
-                            public void onUpdateAvailable(final String result) {
-
-                                // 将新版本信息封装到AppBean中
-                                final AppBean appBean = getAppBeanFromString(result);
-                                new AlertDialog.Builder(SettingsActivity.this)
-                                        .setTitle("更新")
-                                        .setMessage(appBean.getReleaseNote())
-                                        .setPositiveButton(
-                                                "确定",
-                                                new DialogInterface.OnClickListener() {
-
-                                                    @Override
-                                                    public void onClick(
-                                                            DialogInterface dialog,
-                                                            int which) {
-                                                        startDownloadTask(
-                                                                SettingsActivity.this,
-                                                                appBean.getDownloadURL());
-                                                    }
-                                                })
-                                        .setNegativeButton("取消", null)
-                                        .show();
-                                PgyUpdateManager.unregister();
-
-                            }
-
-                            @Override
-                            public void onNoUpdateAvailable() {
-                                FloatToast floatToast = new FloatToast();
-                                floatToast.show(SettingsActivity.this, "已是最新版", SettingsActivity.this.getWindow().getDecorView());
-                                PgyUpdateManager.unregister();
-                            }
-                        });
+                updateHelper.check(true);
             }
         });
         setDateTv.setOnClickListener(new View.OnClickListener() {
