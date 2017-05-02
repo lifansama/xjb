@@ -39,11 +39,11 @@ public class BaseActivity extends AppCompatActivity{
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == 100){
-            if (grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                showAlert("由于您拒绝了授权，检查更新功能将不能正常使用!");
-            }
-        }
+//        if (requestCode == 100){
+//            if (grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_DENIED) {
+//                showAlert("由于您拒绝了授权，检查更新功能将不能正常使用!");
+//            }
+//        }
     }
     private void showAlert(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

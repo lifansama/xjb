@@ -171,7 +171,6 @@ public class ClockViewController {
         display.getMetrics(metrics);
         screenWidth = metrics.widthPixels;
         screenHeight = metrics.heightPixels;
-        ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
         updateHelper = new UpdateHelper(activity);
         updateHelper.check(false);
     }
