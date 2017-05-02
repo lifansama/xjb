@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
 import app.xunxun.homeclock.R;
@@ -52,6 +53,8 @@ public class SupportActivity extends BaseActivity {
 
             }
         });
+        Picasso.with(this).load(R.drawable.alipay).into(alipay);
+        Picasso.with(this).load(R.drawable.wechat).into(wechat);
     }
 
     @Override

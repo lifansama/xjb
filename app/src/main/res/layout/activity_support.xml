@@ -28,16 +28,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/wechat" />
+            android:adjustViewBounds="true" />
 
         <ImageView
             android:id="@+id/alipay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/alipay" />
+            android:adjustViewBounds="true"/>
     </LinearLayout>
 </ScrollView>
 
