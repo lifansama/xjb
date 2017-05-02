@@ -657,11 +657,11 @@ public class ClockViewController {
                     int newTopMarginMax = centerRl.getHeight() <= 0 || timeLl.getHeight() <= 0 ? screenHeight / 2 : centerRl.getHeight() - timeLl.getHeight();
 
                     Crashlytics.setInt("newTopMarginMax", newTopMarginMax);
-                    params.topMargin = random.nextInt(newTopMarginMax);
+                    params.topMargin = newTopMarginMax <= 0 ? 0 : random.nextInt(newTopMarginMax);
                     int newLeftMarginMax = centerRl.getWidth() <= 0 || timeLl.getWidth() <= 0 ? screenWidth / 2 : centerRl.getWidth() - timeLl.getWidth();
 
                     Crashlytics.setInt("newLeftMarginMax", newLeftMarginMax);
-                    params.leftMargin = random.nextInt(newLeftMarginMax);
+                    params.leftMargin = newLeftMarginMax <= 0 ? 0 : random.nextInt(newLeftMarginMax);
                     timeLl.setLayoutParams(params);
                     params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                     lastTime = System.currentTimeMillis();
