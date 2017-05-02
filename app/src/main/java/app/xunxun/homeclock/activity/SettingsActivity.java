@@ -49,6 +49,7 @@ import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
 import app.xunxun.homeclock.preferences.FocusTimePreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
+import app.xunxun.homeclock.preferences.IsMaoHaoShanShuoPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
@@ -145,6 +146,8 @@ public class SettingsActivity extends BaseActivity {
     LinearLayout centerLl;
     @InjectView(R.id.setDateTv)
     TextView setDateTv;
+    @InjectView(R.id.maohaoShanShuoCb)
+    CheckBox maohaoShanShuoCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -183,6 +186,7 @@ public class SettingsActivity extends BaseActivity {
 
         protectScreenCb.setChecked(EnableProtectScreenPreferencesDao.get(this));
 
+        maohaoShanShuoCb.setChecked(IsMaoHaoShanShuoPreferencesDao.get(this));
         dateTimePickerDialog = new DateTimePickerDialog(this);
         dateTimePickerDialog.setOnDateTimeSetListenner(new OnDateTimeSetListenner() {
             @Override
@@ -351,7 +355,7 @@ public class SettingsActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 EnableProtectScreenPreferencesDao.set(buttonView.getContext(), isChecked);
                 if (isChecked)
-                    showProtectScreenAlert();
+                    showAlert("开启防烧屏后文字会5分钟换一次位置，如果字太大影响移动后的显示请自行调小。");
             }
         });
         textSizeTv.setOnClickListener(new View.OnClickListener() {
@@ -420,7 +424,7 @@ public class SettingsActivity extends BaseActivity {
                 setBackgroundColor();
 
                 if (checkedId == R.id.backgroundPicRb) {
-                    showBackgroundPicAlert();
+                    showAlert("背景图片一天一换");
                 }
 
             }
@@ -473,29 +477,26 @@ public class SettingsActivity extends BaseActivity {
                 dateTimePickerDialog.show();
             }
         });
+        maohaoShanShuoCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                IsMaoHaoShanShuoPreferencesDao.set(buttonView.getContext(), isChecked);
+                if (isChecked) {
+                    showAlert("冒号闪烁需要在不显示秒针时起作用。");
+                }
+            }
+        });
     }
 
-
-    /**
-     * 显示防烧屏提示.
-     */
-    private void showProtectScreenAlert() {
+    private void showAlert(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("温馨提醒");
-        builder.setMessage("开启防烧屏后文字会5分钟换一次位置，如果字太大影响移动后的显示请自行调小。");
+        builder.setMessage(msg);
         builder.setPositiveButton("知道了", null);
         builder.show();
 
     }
 
-    private void showBackgroundPicAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("温馨提醒");
-        builder.setMessage("背景图片一天一换");
-        builder.setPositiveButton("知道了", null);
-        builder.show();
-
-    }
 
     /**
      * 初始化设置.

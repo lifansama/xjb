@@ -57,6 +57,7 @@ import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
 import app.xunxun.homeclock.preferences.FocusTimePreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
+import app.xunxun.homeclock.preferences.IsMaoHaoShanShuoPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
@@ -124,6 +125,7 @@ public class ClockViewController {
     private static final SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat time24SDF = new SimpleDateFormat("HH:mm:ss");
     private static final SimpleDateFormat time24NoSecondSDF = new SimpleDateFormat("HH:mm");
+    private static final SimpleDateFormat time24NoSecondNOMaoHaoSDF = new SimpleDateFormat("HH mm");
     private static final SimpleDateFormat weekSDF = new SimpleDateFormat("E");
     private boolean navigationBarIsVisible;
     private boolean isUsefullClick;
@@ -340,19 +342,6 @@ public class ClockViewController {
         });
     }
 
-    /**
-     * 反转颜色.
-     */
-    private void toggleColor() {
-        if (backgroundColor == BackgroundColorPreferencesDao.get(activity)) {
-            backgroundColor = TextColorPreferencesDao.get(activity);
-            foregroundColor = BackgroundColorPreferencesDao.get(activity);
-        } else {
-            backgroundColor = BackgroundColorPreferencesDao.get(activity);
-            foregroundColor = TextColorPreferencesDao.get(activity);
-        }
-
-    }
 
     public void onPause() {
 
@@ -556,7 +545,15 @@ public class ClockViewController {
                 if (ShowSecondPreferencesDao.get(activity)) {
                     timeTv.setText(time24SDF.format(now));
                 } else {
-                    timeTv.setText(time24NoSecondSDF.format(now));
+                    if (IsMaoHaoShanShuoPreferencesDao.get(activity)) {
+                        if (second % 2 == 0) {
+                            timeTv.setText(time24NoSecondSDF.format(now));
+                        } else {
+                            timeTv.setText(time24NoSecondNOMaoHaoSDF.format(now));
+                        }
+                    } else {
+                        timeTv.setText(time24NoSecondSDF.format(now));
+                    }
                 }
             }
         }
@@ -585,7 +582,16 @@ public class ClockViewController {
             end = 10;
 
         } else {
-            time = String.format("%02d:%02d%s", hour12, minute, ampm);
+            if (IsMaoHaoShanShuoPreferencesDao.get(activity)) {
+                if (second % 2 == 0) {
+                    time = String.format("%02d:%02d%s", hour12, minute, ampm);
+                } else {
+                    time = String.format("%02d %02d%s", hour12, minute, ampm);
+                }
+            } else {
+                time = String.format("%02d:%02d%s", hour12, minute, ampm);
+
+            }
             start = 5;
             end = 7;
         }
