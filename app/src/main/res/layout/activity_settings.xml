@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/backRl"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="200dp"
         android:background="#000"
         android:paddingBottom="8dp"
         android:paddingLeft="8dp"
@@ -18,10 +18,12 @@
         android:paddingTop="8dp">
 
         <LinearLayout
+            android:id="@+id/centerLl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:gravity="center_vertical|bottom"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/dateLl"
             android:orientation="horizontal">
 
             <TextView
@@ -100,15 +102,23 @@
             android:id="@+id/textSpaceEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
+            android:layout_below="@+id/centerLl"
             android:hint="写下需要提醒你的事情"
             android:maxLines="2"
             android:textColor="#fff"
             android:textColorHint="@color/grey_500"
             android:textSize="24sp" />
+        <TextView
+            android:id="@+id/setDateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="点击设置到期时间"
+            android:layout_below="@+id/textSpaceEt"
+            android:layout_centerHorizontal="true"
+            android:textColor="#fff"
+            />
     </RelativeLayout>
 
     <ScrollView

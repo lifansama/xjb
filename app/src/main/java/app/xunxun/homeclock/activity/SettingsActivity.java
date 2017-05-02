@@ -46,6 +46,7 @@ import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
+import app.xunxun.homeclock.preferences.FocusTimePreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
@@ -61,6 +62,8 @@ import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import app.xunxun.homeclock.utils.FloatToast;
 import app.xunxun.homeclock.utils.LauncherSettings;
+import app.xunxun.homeclock.widget.DateTimePickerDialog;
+import app.xunxun.homeclock.widget.OnDateTimeSetListenner;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
@@ -138,6 +141,10 @@ public class SettingsActivity extends BaseActivity {
     RadioGroup backgroundStyleRg;
     @InjectView(R.id.versionTv)
     TextView versionTv;
+    @InjectView(R.id.centerLl)
+    LinearLayout centerLl;
+    @InjectView(R.id.setDateTv)
+    TextView setDateTv;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -147,6 +154,7 @@ public class SettingsActivity extends BaseActivity {
     private SimpleDateFormat time24NoSecondSDF = new SimpleDateFormat("HH:mm");
     private SimpleDateFormat weekSDF = new SimpleDateFormat("E");
     private int[] colors;
+    private DateTimePickerDialog dateTimePickerDialog;
 
     public static void start(Context context, int requestCode) {
         Intent intent = new Intent(context, SettingsActivity.class);
@@ -175,9 +183,32 @@ public class SettingsActivity extends BaseActivity {
 
         protectScreenCb.setChecked(EnableProtectScreenPreferencesDao.get(this));
 
+        dateTimePickerDialog = new DateTimePickerDialog(this);
+        dateTimePickerDialog.setOnDateTimeSetListenner(new OnDateTimeSetListenner() {
+            @Override
+            public void onDateTimeSeted(Date date) {
+                if (date != null) {
+                    FocusTimePreferencesDao.set(SettingsActivity.this, date.getTime());
+
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                    setDateTv.setText(String.format("到期时间:%s", simpleDateFormat.format(date)));
+                } else {
+                    FocusTimePreferencesDao.set(SettingsActivity.this, 0);
+                    setDateTv.setText("点击设置到期时间");
+                }
+
+
+            }
+        });
         initListener();
 
         init();
+        if (FocusTimePreferencesDao.get(SettingsActivity.this) > 0) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+            setDateTv.setText(String.format("到期时间:%s", simpleDateFormat.format(new Date(FocusTimePreferencesDao.get(SettingsActivity.this)))));
+        } else {
+            setDateTv.setText("点击设置到期时间");
+        }
 
     }
 
@@ -436,7 +467,14 @@ public class SettingsActivity extends BaseActivity {
                         });
             }
         });
+        setDateTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dateTimePickerDialog.show();
+            }
+        });
     }
+
 
     /**
      * 显示防烧屏提示.
@@ -594,6 +632,7 @@ public class SettingsActivity extends BaseActivity {
         lunarTv.setTextColor(color);
         batteryTv.setTextColor(color);
         textSpaceEt.setTextColor(color);
+        setDateTv.setTextColor(color);
     }
 
     /**

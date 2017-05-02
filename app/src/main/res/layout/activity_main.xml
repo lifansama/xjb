@@ -127,10 +127,18 @@
                     android:id="@+id/textSpaceTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:gravity="center_horizontal"
+                    tools:text="XX"
                     android:textColor="#fff"
                     android:textSize="24sp" />
+                <TextView
+                    android:id="@+id/focusTimeTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    tools:text="「剩余10天」"
+                    android:textColor="#fff"
+                    android:textSize="22sp" />
             </LinearLayout>
 
         </RelativeLayout>

@@ -55,6 +55,7 @@ import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
+import app.xunxun.homeclock.preferences.FocusTimePreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
@@ -112,6 +113,8 @@ public class ClockViewController {
     TextView battery2Tv;
     @InjectView(R.id.backIv)
     ImageView backIv;
+    @InjectView(R.id.focusTimeTv)
+    TextView focusTimeTv;
     private Activity activity;
 
 
@@ -284,6 +287,7 @@ public class ClockViewController {
         batteryTv.setTextColor(color);
         battery2Tv.setTextColor(color);
         textSpaceTv.setTextColor(color);
+        focusTimeTv.setTextColor(color);
     }
 
     /**
@@ -428,6 +432,7 @@ public class ClockViewController {
         weekTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.15));
         ampmTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.5));
         textSpaceTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.25));
+        focusTimeTv.setTextSize((float) (TextSizePreferencesDao.get(activity) * 0.2));
 
     }
 
@@ -463,12 +468,40 @@ public class ClockViewController {
 
         lunarTv.setText(String.format("%s月%s", lunarCalendar.getLunarMonth(), lunarCalendar.getLunarDay()));
 
+
+        if (FocusTimePreferencesDao.get(activity) > 0) {
+            focusTimeTv.setText(diffDate(now, new Date(FocusTimePreferencesDao.get(activity))));
+            focusTimeTv.setVisibility(View.VISIBLE);
+        } else {
+            focusTimeTv.setVisibility(View.GONE);
+        }
         if (isWholeTime(minute, second)) {
             String txt = time2SpeakContent(hour24, hour12);
             if (EnableSeapkWholeTimePreferencesDao.get(activity)) {
                 speak(txt);
             }
         }
+
+
+    }
+
+    private String diffDate(Date date1, Date date2) {
+        String result;
+        long diff = date2.getTime() - date1.getTime();
+        if (diff < 0) {
+            result = "「已过期」";
+        } else if (diff < 1000) {
+            result = "「已到达」";
+        } else if (diff < 60 * 1000) {
+            result = String.format("「剩余%s秒」", diff / 1000);
+        } else if (diff < 60 * 1000 * 60) {
+            result = String.format("「剩余%s分钟」", diff / 1000 / 60);
+        } else if (diff < 60 * 1000 * 60 * 24) {
+            result = String.format("「剩余%s小时」", diff / 1000 / 60 / 60);
+        } else {
+            result = String.format("「剩余%s天」", diff / 1000 / 60 / 60 / 24);
+        }
+        return result;
     }
 
     /**
@@ -617,11 +650,11 @@ public class ClockViewController {
                     Random random = new Random();
                     int newTopMarginMax = centerRl.getHeight() <= 0 || timeLl.getHeight() <= 0 ? screenHeight / 2 : centerRl.getHeight() - timeLl.getHeight();
 
-                    Crashlytics.setInt("newTopMarginMax",newTopMarginMax);
+                    Crashlytics.setInt("newTopMarginMax", newTopMarginMax);
                     params.topMargin = random.nextInt(newTopMarginMax);
-                    int newLeftMarginMax = centerRl.getWidth() <= 0 || timeLl.getWidth() <= 0? screenWidth / 2 : centerRl.getWidth() - timeLl.getWidth();
+                    int newLeftMarginMax = centerRl.getWidth() <= 0 || timeLl.getWidth() <= 0 ? screenWidth / 2 : centerRl.getWidth() - timeLl.getWidth();
 
-                    Crashlytics.setInt("newLeftMarginMax",newLeftMarginMax);
+                    Crashlytics.setInt("newLeftMarginMax", newLeftMarginMax);
                     params.leftMargin = random.nextInt(newLeftMarginMax);
                     timeLl.setLayoutParams(params);
                     params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
@@ -640,6 +673,7 @@ public class ClockViewController {
                     params1.addRule(align == 0 ? RelativeLayout.ALIGN_PARENT_LEFT : RelativeLayout.ALIGN_PARENT_RIGHT);
                     dateLl.setLayoutParams(params1);
                     dateLl.setGravity(align == 0 ? Gravity.LEFT : Gravity.RIGHT);
+
 
                 }
 
