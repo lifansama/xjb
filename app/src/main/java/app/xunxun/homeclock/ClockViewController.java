@@ -27,8 +27,10 @@ import android.text.style.TypefaceSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -142,6 +144,7 @@ public class ClockViewController {
     private int screenWidth;
     private int screenHeight;
     private UpdateHelper updateHelper;
+    private GestureDetector gestureDetector;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -173,11 +176,9 @@ public class ClockViewController {
         screenHeight = metrics.heightPixels;
         updateHelper = new UpdateHelper(activity);
         updateHelper.check(false);
+        gestureDetector= new GestureDetector(activity,new MyGestureListener());
     }
 
-    /**
-     * 初始化百度语音合成.
-     */
 
     /**
      * 说话.
@@ -193,12 +194,10 @@ public class ClockViewController {
      * 初始化监听器.
      */
     private void initListner() {
-        rootFl.setOnLongClickListener(new View.OnLongClickListener() {
+        rootFl.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onLongClick(View view) {
-                Log.v("activityMain", "onLongClick");
-                trans2Settings();
-                return false;
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
             }
         });
         rootFl.setOnClickListener(new View.OnClickListener() {
@@ -692,5 +691,14 @@ public class ClockViewController {
             }
         }
 
+    }
+
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+
+            trans2Settings();
+            return super.onDoubleTap(e);
+        }
     }
 }
