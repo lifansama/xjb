@@ -1,13 +1,12 @@
 package app.xunxun.homeclock;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -18,8 +17,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -42,7 +39,6 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.feedback.PgyFeedbackShakeManager;
-import com.pgyersdk.update.PgyUpdateManager;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -71,6 +67,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
+import app.xunxun.homeclock.preferences.ScreenOrientationPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowBackgroundPicPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
@@ -151,6 +148,13 @@ public class ClockViewController {
     }
 
     public void onCreate(Bundle savedInstanceState) {
+        if (ScreenOrientationPreferencesDao.get(activity) == ActivityInfo.SCREEN_ORIENTATION_SENSOR)
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        else if (ScreenOrientationPreferencesDao.get(activity) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        else if (ScreenOrientationPreferencesDao.get(activity) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         hideNavigationBar();
         activity.setContentView(R.layout.activity_main);
         if (KeepScreenOnPreferencesDao.get(activity)) {
@@ -176,7 +180,7 @@ public class ClockViewController {
         screenHeight = metrics.heightPixels;
         updateHelper = new UpdateHelper(activity);
         updateHelper.check(false);
-        gestureDetector= new GestureDetector(activity,new MyGestureListener());
+        gestureDetector = new GestureDetector(activity, new MyGestureListener());
     }
 
 
@@ -693,7 +697,7 @@ public class ClockViewController {
 
     }
 
-    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener{
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
 

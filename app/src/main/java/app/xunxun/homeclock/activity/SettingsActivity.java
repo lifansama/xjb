@@ -1,8 +1,8 @@
 package app.xunxun.homeclock.activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -30,9 +30,6 @@ import android.widget.TextView;
 import com.fourmob.colorpicker.ColorPickerDialog;
 import com.fourmob.colorpicker.ColorPickerSwatch;
 import com.pgyersdk.feedback.PgyFeedback;
-import com.pgyersdk.javabean.AppBean;
-import com.pgyersdk.update.PgyUpdateManager;
-import com.pgyersdk.update.UpdateManagerListener;
 import com.umeng.analytics.MobclickAgent;
 
 import java.text.SimpleDateFormat;
@@ -57,12 +54,12 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
+import app.xunxun.homeclock.preferences.ScreenOrientationPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowBackgroundPicPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
-import app.xunxun.homeclock.utils.FloatToast;
 import app.xunxun.homeclock.utils.LauncherSettings;
 import app.xunxun.homeclock.widget.DateTimePickerDialog;
 import app.xunxun.homeclock.widget.OnDateTimeSetListenner;
@@ -149,6 +146,14 @@ public class SettingsActivity extends BaseActivity {
     TextView setDateTv;
     @InjectView(R.id.maohaoShanShuoCb)
     CheckBox maohaoShanShuoCb;
+    @InjectView(R.id.sensorRb)
+    RadioButton sensorRb;
+    @InjectView(R.id.landscapeRb)
+    RadioButton landscapeRb;
+    @InjectView(R.id.portraitRb)
+    RadioButton portraitRb;
+    @InjectView(R.id.screenOrientationRg)
+    RadioGroup screenOrientationRg;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -450,6 +455,28 @@ public class SettingsActivity extends BaseActivity {
                 IsMaoHaoShanShuoPreferencesDao.set(buttonView.getContext(), isChecked);
                 if (isChecked) {
                     showAlert("冒号闪烁需要在不显示秒针时起作用。");
+                }
+            }
+        });
+        if (ScreenOrientationPreferencesDao.get(this)==ActivityInfo.SCREEN_ORIENTATION_SENSOR){
+            sensorRb.setChecked(true);
+        }else if (ScreenOrientationPreferencesDao.get(this)==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+            landscapeRb.setChecked(true);
+        }else if (ScreenOrientationPreferencesDao.get(this)==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+            portraitRb.setChecked(true);
+        }
+        screenOrientationRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                if (checkedId == R.id.sensorRb){
+                    ScreenOrientationPreferencesDao.set(group.getContext(), ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
+                }else if (checkedId == R.id.landscapeRb){
+                    ScreenOrientationPreferencesDao.set(group.getContext(), ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+                }else if (checkedId == R.id.portraitRb){
+                    ScreenOrientationPreferencesDao.set(group.getContext(), ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
                 }
             }
         });

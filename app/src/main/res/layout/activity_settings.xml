@@ -323,6 +323,45 @@
                 android:text="显示电量"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+            <RadioGroup
+                android:id="@+id/screenOrientationRg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/sensorRb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    android:text="自动旋转"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/landscapeRb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    android:text="保持横屏"
+                    android:textSize="18sp" />
+                <RadioButton
+                    android:id="@+id/portraitRb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    android:text="保持竖屏"
+                    android:textSize="18sp" />
+            </RadioGroup>
 
             <View
                 android:layout_width="match_parent"
