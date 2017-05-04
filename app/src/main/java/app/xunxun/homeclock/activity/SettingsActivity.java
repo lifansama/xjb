@@ -1,12 +1,16 @@
 package app.xunxun.homeclock.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -154,6 +158,8 @@ public class SettingsActivity extends BaseActivity {
     RadioButton portraitRb;
     @InjectView(R.id.screenOrientationRg)
     RadioGroup screenOrientationRg;
+    @InjectView(R.id.screenBrightCb)
+    CheckBox screenBrightCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -458,28 +464,72 @@ public class SettingsActivity extends BaseActivity {
                 }
             }
         });
-        if (ScreenOrientationPreferencesDao.get(this)==ActivityInfo.SCREEN_ORIENTATION_SENSOR){
+        if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
             sensorRb.setChecked(true);
-        }else if (ScreenOrientationPreferencesDao.get(this)==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+        } else if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             landscapeRb.setChecked(true);
-        }else if (ScreenOrientationPreferencesDao.get(this)==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+        } else if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
             portraitRb.setChecked(true);
         }
         screenOrientationRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                if (checkedId == R.id.sensorRb){
+                if (checkedId == R.id.sensorRb) {
                     ScreenOrientationPreferencesDao.set(group.getContext(), ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
-                }else if (checkedId == R.id.landscapeRb){
+                } else if (checkedId == R.id.landscapeRb) {
                     ScreenOrientationPreferencesDao.set(group.getContext(), ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-                }else if (checkedId == R.id.portraitRb){
+                } else if (checkedId == R.id.portraitRb) {
                     ScreenOrientationPreferencesDao.set(group.getContext(), ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
                 }
             }
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            screenBrightCb.setVisibility(View.VISIBLE);
+            screenBrightCb.setChecked(Settings.System.canWrite(this));
+        }else {
+            screenBrightCb.setVisibility(View.GONE);
+        }
+        screenBrightCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.System.canWrite(buttonView.getContext()) && isChecked) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                        builder.setTitle("温馨提醒");
+                        builder.setMessage("这个功能需要修改系统设置的权限，请给授权！");
+                        builder.setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                                intent.setData(Uri.parse("package:" + getPackageName()));
+                                startActivityForResult(intent, 100);
+                            }
+                        });
+                        builder.show();
+
+                    }
+                }
+            }
+        });
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.System.canWrite(this)){
+                    screenBrightCb.setChecked(false);
+                }
+            }
+        }
     }
 
     private void showAlert(String msg) {

@@ -21,9 +21,9 @@
             android:id="@+id/centerLl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|bottom"
-            android:layout_centerHorizontal="true"
             android:layout_below="@+id/dateLl"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical|bottom"
             android:orientation="horizontal">
 
             <TextView
@@ -102,23 +102,23 @@
             android:id="@+id/textSpaceEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:layout_below="@+id/centerLl"
+            android:gravity="center_horizontal"
             android:hint="写下需要提醒你的事情"
             android:maxLines="2"
             android:textColor="#fff"
             android:textColorHint="@color/grey_500"
             android:textSize="24sp" />
+
         <TextView
             android:id="@+id/setDateTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="点击设置到期时间"
             android:layout_below="@+id/textSpaceEt"
             android:layout_centerHorizontal="true"
-            android:textColor="#fff"
-            />
+            android:padding="8dp"
+            android:text="点击设置到期时间"
+            android:textColor="#fff" />
     </RelativeLayout>
 
     <ScrollView
@@ -138,6 +138,7 @@
                 android:text="常规配置"
                 android:textColor="@color/grey_600"
                 android:textSize="14sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -169,6 +170,7 @@
                     android:text="图片背景"
                     android:textSize="18sp" />
             </RadioGroup>
+
             <TextView
                 android:id="@+id/backgroundColorTv"
                 android:layout_width="match_parent"
@@ -323,10 +325,12 @@
                 android:text="显示电量"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/grey_400" />
+
             <RadioGroup
                 android:id="@+id/screenOrientationRg"
                 android:layout_width="match_parent"
@@ -352,6 +356,7 @@
                     android:paddingTop="16dp"
                     android:text="保持横屏"
                     android:textSize="18sp" />
+
                 <RadioButton
                     android:id="@+id/portraitRb"
                     android:layout_width="wrap_content"
@@ -468,6 +473,7 @@
                 android:text="烧屏保护（移动模式）"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -481,6 +487,22 @@
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:text="冒号闪烁"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey_400" />
+
+            <CheckBox
+                android:id="@+id/screenBrightCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="屏幕亮度调节"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
 
@@ -500,6 +522,7 @@
                 android:text="意见反馈"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"

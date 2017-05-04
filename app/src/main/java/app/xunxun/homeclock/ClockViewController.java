@@ -1,5 +1,6 @@
 package app.xunxun.homeclock;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -7,16 +8,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -29,6 +35,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -67,12 +74,14 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
+import app.xunxun.homeclock.preferences.ScreenBrightnessPreferencesDao;
 import app.xunxun.homeclock.preferences.ScreenOrientationPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowBackgroundPicPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
+import app.xunxun.homeclock.utils.FloatToast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
@@ -140,8 +149,10 @@ public class ClockViewController {
     private long lastTime;
     private int screenWidth;
     private int screenHeight;
+    private int currentLight; // 当前屏幕的亮度
     private UpdateHelper updateHelper;
     private GestureDetector gestureDetector;
+    private FloatToast toast;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -181,6 +192,12 @@ public class ClockViewController {
         updateHelper = new UpdateHelper(activity);
         updateHelper.check(false);
         gestureDetector = new GestureDetector(activity, new MyGestureListener());
+        int flag = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_SETTINGS);
+        if (flag != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.WRITE_SETTINGS},101);
+        }
+
+        toast = new FloatToast();
     }
 
 
@@ -259,7 +276,67 @@ public class ClockViewController {
             shakeFeedback();
         }
 
+        try {
+            int screenMode = Settings.System.getInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE);
+            int screenBrightness = Settings.System.getInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+            ScreenBrightnessPreferencesDao.setSysMode(activity, screenMode);
+            ScreenBrightnessPreferencesDao.setSysValue(activity, screenBrightness);
+            currentLight = screenBrightness;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
 
+
+    }
+
+    public void onPause() {
+
+        timer.cancel();
+        timerTask.cancel();
+        timer = null;
+        timerTask = null;
+        activity.unregisterReceiver(batteryChangeReceiver);
+        if (EnableShakeFeedbackPreferencesDao.get(activity)) {
+            PgyFeedbackShakeManager.unregister();
+        }
+
+        if (isHaveWriteSettinsPermisson()) {
+            setScreenMode(ScreenBrightnessPreferencesDao.getSysMode(activity));
+            setScreenBrightness(ScreenBrightnessPreferencesDao.getSysValue(activity));
+        }
+    }
+
+    private boolean isHaveWriteSettinsPermisson(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return Settings.System.canWrite(activity);
+        }else {
+            return true;
+        }
+
+    }
+
+    /**
+     * 设置当前屏幕亮度的模式
+     * SCREEN_BRIGHTNESS_MODE_AUTOMATIC=1 为自动调节屏幕亮度
+     * SCREEN_BRIGHTNESS_MODE_MANUAL=0 为手动调节屏幕亮度
+     */
+    private void setScreenMode(int value) {
+        Settings.System.putInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, value);
+    }
+
+    /**
+     * 设置当前屏幕亮度值 0--255，并使之生效
+     */
+    private void setScreenBrightness(float value) {
+        Window mWindow = activity.getWindow();
+        WindowManager.LayoutParams mParams = mWindow.getAttributes();
+        float f = value / 255.0F;
+        mParams.screenBrightness = f;
+        mWindow.setAttributes(mParams);
+
+        // 保存设置的屏幕亮度值
+        Settings.System.putInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, (int) value);
     }
 
     /**
@@ -351,18 +428,6 @@ public class ClockViewController {
         });
     }
 
-
-    public void onPause() {
-
-        timer.cancel();
-        timerTask.cancel();
-        timer = null;
-        timerTask = null;
-        activity.unregisterReceiver(batteryChangeReceiver);
-        if (EnableShakeFeedbackPreferencesDao.get(activity)) {
-            PgyFeedbackShakeManager.unregister();
-        }
-    }
 
     public void onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
@@ -703,6 +768,28 @@ public class ClockViewController {
 
             trans2Settings();
             return super.onDoubleTap(e);
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            if (distanceY > 30) {
+                currentLight = (int) (currentLight + (255 - currentLight)
+                        * distanceY / screenHeight);
+                currentLight = currentLight>255?255:currentLight;
+                if (isHaveWriteSettinsPermisson()) {
+                    setScreenBrightness(currentLight);
+                    toast.show(activity,"亮度增加到:"+currentLight,activity.getWindow().getDecorView());
+                }
+            } else if (distanceY < -30) {
+                currentLight = (int) (currentLight - currentLight
+                        * (distanceY) / screenHeight);
+                currentLight = currentLight<0?0:currentLight;
+                if (isHaveWriteSettinsPermisson()) {
+                    setScreenBrightness(currentLight);
+                    toast.show(activity,"亮度减弱到:"+currentLight,activity.getWindow().getDecorView());
+                }
+            }
+            return super.onScroll(e1, e2, distanceX, distanceY);
         }
     }
 }
