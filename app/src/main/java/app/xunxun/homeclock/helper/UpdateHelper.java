@@ -36,25 +36,27 @@ public class UpdateHelper {
                         public void onUpdateAvailable(final String result) {
 
                             // 将新版本信息封装到AppBean中
-                            final AppBean appBean = getAppBeanFromString(result);
-                            new AlertDialog.Builder(mActivity)
-                                    .setTitle("更新")
-                                    .setMessage(appBean.getReleaseNote())
-                                    .setPositiveButton(
-                                            "确定",
-                                            new DialogInterface.OnClickListener() {
+                            if (mActivity != null && !mActivity.isFinishing()) {
+                                final AppBean appBean = getAppBeanFromString(result);
+                                new AlertDialog.Builder(mActivity)
+                                        .setTitle("更新")
+                                        .setMessage(appBean.getReleaseNote())
+                                        .setPositiveButton(
+                                                "确定",
+                                                new DialogInterface.OnClickListener() {
 
-                                                @Override
-                                                public void onClick(
-                                                        DialogInterface dialog,
-                                                        int which) {
-                                                    startDownloadTask(
-                                                            mActivity,
-                                                            appBean.getDownloadURL());
-                                                }
-                                            })
-                                    .setNegativeButton("取消", null)
-                                    .show();
+                                                    @Override
+                                                    public void onClick(
+                                                            DialogInterface dialog,
+                                                            int which) {
+                                                        startDownloadTask(
+                                                                mActivity,
+                                                                appBean.getDownloadURL());
+                                                    }
+                                                })
+                                        .setNegativeButton("取消", null)
+                                        .show();
+                            }
                             PgyUpdateManager.unregister();
 
                         }
