@@ -31,7 +31,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.fourmob.colorpicker.ColorPickerDialog;
 import com.fourmob.colorpicker.ColorPickerSwatch;
 import com.pgyersdk.feedback.PgyFeedback;
 import com.umeng.analytics.MobclickAgent;
@@ -65,6 +64,7 @@ import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import app.xunxun.homeclock.utils.LauncherSettings;
+import app.xunxun.homeclock.widget.ColorPickerDialog;
 import app.xunxun.homeclock.widget.DateTimePickerDialog;
 import app.xunxun.homeclock.widget.OnDateTimeSetListenner;
 import butterknife.ButterKnife;
@@ -192,9 +192,9 @@ public class SettingsActivity extends BaseActivity {
         setContentView(R.layout.activity_settings);
         ButterKnife.inject(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        backgroundColorPickerDialog = new ColorPickerDialog();
+        backgroundColorPickerDialog = new ColorPickerDialog(this);
         colors = getResources().getIntArray(R.array.colors);
-        textColorPickerDialog = new ColorPickerDialog();
+        textColorPickerDialog = new ColorPickerDialog(this);
         textColorPickerDialog.initialize(R.string.txt_select_color, colors, TextColorPreferencesDao.get(this), 4, 2);
 
         protectScreenCb.setChecked(EnableProtectScreenPreferencesDao.get(this));
@@ -237,9 +237,7 @@ public class SettingsActivity extends BaseActivity {
         backgroundColorTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!backgroundColorPickerDialog.isAdded()) {
-                    backgroundColorPickerDialog.show(getSupportFragmentManager(), "colorpicker1");
-                }
+                backgroundColorPickerDialog.show();
             }
         });
         backgroundColorPickerDialog.initialize(R.string.txt_select_color, colors, BackgroundColorPreferencesDao.get(this), 4, 2);
@@ -263,8 +261,7 @@ public class SettingsActivity extends BaseActivity {
         textColorTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!textColorPickerDialog.isAdded())
-                    textColorPickerDialog.show(getSupportFragmentManager(), "colorpicker2");
+                    textColorPickerDialog.show();
 
             }
         });
@@ -489,7 +486,7 @@ public class SettingsActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             screenBrightCb.setVisibility(View.VISIBLE);
             screenBrightCb.setChecked(Settings.System.canWrite(this));
-        }else {
+        } else {
             screenBrightCb.setVisibility(View.GONE);
         }
         screenBrightCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -519,13 +516,12 @@ public class SettingsActivity extends BaseActivity {
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100){
+        if (requestCode == 100) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.System.canWrite(this)){
+                if (!Settings.System.canWrite(this)) {
                     screenBrightCb.setChecked(false);
                 }
             }
