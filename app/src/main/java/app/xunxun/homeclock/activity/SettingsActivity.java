@@ -57,6 +57,7 @@ import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
+import app.xunxun.homeclock.preferences.NotifyStayPreferencesDao;
 import app.xunxun.homeclock.preferences.ScreenOrientationPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowBackgroundPicPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
@@ -160,6 +161,8 @@ public class SettingsActivity extends BaseActivity {
     RadioGroup screenOrientationRg;
     @InjectView(R.id.screenBrightCb)
     CheckBox screenBrightCb;
+    @InjectView(R.id.notifyStayCb)
+    CheckBox notifyStayCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
     private SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -261,7 +264,7 @@ public class SettingsActivity extends BaseActivity {
         textColorTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    textColorPickerDialog.show();
+                textColorPickerDialog.show();
 
             }
         });
@@ -513,6 +516,18 @@ public class SettingsActivity extends BaseActivity {
                 }
             }
         });
+        notifyStayCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                NotifyStayPreferencesDao.set(buttonView.getContext(), isChecked);
+                if (isChecked) {
+                    MyService.startService(buttonView.getContext());
+                } else {
+                    MyService.stopService(buttonView.getContext());
+
+                }
+            }
+        });
     }
 
 
@@ -594,6 +609,8 @@ public class SettingsActivity extends BaseActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
+        notifyStayCb.setChecked(NotifyStayPreferencesDao.get(this));
 
     }
 

@@ -14,6 +14,7 @@ import android.widget.RemoteViews;
 
 import app.xunxun.homeclock.activity.SettingsActivity;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
+import app.xunxun.homeclock.preferences.NotifyStayPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 
 public class MyService extends Service {
@@ -21,12 +22,16 @@ public class MyService extends Service {
     private BroadcastReceiver receiver;
 
     public static void startService(Context context) {
-        context.startService(new Intent(context, MyService.class));
+        if (NotifyStayPreferencesDao.get(context)) {
+            context.startService(new Intent(context, MyService.class));
+        }
 
     }
 
     public static void stopService(Context context) {
-        context.stopService(new Intent(context, MyService.class));
+        if (!NotifyStayPreferencesDao.get(context)) {
+            context.stopService(new Intent(context, MyService.class));
+        }
     }
 
     public MyService() {
@@ -72,7 +77,7 @@ public class MyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
-        if (LockScreenShowOnPreferencesDao.get(this)) {
+        if (!NotifyStayPreferencesDao.get(this)||LockScreenShowOnPreferencesDao.get(this)) {
             stopForeground(true);
         }
     }
