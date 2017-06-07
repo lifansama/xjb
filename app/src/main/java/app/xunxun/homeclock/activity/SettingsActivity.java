@@ -75,7 +75,6 @@ import app.xunxun.homeclock.widget.DateTimePickerDialog;
 import app.xunxun.homeclock.widget.OnDateTimeSetListenner;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import id.zelory.compressor.Compressor;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
 
 /**
@@ -506,36 +505,37 @@ public class SettingsActivity extends BaseActivity {
                 }
             }
         });
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            screenBrightCb.setVisibility(View.VISIBLE);
-            screenBrightCb.setChecked(Settings.System.canWrite(this));
-        } else {
-            screenBrightCb.setVisibility(View.GONE);
-        }
-        screenBrightCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (!Settings.System.canWrite(buttonView.getContext()) && isChecked) {
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
-                        builder.setTitle("温馨提醒");
-                        builder.setMessage("这个功能需要修改系统设置的权限，请给授权！");
-                        builder.setPositiveButton("好的", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                                intent.setData(Uri.parse("package:" + getPackageName()));
-                                startActivityForResult(intent, 100);
-                            }
-                        });
-                        builder.show();
-
-                    }
-                }
-            }
-        });
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            screenBrightCb.setVisibility(View.VISIBLE);
+//            screenBrightCb.setChecked(Settings.System.canWrite(this));
+//        } else {
+//            screenBrightCb.setVisibility(View.GONE);
+//        }
+//        screenBrightCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    if (!Settings.System.canWrite(buttonView.getContext()) && isChecked) {
+//
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+//                        builder.setTitle("温馨提醒");
+//                        builder.setMessage("这个功能需要修改系统设置的权限，请给授权！");
+//                        builder.setPositiveButton("好的", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//
+//                                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+//                                intent.setData(Uri.parse("package:" + getPackageName()));
+//                                startActivityForResult(intent, 100);
+//                            }
+//                        });
+//                        builder.show();
+//
+//                    }
+//                }
+//            }
+//        });
+        screenBrightCb.setVisibility(View.GONE);
         notifyStayCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
