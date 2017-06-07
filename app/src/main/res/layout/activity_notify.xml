@@ -106,6 +106,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
+                    android:lines="2"
+                    android:ellipsize="end"
                     android:gravity="left|bottom"
                     android:text="测试"
                     android:textColor="#fff"
