@@ -157,6 +157,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
+                    android:tag="0"
                     android:text="颜色背景"
                     android:textSize="18sp" />
 
@@ -167,7 +168,18 @@
                     android:checked="true"
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
-                    android:text="图片背景"
+                    android:tag="1"
+                    android:text="在线图片"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/localBackgroundPicRb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    android:tag="2"
+                    android:text="本地图片"
                     android:textSize="18sp" />
             </RadioGroup>
 
@@ -505,6 +517,7 @@
                 android:text="屏幕亮度调节"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"

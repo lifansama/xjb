@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +24,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.TypefaceSpan;
 import android.util.DisplayMetrics;
@@ -48,6 +48,7 @@ import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.feedback.PgyFeedbackShakeManager;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -73,10 +74,11 @@ import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
+import app.xunxun.homeclock.preferences.LocalImageFilePathPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
 import app.xunxun.homeclock.preferences.ScreenBrightnessPreferencesDao;
 import app.xunxun.homeclock.preferences.ScreenOrientationPreferencesDao;
-import app.xunxun.homeclock.preferences.ShowBackgroundPicPreferencesDao;
+import app.xunxun.homeclock.preferences.BackgroundModePreferencesDao;
 import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
@@ -392,11 +394,21 @@ public class ClockViewController {
      * @param color
      */
     private void setBackgroundColor(int color) {
+        int mode = BackgroundModePreferencesDao.get(activity);
 
-        if (ShowBackgroundPicPreferencesDao.get(activity)) {
+        if (mode == BackgroundModePreferencesDao.MODE_ONLINE_IMAGE) {
             getPic();
-        } else {
+        } else if (mode == BackgroundModePreferencesDao.MODE_COLOR){
             activityMain.setBackgroundColor(color);
+        } else if (mode == BackgroundModePreferencesDao.MODE_LOCAL_IMAGE){
+            activityMain.setBackgroundColor(Color.argb(100, 0, 0, 0));
+            String path = LocalImageFilePathPreferencesDao.get(activity);
+            if (!TextUtils.isEmpty(path)) {
+                File file = new File(path);
+                Picasso.with(activity).load(file).into(backIv);
+            }else {
+                activityMain.setBackgroundColor(color);
+            }
         }
 
     }

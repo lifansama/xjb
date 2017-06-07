@@ -1,5 +1,6 @@
 package app.xunxun.homeclock.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,11 +31,13 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fourmob.colorpicker.ColorPickerSwatch;
 import com.pgyersdk.feedback.PgyFeedback;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +47,7 @@ import app.xunxun.homeclock.MyService;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.helper.UpdateHelper;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.BackgroundModePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
@@ -56,20 +60,22 @@ import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
+import app.xunxun.homeclock.preferences.LocalImageFilePathPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
 import app.xunxun.homeclock.preferences.NotifyStayPreferencesDao;
 import app.xunxun.homeclock.preferences.ScreenOrientationPreferencesDao;
-import app.xunxun.homeclock.preferences.ShowBackgroundPicPreferencesDao;
 import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import app.xunxun.homeclock.utils.LauncherSettings;
+import app.xunxun.homeclock.utils.RealPathUtil;
 import app.xunxun.homeclock.widget.ColorPickerDialog;
 import app.xunxun.homeclock.widget.DateTimePickerDialog;
 import app.xunxun.homeclock.widget.OnDateTimeSetListenner;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import id.zelory.compressor.Compressor;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
 
 /**
@@ -141,6 +147,8 @@ public class SettingsActivity extends BaseActivity {
     RadioButton backgroundColorRb;
     @InjectView(R.id.backgroundPicRb)
     RadioButton backgroundPicRb;
+    @InjectView(R.id.localBackgroundPicRb)
+    RadioButton localBackgroundPicRb;
     @InjectView(R.id.backgroundStyleRg)
     RadioGroup backgroundStyleRg;
     @InjectView(R.id.versionTv)
@@ -220,6 +228,16 @@ public class SettingsActivity extends BaseActivity {
 
             }
         });
+
+        int mode = BackgroundModePreferencesDao.get(this);
+        if (mode == BackgroundModePreferencesDao.MODE_COLOR) {
+            backgroundColorRb.setChecked(true);
+
+        } else if (mode == BackgroundModePreferencesDao.MODE_ONLINE_IMAGE) {
+            backgroundPicRb.setChecked(true);
+        } else if (mode == BackgroundModePreferencesDao.MODE_LOCAL_IMAGE) {
+            localBackgroundPicRb.setChecked(true);
+        }
         initListener();
 
         init();
@@ -434,11 +452,13 @@ public class SettingsActivity extends BaseActivity {
         backgroundStyleRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                ShowBackgroundPicPreferencesDao.set(group.getContext(), checkedId == R.id.backgroundPicRb);
-                setBackgroundColor();
+                RadioButton rb = (RadioButton) findViewById(checkedId);
+                BackgroundModePreferencesDao.set(group.getContext(), Integer.parseInt((String) rb.getTag()));
 
                 if (checkedId == R.id.backgroundPicRb) {
                     showAlert("背景图片一天一换");
+                } else if (checkedId == R.id.localBackgroundPicRb) {
+                    openGallery();
                 }
 
             }
@@ -540,6 +560,14 @@ public class SettingsActivity extends BaseActivity {
                     screenBrightCb.setChecked(false);
                 }
             }
+        } else if (requestCode == 200) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri uri = data.getData();
+                String path = RealPathUtil.getRealPathFromURI(this, uri);
+//                File newFile = Compressor.getDefault(this).compressToFile(new File(path));
+                LocalImageFilePathPreferencesDao.set(this,path);
+                Toast.makeText(this,"选图成功，后退查看效果",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -550,6 +578,15 @@ public class SettingsActivity extends BaseActivity {
         builder.setPositiveButton("知道了", null);
         builder.show();
 
+    }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        galleryIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        Intent intent = Intent.createChooser(galleryIntent, "选择图片");
+        startActivityForResult(intent, 200);
     }
 
 
@@ -597,11 +634,6 @@ public class SettingsActivity extends BaseActivity {
 
         lockScreenShowCb.setChecked(LockScreenShowOnPreferencesDao.get(this));
         showSecondCb.setChecked(ShowSecondPreferencesDao.get(this));
-        if (ShowBackgroundPicPreferencesDao.get(this)) {
-            backgroundPicRb.setChecked(true);
-        } else {
-            backgroundColorRb.setChecked(true);
-        }
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
             versionTv.setText(String.format("检查更新(v%s)", packageInfo.versionName));
@@ -697,10 +729,7 @@ public class SettingsActivity extends BaseActivity {
      * 设置背景色.
      */
     private void setBackgroundColor() {
-        if (ShowBackgroundPicPreferencesDao.get(this)) {
-            backRl.setBackgroundResource(R.drawable.pic_background);
-        } else
-            backRl.setBackgroundColor(BackgroundColorPreferencesDao.get(this));
+        backRl.setBackgroundColor(BackgroundColorPreferencesDao.get(this));
     }
 
 
@@ -750,4 +779,5 @@ public class SettingsActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 }
