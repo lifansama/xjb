@@ -58,7 +58,8 @@ public class MyService extends Service {
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, new Intent(this, SettingsActivity.class), PendingIntent.FLAG_CANCEL_CURRENT);
             remoteViews.setOnClickPendingIntent(R.id.rootFl, pendingIntent);
             Notification notification = new NotificationCompat.Builder(this)
-                    .setContent(remoteViews)
+                    .setCustomContentView(remoteViews)
+                    .setCustomBigContentView(remoteViews)
                     .setSmallIcon(R.mipmap.ic_app)
                     .setContentIntent(pendingIntent)
                     .build();
