@@ -217,12 +217,12 @@ public class ClockViewController {
      * 初始化监听器.
      */
     private void initListner() {
-        rootFl.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
+//        rootFl.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                return gestureDetector.onTouchEvent(event);
+//            }
+//        });
         rootFl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
