@@ -63,6 +63,7 @@ import app.xunxun.homeclock.api.Api;
 import app.xunxun.homeclock.helper.UpdateHelper;
 import app.xunxun.homeclock.model.Pic;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
+import app.xunxun.homeclock.preferences.BackgroundModePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
 import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
@@ -78,7 +79,6 @@ import app.xunxun.homeclock.preferences.LocalImageFilePathPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
 import app.xunxun.homeclock.preferences.ScreenBrightnessPreferencesDao;
 import app.xunxun.homeclock.preferences.ScreenOrientationPreferencesDao;
-import app.xunxun.homeclock.preferences.BackgroundModePreferencesDao;
 import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao;
 import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
@@ -196,7 +196,7 @@ public class ClockViewController {
         gestureDetector = new GestureDetector(activity, new MyGestureListener());
         int flag = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_SETTINGS);
         if (flag != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.WRITE_SETTINGS},101);
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_SETTINGS}, 101);
         }
 
         toast = new FloatToast();
@@ -292,11 +292,16 @@ public class ClockViewController {
     }
 
     public void onPause() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
 
-        timer.cancel();
-        timerTask.cancel();
-        timer = null;
-        timerTask = null;
+        }
+
+        if (timerTask != null) {
+            timerTask.cancel();
+            timerTask = null;
+        }
         activity.unregisterReceiver(batteryChangeReceiver);
         if (EnableShakeFeedbackPreferencesDao.get(activity)) {
             PgyFeedbackShakeManager.unregister();
@@ -308,11 +313,11 @@ public class ClockViewController {
         }
     }
 
-    private boolean isHaveWriteSettinsPermisson(){
+    private boolean isHaveWriteSettinsPermisson() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return Settings.System.canWrite(activity);
-        }else {
+        } else {
             return true;
         }
 
@@ -398,15 +403,15 @@ public class ClockViewController {
 
         if (mode == BackgroundModePreferencesDao.MODE_ONLINE_IMAGE) {
             getPic();
-        } else if (mode == BackgroundModePreferencesDao.MODE_COLOR){
+        } else if (mode == BackgroundModePreferencesDao.MODE_COLOR) {
             activityMain.setBackgroundColor(color);
-        } else if (mode == BackgroundModePreferencesDao.MODE_LOCAL_IMAGE){
+        } else if (mode == BackgroundModePreferencesDao.MODE_LOCAL_IMAGE) {
             activityMain.setBackgroundColor(Color.argb(100, 0, 0, 0));
             String path = LocalImageFilePathPreferencesDao.get(activity);
             if (!TextUtils.isEmpty(path)) {
                 File file = new File(path);
                 Picasso.with(activity).load(file).into(backIv);
-            }else {
+            } else {
                 activityMain.setBackgroundColor(color);
             }
         }
@@ -787,18 +792,18 @@ public class ClockViewController {
             if (distanceY > 30) {
                 currentLight = (int) (currentLight + (255 - currentLight)
                         * distanceY / screenHeight);
-                currentLight = currentLight>255?255:currentLight;
+                currentLight = currentLight > 255 ? 255 : currentLight;
                 if (isHaveWriteSettinsPermisson()) {
                     setScreenBrightness(currentLight);
-                    toast.show(activity,"亮度增加到:"+currentLight,activity.getWindow().getDecorView());
+                    toast.show(activity, "亮度增加到:" + currentLight, activity.getWindow().getDecorView());
                 }
             } else if (distanceY < -30) {
                 currentLight = (int) (currentLight - currentLight
                         * (distanceY) / screenHeight);
-                currentLight = currentLight<0?0:currentLight;
+                currentLight = currentLight < 0 ? 0 : currentLight;
                 if (isHaveWriteSettinsPermisson()) {
                     setScreenBrightness(currentLight);
-                    toast.show(activity,"亮度减弱到:"+currentLight,activity.getWindow().getDecorView());
+                    toast.show(activity, "亮度减弱到:" + currentLight, activity.getWindow().getDecorView());
                 }
             }
             return super.onScroll(e1, e2, distanceX, distanceY);
