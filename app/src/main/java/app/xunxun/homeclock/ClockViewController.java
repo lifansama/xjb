@@ -217,12 +217,12 @@ public class ClockViewController {
      * 初始化监听器.
      */
     private void initListner() {
-//        rootFl.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return gestureDetector.onTouchEvent(event);
-//            }
-//        });
+        rootFl.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
         rootFl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -789,23 +789,23 @@ public class ClockViewController {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (distanceY > 30) {
-                currentLight = (int) (currentLight + (255 - currentLight)
-                        * distanceY / screenHeight);
-                currentLight = currentLight > 255 ? 255 : currentLight;
-                if (isHaveWriteSettinsPermisson()) {
-                    setScreenBrightness(currentLight);
-                    toast.show(activity, "亮度增加到:" + currentLight, activity.getWindow().getDecorView());
-                }
-            } else if (distanceY < -30) {
-                currentLight = (int) (currentLight - currentLight
-                        * (distanceY) / screenHeight);
-                currentLight = currentLight < 0 ? 0 : currentLight;
-                if (isHaveWriteSettinsPermisson()) {
-                    setScreenBrightness(currentLight);
-                    toast.show(activity, "亮度减弱到:" + currentLight, activity.getWindow().getDecorView());
-                }
-            }
+//            if (distanceY > 30) {
+//                currentLight = (int) (currentLight + (255 - currentLight)
+//                        * distanceY / screenHeight);
+//                currentLight = currentLight > 255 ? 255 : currentLight;
+//                if (isHaveWriteSettinsPermisson()) {
+//                    setScreenBrightness(currentLight);
+//                    toast.show(activity, "亮度增加到:" + currentLight, activity.getWindow().getDecorView());
+//                }
+//            } else if (distanceY < -30) {
+//                currentLight = (int) (currentLight - currentLight
+//                        * (distanceY) / screenHeight);
+//                currentLight = currentLight < 0 ? 0 : currentLight;
+//                if (isHaveWriteSettinsPermisson()) {
+//                    setScreenBrightness(currentLight);
+//                    toast.show(activity, "亮度减弱到:" + currentLight, activity.getWindow().getDecorView());
+//                }
+//            }
             return super.onScroll(e1, e2, distanceX, distanceY);
         }
     }
