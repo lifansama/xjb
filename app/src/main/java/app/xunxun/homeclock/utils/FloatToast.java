@@ -20,16 +20,14 @@ public class FloatToast {
     private PopupWindow popupWindow;
     private Handler handler = new Handler();
 
-    public FloatToast() {
-        popupWindow = new PopupWindow(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-    }
-
     public void show(final Activity activity, String text, View view) {
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            if (popupWindow == null)
+                popupWindow = new PopupWindow(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             if (activity != null && !activity.isFinishing()) {
-                if (popupWindow.isShowing()){
+                if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 }
                 TextView textView = new TextView(activity);
