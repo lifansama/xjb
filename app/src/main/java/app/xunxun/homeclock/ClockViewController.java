@@ -170,11 +170,6 @@ public class ClockViewController {
 
         hideNavigationBar();
         activity.setContentView(R.layout.activity_main);
-        if (KeepScreenOnPreferencesDao.get(activity)) {
-            Log.v("onCreate", "FLAG_KEEP_SCREEN_ON");
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        }
         ButterKnife.inject(this, activity);
         initTypeFace();
 

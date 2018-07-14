@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 
 import app.xunxun.homeclock.MyApplication;
+import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 
 /**
  * Created by fengdianxun on 2017/4/22.
@@ -21,6 +23,11 @@ public class BaseActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
+        if (KeepScreenOnPreferencesDao.get(this)) {
+            Log.v("onCreate", "FLAG_KEEP_SCREEN_ON");
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         MyApplication app = (MyApplication) getApplication();
