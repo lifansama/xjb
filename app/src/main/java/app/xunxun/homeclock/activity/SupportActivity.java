@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ public class SupportActivity extends BaseActivity {
     ImageView alipay;
     @InjectView(R.id.wechat)
     ImageView wechat;
+    private CountDownTimer countDownTimer;
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, SupportActivity.class));
@@ -55,6 +57,8 @@ public class SupportActivity extends BaseActivity {
         });
         Picasso.with(this).load(R.drawable.alipay).into(alipay);
         Picasso.with(this).load(R.drawable.wechat).into(wechat);
+        countDownTimer = new MyCountDown(60*1000,1000);
+
     }
 
     @Override
@@ -68,10 +72,37 @@ public class SupportActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        countDownTimer.start();
     }
 
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+        countDownTimer.cancel();
+    }
+
+    class MyCountDown extends CountDownTimer {
+        /**
+         * @param millisInFuture    The number of millis in the future from the call
+         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
+         *                          is called.
+         * @param countDownInterval The interval along the way to receive
+         *                          {@link #onTick(long)} callbacks.
+         */
+        public MyCountDown(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            setTitle(String.format("打赏碗泡面给开发者(%s秒)", millisUntilFinished / 1000));
+
+        }
+
+        @Override
+        public void onFinish() {
+            onBackPressed();
+
+        }
     }
 }

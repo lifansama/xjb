@@ -2,7 +2,6 @@ package app.xunxun.homeclock.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -11,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -38,7 +37,6 @@ import com.fourmob.colorpicker.ColorPickerSwatch;
 import com.pgyersdk.feedback.PgyFeedback;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -182,6 +180,7 @@ public class SettingsActivity extends BaseActivity {
     private int[] colors;
     private DateTimePickerDialog dateTimePickerDialog;
     private UpdateHelper updateHelper;
+    private CountDownTimer countDownTimer;
 
     public static void start(Context context, int requestCode) {
         Intent intent = new Intent(context, SettingsActivity.class);
@@ -249,6 +248,7 @@ public class SettingsActivity extends BaseActivity {
         }
 
         updateHelper = new UpdateHelper(this);
+        countDownTimer = new MyCountDown(60*1000,1000);
     }
 
     /**
@@ -566,8 +566,8 @@ public class SettingsActivity extends BaseActivity {
                 Uri uri = data.getData();
                 String path = RealPathUtil.getRealPathFromURI(this, uri);
 //                File newFile = Compressor.getDefault(this).compressToFile(new File(path));
-                LocalImageFilePathPreferencesDao.set(this,path);
-                Toast.makeText(this,"选图成功，后退查看效果",Toast.LENGTH_SHORT).show();
+                LocalImageFilePathPreferencesDao.set(this, path);
+                Toast.makeText(this, "选图成功，后退查看效果", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -747,11 +747,13 @@ public class SettingsActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        countDownTimer.start();
     }
 
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+        countDownTimer.cancel();
     }
 
     @Override
@@ -779,6 +781,31 @@ public class SettingsActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.settings, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    class MyCountDown extends CountDownTimer {
+        /**
+         * @param millisInFuture    The number of millis in the future from the call
+         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
+         *                          is called.
+         * @param countDownInterval The interval along the way to receive
+         *                          {@link #onTick(long)} callbacks.
+         */
+        public MyCountDown(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            setTitle(String.format("设置(%s秒)", millisUntilFinished / 1000));
+
+        }
+
+        @Override
+        public void onFinish() {
+            onBackPressed();
+
+        }
     }
 
 }
