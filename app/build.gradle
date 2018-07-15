@@ -20,7 +20,6 @@ repositories {
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "app.xunxun.homeclock"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -53,6 +52,7 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
