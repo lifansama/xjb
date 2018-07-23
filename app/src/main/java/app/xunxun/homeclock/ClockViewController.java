@@ -66,8 +66,9 @@ import app.xunxun.homeclock.model.Pic;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.BackgroundModePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
-import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
+import app.xunxun.homeclock.preferences.EnableVibrateWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
+import app.xunxun.homeclock.preferences.EnableVoiceWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.FocusTimePreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsMaoHaoShanShuoPreferencesDao;
@@ -207,8 +208,12 @@ public class ClockViewController {
      */
     private void speak(String filename) {
 
-        vibrator.vibrate(1000);
-        soundPoolHelper.play(filename);
+        if (EnableVibrateWholeTimePreferencesDao.get(activity)) {
+            vibrator.vibrate(1000);
+        }
+        if (EnableVoiceWholeTimePreferencesDao.get(activity)) {
+            soundPoolHelper.play(filename);
+        }
     }
 
     /**
@@ -555,10 +560,8 @@ public class ClockViewController {
             focusTimeTv.setVisibility(View.GONE);
         }
         if (isWholeTime(minute, second)) {
-            if (EnableSeapkWholeTimePreferencesDao.get(activity)) {
-                String file = getFileByTime(hour24, hour12);
-                speak(file);
-            }
+            String file = getFileByTime(hour24, hour12);
+            speak(file);
         }
 
 

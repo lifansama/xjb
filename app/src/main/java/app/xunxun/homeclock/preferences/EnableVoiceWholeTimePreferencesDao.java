@@ -8,8 +8,8 @@ import android.preference.PreferenceManager;
  * 整点语音报时.
  * Created by fengdianxun on 15-6-24.
  */
-public class EnableSeapkWholeTimePreferencesDao {
-    private static final String KEY = "EnableSeapkWholeTimePreferencesDao";
+public class EnableVoiceWholeTimePreferencesDao {
+    private static final String KEY = "EnableVoiceWholeTimePreferencesDao";
 
     public static void set(Context context, boolean flag) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

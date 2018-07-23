@@ -420,6 +420,16 @@
                 android:text="整点震动"
                 android:textColor="@color/grey_800"
                 android:textSize="18sp" />
+            <CheckBox
+                android:id="@+id/enableVoiceWholeTimeCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="整点报时"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"

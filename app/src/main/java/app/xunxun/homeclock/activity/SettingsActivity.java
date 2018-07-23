@@ -48,8 +48,9 @@ import app.xunxun.homeclock.helper.UpdateHelper;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
 import app.xunxun.homeclock.preferences.BackgroundModePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao;
-import app.xunxun.homeclock.preferences.EnableSeapkWholeTimePreferencesDao;
+import app.xunxun.homeclock.preferences.EnableVibrateWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao;
+import app.xunxun.homeclock.preferences.EnableVoiceWholeTimePreferencesDao;
 import app.xunxun.homeclock.preferences.FocusTimePreferencesDao;
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao;
 import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao;
@@ -132,7 +133,9 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.enableShakeFeedbackCb)
     CheckBox enableShakeFeedbackCb;
     @BindView(R.id.enableSpeakWholeTimeCb)
-    CheckBox enableSpeakWholeTimeCb;
+    CheckBox enableVibrateWholeTimeCb;
+    @BindView(R.id.enableVoiceWholeTimeCb)
+    CheckBox enableVoiceWholeTimeCb;
     @BindView(R.id.protectScreenCb)
     CheckBox protectScreenCb;
     @BindView(R.id.textSizeTv)
@@ -376,10 +379,16 @@ public class SettingsActivity extends BaseActivity {
 
             }
         });
-        enableSpeakWholeTimeCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        enableVibrateWholeTimeCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                EnableSeapkWholeTimePreferencesDao.set(buttonView.getContext(), isChecked);
+                EnableVibrateWholeTimePreferencesDao.set(buttonView.getContext(), isChecked);
+            }
+        });
+        enableVoiceWholeTimeCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EnableVoiceWholeTimePreferencesDao.set(buttonView.getContext(), isChecked);
             }
         });
         protectScreenCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -630,7 +639,8 @@ public class SettingsActivity extends BaseActivity {
             }
         });
         enableShakeFeedbackCb.setChecked(EnableShakeFeedbackPreferencesDao.get(this));
-        enableSpeakWholeTimeCb.setChecked(EnableSeapkWholeTimePreferencesDao.get(this));
+        enableVibrateWholeTimeCb.setChecked(EnableVibrateWholeTimePreferencesDao.get(this));
+        enableVoiceWholeTimeCb.setChecked(EnableVibrateWholeTimePreferencesDao.get(this));
         showBatteryCb.setChecked(IsShowBatteryPreferencesDao.get(this));
 
         lockScreenShowCb.setChecked(LockScreenShowOnPreferencesDao.get(this));
