@@ -43,7 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+//import com.crashlytics.android.Crashlytics;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.feedback.PgyFeedbackShakeManager;
 import com.squareup.picasso.Picasso;
@@ -743,11 +743,11 @@ public class ClockViewController {
                     Random random = new Random();
                     int newTopMarginMax = centerRl.getHeight() <= 0 || timeLl.getHeight() <= 0 ? screenHeight / 2 : centerRl.getHeight() - timeLl.getHeight();
 
-                    Crashlytics.setInt("newTopMarginMax", newTopMarginMax);
+//                    Crashlytics.setInt("newTopMarginMax", newTopMarginMax);
                     params.topMargin = newTopMarginMax <= 0 ? 0 : random.nextInt(newTopMarginMax);
                     int newLeftMarginMax = centerRl.getWidth() <= 0 || timeLl.getWidth() <= 0 ? screenWidth / 2 : centerRl.getWidth() - timeLl.getWidth();
 
-                    Crashlytics.setInt("newLeftMarginMax", newLeftMarginMax);
+//                    Crashlytics.setInt("newLeftMarginMax", newLeftMarginMax);
                     params.leftMargin = newLeftMarginMax <= 0 ? 0 : random.nextInt(newLeftMarginMax);
                     timeLl.setLayoutParams(params);
                     params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
