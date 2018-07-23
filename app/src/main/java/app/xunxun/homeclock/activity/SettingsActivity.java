@@ -73,7 +73,7 @@ import app.xunxun.homeclock.widget.ColorPickerDialog;
 import app.xunxun.homeclock.widget.DateTimePickerDialog;
 import app.xunxun.homeclock.widget.OnDateTimeSetListenner;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
 
 /**
@@ -83,91 +83,91 @@ public class SettingsActivity extends BaseActivity {
     public static final String REQUEST_CODE = "requestCode";
     public static final int REQUEST_MAIN = 1;
     public static final int REQUEST_LAUNCHER = 2;
-    @InjectView(R.id.backgroundColorTv)
+    @BindView(R.id.backgroundColorTv)
     TextView backgroundColorTv;
-    @InjectView(R.id.timeTv)
+    @BindView(R.id.timeTv)
     TextView timeTv;
-    @InjectView(R.id.dateTv)
+    @BindView(R.id.dateTv)
     TextView dateTv;
-    @InjectView(R.id.weekTv)
+    @BindView(R.id.weekTv)
     TextView weekTv;
-    @InjectView(R.id.backRl)
+    @BindView(R.id.backRl)
     RelativeLayout backRl;
-    @InjectView(R.id.textColorTv)
+    @BindView(R.id.textColorTv)
     TextView textColorTv;
-    @InjectView(R.id.activity_settings)
+    @BindView(R.id.activity_settings)
     LinearLayout activitySettings;
-    @InjectView(R.id.supportTv)
+    @BindView(R.id.supportTv)
     TextView supportTv;
-    @InjectView(R.id.keepScreenOnCb)
+    @BindView(R.id.keepScreenOnCb)
     CheckBox keepScreenOnCb;
-    @InjectView(R.id.lunarTv)
+    @BindView(R.id.lunarTv)
     TextView lunarTv;
-    @InjectView(R.id.ampmTv)
+    @BindView(R.id.ampmTv)
     TextView ampmTv;
-    @InjectView(R.id.time_12Rb)
+    @BindView(R.id.time_12Rb)
     RadioButton time12Rb;
-    @InjectView(R.id.time_24Rb)
+    @BindView(R.id.time_24Rb)
     RadioButton time24Rb;
-    @InjectView(R.id.timeStyleRg)
+    @BindView(R.id.timeStyleRg)
     RadioGroup timeStyleRg;
-    @InjectView(R.id.dateLl)
+    @BindView(R.id.dateLl)
     LinearLayout dateLl;
-    @InjectView(R.id.setLauncherCb)
+    @BindView(R.id.setLauncherCb)
     CheckBox setLauncherCb;
-    @InjectView(R.id.showDateCb)
+    @BindView(R.id.showDateCb)
     CheckBox showDateCb;
-    @InjectView(R.id.showLunarCb)
+    @BindView(R.id.showLunarCb)
     CheckBox showLunarCb;
-    @InjectView(R.id.showWeekCb)
+    @BindView(R.id.showWeekCb)
     CheckBox showWeekCb;
-    @InjectView(R.id.batteryTv)
+    @BindView(R.id.batteryTv)
     TextView batteryTv;
-    @InjectView(R.id.showBatteryCb)
+    @BindView(R.id.showBatteryCb)
     CheckBox showBatteryCb;
-    @InjectView(R.id.textSpaceEt)
+    @BindView(R.id.textSpaceEt)
     EditText textSpaceEt;
-    @InjectView(R.id.feedbackTv)
+    @BindView(R.id.feedbackTv)
     TextView feedbackTv;
-    @InjectView(R.id.enableShakeFeedbackCb)
+    @BindView(R.id.enableShakeFeedbackCb)
     CheckBox enableShakeFeedbackCb;
-    @InjectView(R.id.enableSpeakWholeTimeCb)
+    @BindView(R.id.enableSpeakWholeTimeCb)
     CheckBox enableSpeakWholeTimeCb;
-    @InjectView(R.id.protectScreenCb)
+    @BindView(R.id.protectScreenCb)
     CheckBox protectScreenCb;
-    @InjectView(R.id.textSizeTv)
+    @BindView(R.id.textSizeTv)
     TextView textSizeTv;
-    @InjectView(R.id.lockScreenShowCb)
+    @BindView(R.id.lockScreenShowCb)
     CheckBox lockScreenShowCb;
-    @InjectView(R.id.showSecondCb)
+    @BindView(R.id.showSecondCb)
     CheckBox showSecondCb;
-    @InjectView(R.id.backgroundColorRb)
+    @BindView(R.id.backgroundColorRb)
     RadioButton backgroundColorRb;
-    @InjectView(R.id.backgroundPicRb)
+    @BindView(R.id.backgroundPicRb)
     RadioButton backgroundPicRb;
-    @InjectView(R.id.localBackgroundPicRb)
+    @BindView(R.id.localBackgroundPicRb)
     RadioButton localBackgroundPicRb;
-    @InjectView(R.id.backgroundStyleRg)
+    @BindView(R.id.backgroundStyleRg)
     RadioGroup backgroundStyleRg;
-    @InjectView(R.id.versionTv)
+    @BindView(R.id.versionTv)
     TextView versionTv;
-    @InjectView(R.id.centerLl)
+    @BindView(R.id.centerLl)
     LinearLayout centerLl;
-    @InjectView(R.id.setDateTv)
+    @BindView(R.id.setDateTv)
     TextView setDateTv;
-    @InjectView(R.id.maohaoShanShuoCb)
+    @BindView(R.id.maohaoShanShuoCb)
     CheckBox maohaoShanShuoCb;
-    @InjectView(R.id.sensorRb)
+    @BindView(R.id.sensorRb)
     RadioButton sensorRb;
-    @InjectView(R.id.landscapeRb)
+    @BindView(R.id.landscapeRb)
     RadioButton landscapeRb;
-    @InjectView(R.id.portraitRb)
+    @BindView(R.id.portraitRb)
     RadioButton portraitRb;
-    @InjectView(R.id.screenOrientationRg)
+    @BindView(R.id.screenOrientationRg)
     RadioGroup screenOrientationRg;
-    @InjectView(R.id.screenBrightCb)
+    @BindView(R.id.screenBrightCb)
     CheckBox screenBrightCb;
-    @InjectView(R.id.notifyStayCb)
+    @BindView(R.id.notifyStayCb)
     CheckBox notifyStayCb;
     private ColorPickerDialog backgroundColorPickerDialog;
     private ColorPickerDialog textColorPickerDialog;
@@ -200,7 +200,7 @@ public class SettingsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         backgroundColorPickerDialog = new ColorPickerDialog(this);
         colors = getResources().getIntArray(R.array.colors);

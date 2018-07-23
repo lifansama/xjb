@@ -60,6 +60,7 @@ import app.xunxun.homeclock.activity.LauncherActivity;
 import app.xunxun.homeclock.activity.MainActivity;
 import app.xunxun.homeclock.activity.SettingsActivity;
 import app.xunxun.homeclock.api.Api;
+import app.xunxun.homeclock.helper.SoundPoolHelper;
 import app.xunxun.homeclock.helper.UpdateHelper;
 import app.xunxun.homeclock.model.Pic;
 import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao;
@@ -74,7 +75,6 @@ import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao;
 import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao;
-import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao;
 import app.xunxun.homeclock.preferences.LocalImageFilePathPreferencesDao;
 import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao;
 import app.xunxun.homeclock.preferences.ScreenBrightnessPreferencesDao;
@@ -84,8 +84,8 @@ import app.xunxun.homeclock.preferences.TextColorPreferencesDao;
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao;
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao;
 import app.xunxun.homeclock.utils.FloatToast;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import io.github.xhinliang.lunarcalendar.LunarCalendar;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -101,35 +101,35 @@ public class ClockViewController {
 
     public static final int WHAT_TIME = 1;
 
-    @InjectView(R.id.dateTv)
+    @BindView(R.id.dateTv)
     TextView dateTv;
-    @InjectView(R.id.weekTv)
+    @BindView(R.id.weekTv)
     TextView weekTv;
-    @InjectView(R.id.lunarTv)
+    @BindView(R.id.lunarTv)
     TextView lunarTv;
-    @InjectView(R.id.dateLl)
+    @BindView(R.id.dateLl)
     LinearLayout dateLl;
-    @InjectView(R.id.timeTv)
+    @BindView(R.id.timeTv)
     TextView timeTv;
-    @InjectView(R.id.ampmTv)
+    @BindView(R.id.ampmTv)
     TextView ampmTv;
-    @InjectView(R.id.activity_main)
+    @BindView(R.id.activity_main)
     RelativeLayout activityMain;
-    @InjectView(R.id.rootFl)
+    @BindView(R.id.rootFl)
     FrameLayout rootFl;
-    @InjectView(R.id.batteryTv)
+    @BindView(R.id.batteryTv)
     TextView batteryTv;
-    @InjectView(R.id.textSpaceTv)
+    @BindView(R.id.textSpaceTv)
     TextView textSpaceTv;
-    @InjectView(R.id.timeLl)
+    @BindView(R.id.timeLl)
     LinearLayout timeLl;
-    @InjectView(R.id.centerRl)
+    @BindView(R.id.centerRl)
     RelativeLayout centerRl;
-    @InjectView(R.id.battery2Tv)
+    @BindView(R.id.battery2Tv)
     TextView battery2Tv;
-    @InjectView(R.id.backIv)
+    @BindView(R.id.backIv)
     ImageView backIv;
-    @InjectView(R.id.focusTimeTv)
+    @BindView(R.id.focusTimeTv)
     TextView focusTimeTv;
     private Activity activity;
 
@@ -155,6 +155,7 @@ public class ClockViewController {
     private UpdateHelper updateHelper;
     private GestureDetector gestureDetector;
     private FloatToast toast;
+    private SoundPoolHelper soundPoolHelper;
 
     public ClockViewController(Activity activity) {
         this.activity = activity;
@@ -170,7 +171,7 @@ public class ClockViewController {
 
         hideNavigationBar();
         activity.setContentView(R.layout.activity_main);
-        ButterKnife.inject(this, activity);
+        ButterKnife.bind(this, activity);
         initTypeFace();
 
 
@@ -195,17 +196,19 @@ public class ClockViewController {
         }
 
         toast = new FloatToast();
+
+        soundPoolHelper = new SoundPoolHelper(activity);
+        soundPoolHelper.load();
     }
 
 
     /**
      * 说话.
-     *
-     * @param txt
      */
-    private void speak(final String txt) {
+    private void speak(String filename) {
 
         vibrator.vibrate(1000);
+        soundPoolHelper.play(filename);
     }
 
     /**
@@ -352,6 +355,7 @@ public class ClockViewController {
 
     public void onDestroy() {
         PgyCrashManager.unregister();
+        soundPoolHelper.release();
 
     }
 
@@ -551,9 +555,9 @@ public class ClockViewController {
             focusTimeTv.setVisibility(View.GONE);
         }
         if (isWholeTime(minute, second)) {
-            String txt = time2SpeakContent(hour24, hour12);
             if (EnableSeapkWholeTimePreferencesDao.get(activity)) {
-                speak(txt);
+                String file = getFileByTime(hour24, hour12);
+                speak(file);
             }
         }
 
@@ -589,24 +593,18 @@ public class ClockViewController {
     }
 
     /**
-     * 时间转报时的话.
+     * 根据时间获取声音文件.
      *
      * @param hour24
      * @param hour12
      * @return
      */
-    private String time2SpeakContent(int hour24, int hour12) {
-        String result;
-        if (Is12TimePreferencesDao.get(activity)) {
-            if (hour12 == 0 && hour24 == 12) {
-                hour12 = 12;
-            }
-            String ampm = hour24 >= 12 ? "下午" : "上午";
-            result = String.format("%s%d点整", ampm, hour12);
-        } else {
-            result = String.format("%d点整", hour24);
-        }
-        return result;
+    private String getFileByTime(int hour24, int hour12) {
+        if (hour24 == 0) hour24 = 24;
+        if (hour12 == 0) hour12 = 12;
+        String ampm = hour24 > 12 ? "pm" : "am";
+        String filename = String.format("clock_%s%d", ampm, hour12);
+        return filename;
 
     }
 

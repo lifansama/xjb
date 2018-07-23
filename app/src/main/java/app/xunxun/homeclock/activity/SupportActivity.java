@@ -15,15 +15,15 @@ import com.umeng.analytics.MobclickAgent;
 import app.xunxun.homeclock.R;
 import app.xunxun.homeclock.utils.FloatToast;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * 打赏页面.
  */
 public class SupportActivity extends BaseActivity {
-    @InjectView(R.id.alipay)
+    @BindView(R.id.alipay)
     ImageView alipay;
-    @InjectView(R.id.wechat)
+    @BindView(R.id.wechat)
     ImageView wechat;
     private CountDownTimer countDownTimer;
 
@@ -35,7 +35,7 @@ public class SupportActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_support);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         alipay.setOnClickListener(new View.OnClickListener() {
             @Override
