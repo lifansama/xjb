@@ -14,23 +14,17 @@ import com.umeng.analytics.MobclickAgent
 
 import app.xunxun.homeclock.R
 import app.xunxun.homeclock.utils.FloatToast
-import butterknife.ButterKnife
-import butterknife.BindView
+import kotlinx.android.synthetic.main.activity_support.*
 
 /**
  * 打赏页面.
  */
 class SupportActivity : BaseActivity() {
-    @BindView(R.id.alipay)
-    internal var alipay: ImageView? = null
-    @BindView(R.id.wechat)
-    internal var wechat: ImageView? = null
     private var countDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_support)
-        ButterKnife.bind(this)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         alipay!!.setOnClickListener {
             try {

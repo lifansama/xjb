@@ -73,102 +73,13 @@ import app.xunxun.homeclock.utils.RealPathUtil
 import app.xunxun.homeclock.widget.ColorPickerDialog
 import app.xunxun.homeclock.widget.DateTimePickerDialog
 import app.xunxun.homeclock.widget.OnDateTimeSetListenner
-import butterknife.ButterKnife
-import butterknife.BindView
 import io.github.xhinliang.lunarcalendar.LunarCalendar
+import kotlinx.android.synthetic.main.activity_settings.*
 
 /**
  * 设置页面.
  */
 class SettingsActivity : BaseActivity() {
-    @BindView(R.id.backgroundColorTv)
-    internal var backgroundColorTv: TextView? = null
-    @BindView(R.id.timeTv)
-    internal var timeTv: TextView? = null
-    @BindView(R.id.dateTv)
-    internal var dateTv: TextView? = null
-    @BindView(R.id.weekTv)
-    internal var weekTv: TextView? = null
-    @BindView(R.id.backRl)
-    internal var backRl: RelativeLayout? = null
-    @BindView(R.id.textColorTv)
-    internal var textColorTv: TextView? = null
-    @BindView(R.id.activity_settings)
-    internal var activitySettings: LinearLayout? = null
-    @BindView(R.id.supportTv)
-    internal var supportTv: TextView? = null
-    @BindView(R.id.keepScreenOnCb)
-    internal var keepScreenOnCb: CheckBox? = null
-    @BindView(R.id.lunarTv)
-    internal var lunarTv: TextView? = null
-    @BindView(R.id.ampmTv)
-    internal var ampmTv: TextView? = null
-    @BindView(R.id.time_12Rb)
-    internal var time12Rb: RadioButton? = null
-    @BindView(R.id.time_24Rb)
-    internal var time24Rb: RadioButton? = null
-    @BindView(R.id.timeStyleRg)
-    internal var timeStyleRg: RadioGroup? = null
-    @BindView(R.id.dateLl)
-    internal var dateLl: LinearLayout? = null
-    @BindView(R.id.setLauncherCb)
-    internal var setLauncherCb: CheckBox? = null
-    @BindView(R.id.showDateCb)
-    internal var showDateCb: CheckBox? = null
-    @BindView(R.id.showLunarCb)
-    internal var showLunarCb: CheckBox? = null
-    @BindView(R.id.showWeekCb)
-    internal var showWeekCb: CheckBox? = null
-    @BindView(R.id.batteryTv)
-    internal var batteryTv: TextView? = null
-    @BindView(R.id.showBatteryCb)
-    internal var showBatteryCb: CheckBox? = null
-    @BindView(R.id.textSpaceEt)
-    internal var textSpaceEt: EditText? = null
-    @BindView(R.id.feedbackTv)
-    internal var feedbackTv: TextView? = null
-    @BindView(R.id.enableShakeFeedbackCb)
-    internal var enableShakeFeedbackCb: CheckBox? = null
-    @BindView(R.id.enableSpeakWholeTimeCb)
-    internal var enableVibrateWholeTimeCb: CheckBox? = null
-    @BindView(R.id.enableVoiceWholeTimeCb)
-    internal var enableVoiceWholeTimeCb: CheckBox? = null
-    @BindView(R.id.protectScreenCb)
-    internal var protectScreenCb: CheckBox? = null
-    @BindView(R.id.textSizeTv)
-    internal var textSizeTv: TextView? = null
-    @BindView(R.id.lockScreenShowCb)
-    internal var lockScreenShowCb: CheckBox? = null
-    @BindView(R.id.showSecondCb)
-    internal var showSecondCb: CheckBox? = null
-    @BindView(R.id.backgroundColorRb)
-    internal var backgroundColorRb: RadioButton? = null
-    @BindView(R.id.backgroundPicRb)
-    internal var backgroundPicRb: RadioButton? = null
-    @BindView(R.id.localBackgroundPicRb)
-    internal var localBackgroundPicRb: RadioButton? = null
-    @BindView(R.id.backgroundStyleRg)
-    internal var backgroundStyleRg: RadioGroup? = null
-    @BindView(R.id.versionTv)
-    internal var versionTv: TextView? = null
-    @BindView(R.id.centerLl)
-    internal var centerLl: LinearLayout? = null
-    @BindView(R.id.setDateTv)
-    internal var setDateTv: TextView? = null
-    @BindView(R.id.maohaoShanShuoCb)
-    internal var maohaoShanShuoCb: CheckBox? = null
-    @BindView(R.id.sensorRb)
-    internal var sensorRb: RadioButton? = null
-    @BindView(R.id.landscapeRb)
-    internal var landscapeRb: RadioButton? = null
-    @BindView(R.id.portraitRb)
-    internal var portraitRb: RadioButton? = null
-    @BindView(R.id.screenOrientationRg)
-    internal var screenOrientationRg: RadioGroup? = null
-    @BindView(R.id.screenBrightCb)
-    internal var screenBrightCb: CheckBox? = null
-    @BindView(R.id.notifyStayCb)
-    internal var notifyStayCb: CheckBox? = null
     private var backgroundColorPickerDialog: ColorPickerDialog? = null
     private var textColorPickerDialog: ColorPickerDialog? = null
     private val dateSDF = SimpleDateFormat("yyyy-MM-dd")
@@ -185,7 +96,6 @@ class SettingsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        ButterKnife.bind(this)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         backgroundColorPickerDialog = ColorPickerDialog(this)
         colors = resources.getIntArray(R.array.colors)
@@ -299,7 +209,7 @@ class SettingsActivity : BaseActivity() {
         }
         feedbackTv!!.setOnClickListener { PgyFeedback.getInstance().showDialog(this@SettingsActivity) }
         enableShakeFeedbackCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableShakeFeedbackPreferencesDao.set(buttonView.context, isChecked) }
-        enableVibrateWholeTimeCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableVibrateWholeTimePreferencesDao.set(buttonView.context, isChecked) }
+        enableSpeakWholeTimeCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableVibrateWholeTimePreferencesDao.set(buttonView.context, isChecked) }
         enableVoiceWholeTimeCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableVoiceWholeTimePreferencesDao.set(buttonView.context, isChecked) }
         protectScreenCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
             EnableProtectScreenPreferencesDao.set(buttonView.context, isChecked)
@@ -479,9 +389,9 @@ class SettingsActivity : BaseActivity() {
         setForegroundColor()
         setDate()
         if (Is12TimePreferencesDao.get(this))
-            time12Rb!!.isChecked = true
+            time_12Rb!!.isChecked = true
         else
-            time24Rb!!.isChecked = true
+            time_24Rb!!.isChecked = true
 
         setTime()
         LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this))
@@ -507,7 +417,7 @@ class SettingsActivity : BaseActivity() {
             }
         })
         enableShakeFeedbackCb!!.isChecked = EnableShakeFeedbackPreferencesDao.get(this)
-        enableVibrateWholeTimeCb!!.isChecked = EnableVibrateWholeTimePreferencesDao.get(this)
+        enableSpeakWholeTimeCb!!.isChecked = EnableVibrateWholeTimePreferencesDao.get(this)
         enableVoiceWholeTimeCb!!.isChecked = EnableVibrateWholeTimePreferencesDao.get(this)
         showBatteryCb!!.isChecked = IsShowBatteryPreferencesDao.get(this)
 

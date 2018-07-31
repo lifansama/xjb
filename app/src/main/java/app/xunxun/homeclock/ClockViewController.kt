@@ -84,15 +84,13 @@ import app.xunxun.homeclock.preferences.TextColorPreferencesDao
 import app.xunxun.homeclock.preferences.TextSizePreferencesDao
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao
 import app.xunxun.homeclock.utils.FloatToast
-import butterknife.BindView
-import butterknife.ButterKnife
 import io.github.xhinliang.lunarcalendar.LunarCalendar
+import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.String.Companion
 
 /**
  * Created by fengdianxun on 2017/1/19.
@@ -100,36 +98,6 @@ import kotlin.String.Companion
 
 class ClockViewController(private val activity: Activity) {
 
-    @BindView(R.id.dateTv)
-    internal var dateTv: TextView? = null
-    @BindView(R.id.weekTv)
-    internal var weekTv: TextView? = null
-    @BindView(R.id.lunarTv)
-    internal var lunarTv: TextView? = null
-    @BindView(R.id.dateLl)
-    internal var dateLl: LinearLayout? = null
-    @BindView(R.id.timeTv)
-    internal var timeTv: TextView? = null
-    @BindView(R.id.ampmTv)
-    internal var ampmTv: TextView? = null
-    @BindView(R.id.activity_main)
-    internal var activityMain: RelativeLayout? = null
-    @BindView(R.id.rootFl)
-    internal var rootFl: FrameLayout? = null
-    @BindView(R.id.batteryTv)
-    internal var batteryTv: TextView? = null
-    @BindView(R.id.textSpaceTv)
-    internal var textSpaceTv: TextView? = null
-    @BindView(R.id.timeLl)
-    internal var timeLl: LinearLayout? = null
-    @BindView(R.id.centerRl)
-    internal var centerRl: RelativeLayout? = null
-    @BindView(R.id.battery2Tv)
-    internal var battery2Tv: TextView? = null
-    @BindView(R.id.backIv)
-    internal var backIv: ImageView? = null
-    @BindView(R.id.focusTimeTv)
-    internal var focusTimeTv: TextView? = null
 
 
     private var timer: Timer? = null
@@ -167,7 +135,7 @@ class ClockViewController(private val activity: Activity) {
 
         hideNavigationBar()
         activity.setContentView(R.layout.activity_main)
-        ButterKnife.bind(this, activity)
+//        ButterKnife.bind(this, activity)
         initTypeFace()
 
 
@@ -215,8 +183,8 @@ class ClockViewController(private val activity: Activity) {
      * 初始化监听器.
      */
     private fun initListner() {
-        rootFl!!.setOnTouchListener { v, event -> gestureDetector!!.onTouchEvent(event) }
-        rootFl!!.setOnClickListener { view ->
+        activity.rootFl!!.setOnTouchListener { v, event -> gestureDetector!!.onTouchEvent(event) }
+        activity.rootFl!!.setOnClickListener { view ->
             view.requestFocus()
             if (isUsefullClick && navigationBarIsVisible) {
                 Log.v("activityMain", "hideNavigationBar")
@@ -351,15 +319,15 @@ class ClockViewController(private val activity: Activity) {
      * @param color
      */
     private fun setForegroundColor(color: Int) {
-        timeTv!!.setTextColor(color)
-        dateTv!!.setTextColor(color)
-        weekTv!!.setTextColor(color)
-        lunarTv!!.setTextColor(color)
-        ampmTv!!.setTextColor(color)
-        batteryTv!!.setTextColor(color)
-        battery2Tv!!.setTextColor(color)
-        textSpaceTv!!.setTextColor(color)
-        focusTimeTv!!.setTextColor(color)
+        activity.timeTv!!.setTextColor(color)
+        activity.dateTv!!.setTextColor(color)
+        activity.weekTv!!.setTextColor(color)
+        activity.lunarTv!!.setTextColor(color)
+        activity.ampmTv!!.setTextColor(color)
+        activity.batteryTv!!.setTextColor(color)
+        activity.battery2Tv!!.setTextColor(color)
+        activity.textSpaceTv!!.setTextColor(color)
+        activity.focusTimeTv!!.setTextColor(color)
     }
 
     /**
@@ -381,15 +349,15 @@ class ClockViewController(private val activity: Activity) {
         if (mode == BackgroundModePreferencesDao.MODE_ONLINE_IMAGE) {
             getPic()
         } else if (mode == BackgroundModePreferencesDao.MODE_COLOR) {
-            activityMain!!.setBackgroundColor(color)
+            activity.activity_main!!.setBackgroundColor(color)
         } else if (mode == BackgroundModePreferencesDao.MODE_LOCAL_IMAGE) {
-            activityMain!!.setBackgroundColor(Color.argb(100, 0, 0, 0))
+            activity.activity_main!!.setBackgroundColor(Color.argb(100, 0, 0, 0))
             val path = LocalImageFilePathPreferencesDao.get(activity)
             if (!TextUtils.isEmpty(path)) {
                 val file = File(path)
-                Picasso.with(activity).load(file).into(backIv)
+                Picasso.with(activity).load(file).into(activity.backIv)
             } else {
-                activityMain!!.setBackgroundColor(color)
+                activity.activity_main!!.setBackgroundColor(color)
             }
         }
 
@@ -408,8 +376,8 @@ class ClockViewController(private val activity: Activity) {
                     val imagesEntity = response.body().images!![0]
                     val url = imagesEntity.url
 
-                    activityMain!!.setBackgroundColor(Color.argb(100, 0, 0, 0))
-                    Picasso.with(activity).load(String.format("%s%s", "http://www.bing.com/", url)).into(backIv)
+                    activity.activity_main!!.setBackgroundColor(Color.argb(100, 0, 0, 0))
+                    Picasso.with(activity).load(String.format("%s%s", "http://www.bing.com/", url)).into(activity.backIv)
 
                 }
             }
@@ -450,8 +418,8 @@ class ClockViewController(private val activity: Activity) {
     private fun initTypeFace() {
 
         val typeFace = Typeface.createFromAsset(activity.assets, "fonts/ds_digi.ttf")
-        timeTv!!.typeface = typeFace
-        dateTv!!.typeface = typeFace
+        activity.timeTv!!.typeface = typeFace
+        activity.dateTv!!.typeface = typeFace
 
     }
 
@@ -459,30 +427,30 @@ class ClockViewController(private val activity: Activity) {
      * 初始化.
      */
     private fun init() {
-        setTextViewVisibility(dateTv!!, IsShowDatePreferencesDao.get(activity))
-        setTextViewVisibility(weekTv!!, IsShowWeekPreferencesDao.get(activity))
-        setTextViewVisibility(lunarTv!!, IsShowLunarPreferencesDao.get(activity))
-        setTextViewVisibility(batteryTv!!, IsShowBatteryPreferencesDao.get(activity))
+        setTextViewVisibility(activity.dateTv!!, IsShowDatePreferencesDao.get(activity))
+        setTextViewVisibility(activity.weekTv!!, IsShowWeekPreferencesDao.get(activity))
+        setTextViewVisibility(activity.lunarTv!!, IsShowLunarPreferencesDao.get(activity))
+        setTextViewVisibility(activity.batteryTv!!, IsShowBatteryPreferencesDao.get(activity))
 
-        textSpaceTv!!.text = TextSpaceContentPreferencesDao.get(activity)
+        activity.textSpaceTv!!.text = TextSpaceContentPreferencesDao.get(activity)
 
         backgroundColor = BackgroundColorPreferencesDao.get(activity)
         foregroundColor = TextColorPreferencesDao.get(activity)
 
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            timeTv!!.textSize = TextSizePreferencesDao.get(activity).toFloat()
+            activity.timeTv!!.textSize = TextSizePreferencesDao.get(activity).toFloat()
         } else if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            timeTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.7).toFloat()
+            activity.timeTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.7).toFloat()
         }
 
-        batteryTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.13).toFloat()
-        battery2Tv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.13).toFloat()
-        lunarTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.15).toFloat()
-        dateTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.2).toFloat()
-        weekTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.15).toFloat()
-        ampmTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.5).toFloat()
-        textSpaceTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.25).toFloat()
-        focusTimeTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.2).toFloat()
+        activity.batteryTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.13).toFloat()
+        activity.battery2Tv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.13).toFloat()
+        activity.lunarTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.15).toFloat()
+        activity.dateTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.2).toFloat()
+        activity.weekTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.15).toFloat()
+        activity.ampmTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.5).toFloat()
+        activity.textSpaceTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.25).toFloat()
+        activity.focusTimeTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.2).toFloat()
 
     }
 
@@ -509,21 +477,21 @@ class ClockViewController(private val activity: Activity) {
 
         setTime(now, hour24, minute, hour12, second)
 
-        if (dateTv != null)
-            dateTv!!.text = dateSDF.format(now)
-        if (weekTv != null)
-            weekTv!!.text = weekSDF.format(now)
+        if (activity.dateTv != null)
+            activity.dateTv!!.text = dateSDF.format(now)
+        if (activity.weekTv != null)
+            activity.weekTv!!.text = weekSDF.format(now)
 
         val lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH))
 
-        lunarTv!!.text = String.format("%s月%s", lunarCalendar.lunarMonth, lunarCalendar.lunarDay)
+        activity.lunarTv!!.text = String.format("%s月%s", lunarCalendar.lunarMonth, lunarCalendar.lunarDay)
 
 
         if (FocusTimePreferencesDao.get(activity) > 0) {
-            focusTimeTv!!.text = diffDate(now, Date(FocusTimePreferencesDao.get(activity)))
-            focusTimeTv!!.visibility = View.VISIBLE
+            activity.focusTimeTv!!.text = diffDate(now, Date(FocusTimePreferencesDao.get(activity)))
+            activity.focusTimeTv!!.visibility = View.VISIBLE
         } else {
-            focusTimeTv!!.visibility = View.GONE
+            activity.focusTimeTv!!.visibility = View.GONE
         }
         if (isWholeTime(minute, second)) {
             val file = getFileByTime(hour24, hour12)
@@ -588,25 +556,25 @@ class ClockViewController(private val activity: Activity) {
      */
     private fun setTime(now: Date, hour24: Int, minute: Int, hour12: Int, second: Int) {
         if (Is12TimePreferencesDao.get(activity)) {
-            if (timeTv != null) {
+            if (activity.timeTv != null) {
                 val spannable = getAmPmTextSpannable(hour24, minute, hour12, second)
 
-                timeTv!!.text = spannable
+                activity.timeTv!!.text = spannable
             }
 
         } else {
-            if (timeTv != null) {
+            if (activity.timeTv != null) {
                 if (ShowSecondPreferencesDao.get(activity)) {
-                    timeTv!!.text = time24SDF.format(now)
+                    activity.timeTv!!.text = time24SDF.format(now)
                 } else {
                     if (IsMaoHaoShanShuoPreferencesDao.get(activity)) {
                         if (second % 2 == 0) {
-                            timeTv!!.text = time24NoSecondSDF.format(now)
+                            activity.timeTv!!.text = time24NoSecondSDF.format(now)
                         } else {
-                            timeTv!!.text = time24NoSecondNOMaoHaoSDF.format(now)
+                            activity.timeTv!!.text = time24NoSecondNOMaoHaoSDF.format(now)
                         }
                     } else {
-                        timeTv!!.text = time24NoSecondSDF.format(now)
+                        activity.timeTv!!.text = time24NoSecondSDF.format(now)
                     }
                 }
             }
@@ -687,9 +655,9 @@ class ClockViewController(private val activity: Activity) {
 
 
                 //把它转成百分比
-                if (batteryTv != null) {
-                    batteryTv!!.text = String.format("%s:%d%%", if (isCharging) "充电中" else "电量", level * 100 / scale)
-                    battery2Tv!!.text = String.format("%s:%d%%", if (isCharging) "充电中" else "电量", level * 100 / scale)
+                if (activity.batteryTv != null) {
+                    activity.batteryTv!!.text = String.format("%s:%d%%", if (isCharging) "充电中" else "电量", level * 100 / scale)
+                    activity.battery2Tv!!.text = String.format("%s:%d%%", if (isCharging) "充电中" else "电量", level * 100 / scale)
                 }
 
             }
@@ -703,33 +671,33 @@ class ClockViewController(private val activity: Activity) {
             if (msg.what == 1) {
                 setDateTime()
                 if (EnableProtectScreenPreferencesDao.get(activity) && System.currentTimeMillis() - lastTime > 1000 * 60 * 5) {
-                    val params = timeLl!!.layoutParams as RelativeLayout.LayoutParams
+                    val params = activity.timeLl!!.layoutParams as RelativeLayout.LayoutParams
                     val random = Random()
-                    val newTopMarginMax = if (centerRl!!.height <= 0 || timeLl!!.height <= 0) screenHeight / 2 else centerRl!!.height - timeLl!!.height
+                    val newTopMarginMax = if (activity.centerRl!!.height <= 0 || activity.timeLl!!.height <= 0) screenHeight / 2 else activity.centerRl!!.height - activity.timeLl!!.height
 
                     //                    Crashlytics.setInt("newTopMarginMax", newTopMarginMax);
                     params.topMargin = if (newTopMarginMax <= 0) 0 else random.nextInt(newTopMarginMax)
-                    val newLeftMarginMax = if (centerRl!!.width <= 0 || timeLl!!.width <= 0) screenWidth / 2 else centerRl!!.width - timeLl!!.width
+                    val newLeftMarginMax = if (activity.centerRl!!.width <= 0 || activity.timeLl!!.width <= 0) screenWidth / 2 else activity.centerRl!!.width - activity.timeLl!!.width
 
                     //                    Crashlytics.setInt("newLeftMarginMax", newLeftMarginMax);
                     params.leftMargin = if (newLeftMarginMax <= 0) 0 else random.nextInt(newLeftMarginMax)
-                    timeLl!!.layoutParams = params
+                    activity.timeLl!!.layoutParams = params
                     params.addRule(RelativeLayout.CENTER_IN_PARENT, 0)
                     lastTime = System.currentTimeMillis()
 
 
-                    batteryTv!!.visibility = View.GONE
-                    battery2Tv!!.visibility = if (IsShowBatteryPreferencesDao.get(activity)) View.VISIBLE else View.GONE
+                    activity.batteryTv!!.visibility = View.GONE
+                    activity.battery2Tv!!.visibility = if (IsShowBatteryPreferencesDao.get(activity)) View.VISIBLE else View.GONE
 
 
-                    val params1 = dateLl!!.layoutParams as RelativeLayout.LayoutParams
+                    val params1 = activity.dateLl!!.layoutParams as RelativeLayout.LayoutParams
                     val align = random.nextInt(2)
                     Log.v("xxx", "params.topMargin:$align")
                     params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0)
                     params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0)
                     params1.addRule(if (align == 0) RelativeLayout.ALIGN_PARENT_LEFT else RelativeLayout.ALIGN_PARENT_RIGHT)
-                    dateLl!!.layoutParams = params1
-                    dateLl!!.gravity = if (align == 0) Gravity.LEFT else Gravity.RIGHT
+                    activity.dateLl!!.layoutParams = params1
+                    activity.dateLl!!.gravity = if (align == 0) Gravity.LEFT else Gravity.RIGHT
 
 
                 }
