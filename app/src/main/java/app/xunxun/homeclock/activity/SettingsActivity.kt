@@ -175,7 +175,6 @@ class SettingsActivity : BaseActivity() {
 
         timeStyleRg!!.setOnCheckedChangeListener { radioGroup, id ->
             Is12TimePreferencesDao.set(radioGroup.context, id == R.id.time_12Rb)
-            setTime()
         }
 
         setLauncherCb!!.isChecked = IsLauncherPreferencesDao.get(this)
@@ -193,19 +192,15 @@ class SettingsActivity : BaseActivity() {
         }
         showDateCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
             IsShowDatePreferencesDao.set(buttonView.context, isChecked)
-            setShowDateCb(isChecked)
         }
         showLunarCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
             IsShowLunarPreferencesDao.set(buttonView.context, isChecked)
-            setShowLunarCb(isChecked)
         }
         showWeekCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
             IsShowWeekPreferencesDao.set(buttonView.context, isChecked)
-            setShowWeekCb(isChecked)
         }
         showBatteryCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
             IsShowBatteryPreferencesDao.set(buttonView.context, isChecked)
-            batteryTv!!.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
         feedbackTv!!.setOnClickListener { PgyFeedback.getInstance().showDialog(this@SettingsActivity) }
         enableShakeFeedbackCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableShakeFeedbackPreferencesDao.set(buttonView.context, isChecked) }
@@ -261,7 +256,6 @@ class SettingsActivity : BaseActivity() {
         }
         showSecondCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
             ShowSecondPreferencesDao.set(buttonView.context, isChecked)
-            setTime()
         }
         backgroundStyleRg!!.setOnCheckedChangeListener { group, checkedId ->
             val rb = findViewById(checkedId) as RadioButton
@@ -387,18 +381,12 @@ class SettingsActivity : BaseActivity() {
     private fun init() {
         setBackgroundColor()
         setForegroundColor()
-        setDate()
         if (Is12TimePreferencesDao.get(this))
             time_12Rb!!.isChecked = true
         else
             time_24Rb!!.isChecked = true
 
-        setTime()
         LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this))
-        setShowDateCb(IsShowDatePreferencesDao.get(this))
-        setShowLunarCb(IsShowLunarPreferencesDao.get(this))
-        setShowWeekCb(IsShowWeekPreferencesDao.get(this))
-        batteryTv!!.visibility = if (IsShowBatteryPreferencesDao.get(this)) View.VISIBLE else View.GONE
         if (!TextUtils.isEmpty(TextSpaceContentPreferencesDao.get(this))) {
             textSpaceEt!!.setText(TextSpaceContentPreferencesDao.get(this))
         }
@@ -435,81 +423,16 @@ class SettingsActivity : BaseActivity() {
 
     }
 
-    /**
-     * 设置当前日期.
-     */
-    private fun setDate() {
-        val now = Date()
-        dateTv!!.text = dateSDF.format(now)
-        weekTv!!.text = weekSDF.format(now)
-        val calendar = Calendar.getInstance()
-        val lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH))
-        lunarTv!!.text = String.format("%s月%s日", lunarCalendar.lunarMonth, lunarCalendar.lunarDay)
-    }
-
-    private fun setShowDateCb(isShow: Boolean) {
-        showDateCb!!.isChecked = isShow
-        dateTv!!.visibility = if (isShow) View.VISIBLE else View.GONE
-
-    }
-
-    private fun setShowWeekCb(isShow: Boolean) {
-
-        weekTv!!.visibility = if (isShow) View.VISIBLE else View.GONE
-        showWeekCb!!.isChecked = isShow
-    }
-
-    private fun setShowLunarCb(isShow: Boolean) {
-        showLunarCb!!.isChecked = isShow
-        lunarTv!!.visibility = if (isShow) View.VISIBLE else View.GONE
-
-    }
-
 
     /**
      * 设置时间.
      */
-    private fun setTime() {
-        val now = Date()
-        val timeStr: String
-        if (Is12TimePreferencesDao.get(this)) {
-            val calendar = Calendar.getInstance()
-            if (ShowSecondPreferencesDao.get(this)) {
-                timeStr = time12SDF.format(now)
-            } else {
-                timeStr = time12NoSecondSDF.format(now)
-            }
-            if (calendar.get(Calendar.HOUR_OF_DAY) >= 12) {
-                ampmTv!!.text = "PM"
-
-            } else {
-                ampmTv!!.text = "AM"
-
-            }
-            ampmTv!!.visibility = View.VISIBLE
-        } else {
-            if (ShowSecondPreferencesDao.get(this)) {
-                timeStr = time24SDF.format(now)
-            } else {
-                timeStr = time24NoSecondSDF.format(now)
-            }
-            ampmTv!!.visibility = View.GONE
-
-        }
-        timeTv!!.text = timeStr
-    }
 
     /**
      * 设置前景色.
      */
     private fun setForegroundColor() {
         val color = TextColorPreferencesDao.get(this)
-        timeTv!!.setTextColor(color)
-        dateTv!!.setTextColor(color)
-        weekTv!!.setTextColor(color)
-        ampmTv!!.setTextColor(color)
-        lunarTv!!.setTextColor(color)
-        batteryTv!!.setTextColor(color)
         textSpaceEt!!.setTextColor(color)
         setDateTv!!.setTextColor(color)
     }
