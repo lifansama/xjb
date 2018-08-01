@@ -3,13 +3,16 @@ package app.xunxun.homeclock.activity
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.MenuItem
 import android.view.WindowManager
 
 import app.xunxun.homeclock.MyApplication
 import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao
+import com.umeng.analytics.MobclickAgent
 
 /**
  * Created by fengdianxun on 2017/4/22.
@@ -18,8 +21,13 @@ import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao
 open class BaseActivity : AppCompatActivity() {
 
     private var dialog: AlertDialog? = null
+    private var countDownTimer: CountDownTimer? = null
+    protected var disableCountDown:Boolean = false
+    private lateinit var initialTitle:CharSequence
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initialTitle = title
 
         if (KeepScreenOnPreferencesDao.get(this)) {
             Log.v("onCreate", "FLAG_KEEP_SCREEN_ON")
@@ -30,7 +38,10 @@ open class BaseActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         val app = application as MyApplication
         app.pushActivity(this)
-        super.onCreate(savedInstanceState)
+        if (!disableCountDown) {
+            countDownTimer = MyCountDown((60 * 1000).toLong(), 1000)
+        }
+
     }
 
     override fun onDestroy() {
@@ -42,6 +53,18 @@ open class BaseActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+
+    public override fun onResume() {
+        super.onResume()
+        MobclickAgent.onResume(this)
+        countDownTimer?.start()
+    }
+
+    public override fun onPause() {
+        super.onPause()
+        MobclickAgent.onPause(this)
+        countDownTimer?.cancel()
+    }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         //        if (requestCode == 100){
         //            if (grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_DENIED) {
@@ -49,13 +72,25 @@ open class BaseActivity : AppCompatActivity() {
         //            }
         //        }
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
-    private fun showAlert(msg: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("温馨提醒")
-        builder.setMessage(msg)
-        builder.setPositiveButton("知道了", null)
-        dialog = builder.show()
 
+    internal inner class MyCountDown
+    (millisInFuture: Long, countDownInterval: Long) : CountDownTimer(millisInFuture, countDownInterval) {
+
+        override fun onTick(millisUntilFinished: Long) {
+            title = String.format("$initialTitle(%s秒)", millisUntilFinished / 1000)
+
+        }
+
+        override fun onFinish() {
+            onBackPressed()
+
+        }
     }
 }

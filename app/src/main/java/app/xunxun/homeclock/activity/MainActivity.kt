@@ -29,6 +29,7 @@ class MainActivity : BaseActivity() {
     private var clockViewController: ClockViewController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        disableCountDown = true
         super.onCreate(savedInstanceState)
 
         clockViewController = ClockViewController(this)

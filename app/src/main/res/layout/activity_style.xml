@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.StyleActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_300"
+        android:orientation="vertical">
+        <RadioGroup
+            android:id="@+id/backgroundStyleRg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/backgroundColorRb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:tag="0"
+                android:text="颜色背景"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/backgroundPicRb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:tag="1"
+                android:text="在线图片"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/localBackgroundPicRb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:tag="2"
+                android:text="本地图片"
+                android:textSize="18sp" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/backgroundColorTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:padding="16dp"
+            android:text="更改背景色"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <TextView
+            android:id="@+id/textColorTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:padding="16dp"
+            android:text="更改字体颜色"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <TextView
+            android:id="@+id/textSizeTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:padding="16dp"
+            android:text="更改字体大小"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <RadioGroup
+            android:id="@+id/timeStyleRg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/time_12Rb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="12小时制"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/time_24Rb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="24小时制"
+                android:textSize="18sp" />
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/showSecondCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="显示秒"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/showDateCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="显示日期"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/showWeekCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="显示星期"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/showLunarCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="显示农历"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+
+        <CheckBox
+            android:id="@+id/showBatteryCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="显示电量"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+    </LinearLayout>
+</ScrollView>

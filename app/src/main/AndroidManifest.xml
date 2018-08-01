@@ -25,8 +25,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="sensor"
             android:launchMode="singleInstance"
+            android:screenOrientation="sensor"
             android:theme="@style/Theme.AppCompat.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,8 +48,8 @@
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:launchMode="singleTask"
-            android:label="设置" />
+            android:label="设置"
+            android:launchMode="singleTask" />
         <activity
             android:name=".activity.SupportActivity"
             android:label="打赏碗泡面给开发者" />
@@ -63,23 +63,33 @@
             android:value="coolapk" />
         <meta-data
             android:name="PGYER_APPID"
-            android:value="f2e2c87c2f08308ae15a80b94f8350c8"></meta-data>
+            android:value="f2e2c87c2f08308ae15a80b94f8350c8" />
 
         <service
             android:name=".MyService"
             android:enabled="true"
-            android:exported="true"></service>
-        <provider android:name="android.support.v4.content.FileProvider"
+            android:exported="true" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
             android:authorities="app.xunxun.homeclock"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3e12e2386872ad948575a3afd390ef02b7213d42" />
+
+        <activity
+            android:name=".activity.StyleActivity"
+            android:label="样式"/>
+        <activity
+            android:name=".activity.FuncActivity"
+            android:label="功能"/>
     </application>
 
 </manifest>

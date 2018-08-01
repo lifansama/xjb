@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.FuncActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/backRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:visibility="gone">
+
+
+            <EditText
+                android:id="@+id/textSpaceEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:hint="写下需要提醒你的事情"
+                android:maxLines="2"
+                android:textColor="#fff"
+                android:textColorHint="@color/grey_500"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/setDateTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textSpaceEt"
+                android:layout_centerHorizontal="true"
+                android:padding="8dp"
+                android:text="点击设置到期时间" />
+        </RelativeLayout>
+
+        <RadioGroup
+            android:id="@+id/screenOrientationRg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/sensorRb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="自动旋转"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/landscapeRb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="保持横屏"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/portraitRb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="保持竖屏"
+                android:textSize="18sp" />
+        </RadioGroup>
+
+        <CheckBox
+            android:id="@+id/keepScreenOnCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="保持屏幕常亮"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/enableSpeakWholeTimeCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="整点震动"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/enableVoiceWholeTimeCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="整点报时"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/setLauncherCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="设为桌面启动器"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/lockScreenShowCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="锁屏显示"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/enableShakeFeedbackCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="摇一摇反馈"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/protectScreenCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="烧屏保护（移动模式）"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/maohaoShanShuoCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="冒号闪烁"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400"
+            android:visibility="gone" />
+
+        <CheckBox
+            android:id="@+id/screenBrightCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="屏幕亮度调节"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
+
+        <CheckBox
+            android:id="@+id/notifyStayCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/press_item"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="通知栏驻留"
+            android:textColor="@color/grey_800"
+            android:textSize="18sp" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="32dp"
+            android:background="@color/grey_400" />
+    </LinearLayout>
+
+</ScrollView>
