@@ -62,7 +62,6 @@ class StyleActivity : BaseActivity() {
             }
         })
         textColorTv!!.setOnClickListener { textColorPickerDialog!!.show() }
-        textSizeTv!!.setOnClickListener { }
 
         timeStyleRg!!.setOnCheckedChangeListener { radioGroup, id ->
             Is12TimePreferencesDao.set(radioGroup.context, id == R.id.time_12Rb)
