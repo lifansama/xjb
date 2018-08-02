@@ -64,36 +64,44 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/grey_400" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="32dp"
-            android:background="@color/grey_400" />
 
-        <TextView
-            android:id="@+id/textColorTv"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/press_item"
-            android:padding="16dp"
-            android:text="更改字体颜色"
-            android:textColor="@color/grey_800"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/grey_400" />
+            <TextView
+                android:id="@+id/textColorTv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/press_item"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="字体颜色"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/textSizeTv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/press_item"
-            android:padding="16dp"
-            android:text="更改字体大小"
-            android:textColor="@color/grey_800"
-            android:textSize="18sp" />
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey_400" />
+
+            <TextView
+                android:id="@+id/textSizeTv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/press_item"
+                android:gravity="center"
+                android:padding="16dp"
+
+                android:text="字体大小"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+        </LinearLayout>
 
 
         <View
@@ -116,8 +124,9 @@
 
             <RadioButton
                 android:id="@+id/time_12Rb"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:text="12小时制"
@@ -125,8 +134,9 @@
 
             <RadioButton
                 android:id="@+id/time_24Rb"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:checked="true"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
@@ -139,86 +149,90 @@
             android:layout_height="0.5dp"
             android:background="@color/grey_400" />
 
-        <CheckBox
-            android:id="@+id/showSecondCb"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/press_item"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
-            android:text="显示秒"
-            android:textColor="@color/grey_800"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/showSecondCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="秒针"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+
+            <CheckBox
+                android:id="@+id/showDateCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="日期"
+
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+
+            <CheckBox
+                android:id="@+id/showWeekCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+
+                android:text="星期"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+
+            <CheckBox
+                android:id="@+id/showLunarCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+
+                android:paddingTop="16dp"
+                android:text="农历"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+
+            <CheckBox
+                android:id="@+id/showBatteryCb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/press_item"
+                android:paddingBottom="16dp"
+
+                android:paddingTop="16dp"
+                android:text="电量"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp" />
+        </LinearLayout>
+
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/grey_400" />
 
-        <CheckBox
-            android:id="@+id/showDateCb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/press_item"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
-            android:text="显示日期"
-            android:textColor="@color/grey_800"
-            android:textSize="18sp" />
-
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/grey_400" />
-
-        <CheckBox
-            android:id="@+id/showWeekCb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/press_item"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
-            android:text="显示星期"
-            android:textColor="@color/grey_800"
-            android:textSize="18sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/grey_400" />
-
-        <CheckBox
-            android:id="@+id/showLunarCb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/press_item"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
-            android:text="显示农历"
-            android:textColor="@color/grey_800"
-            android:textSize="18sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/grey_400" />
-
-
-        <CheckBox
-            android:id="@+id/showBatteryCb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/press_item"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
-            android:text="显示电量"
-            android:textColor="@color/grey_800"
-            android:textSize="18sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_marginTop="32dp"
             android:background="@color/grey_400" />
 
         <CheckBox

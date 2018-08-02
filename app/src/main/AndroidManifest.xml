@@ -49,10 +49,13 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="设置"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SupportActivity"
-            android:label="打赏碗泡面给开发者" />
+            android:label="打赏碗泡面给开发者"
+
+            android:screenOrientation="portrait" />
         <activity android:name="com.pgyersdk.activity.FeedbackActivity" />
 
         <meta-data
@@ -86,10 +89,18 @@
 
         <activity
             android:name=".activity.StyleActivity"
-            android:label="样式"/>
+            android:label="样式"
+
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.FuncActivity"
-            android:label="功能"/>
+            android:label="功能"
+
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AlertActivity"
+            android:label="提醒"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

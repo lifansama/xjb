@@ -10,7 +10,6 @@ import app.xunxun.homeclock.R
 import app.xunxun.homeclock.helper.UpdateHelper
 import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao
 import com.pgyersdk.feedback.PgyFeedback
-import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.activity_settings.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.startActivity
@@ -26,26 +25,14 @@ class SettingsActivity : BaseActivity() {
         setContentView(R.layout.activity_settings)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        initListener()
-
         init()
 
         updateHelper = UpdateHelper(this)
         styleTv.onClick { startActivity<StyleActivity>() }
         funcTv.onClick { startActivity<FuncActivity>() }
-    }
-
-    /**
-     * 设置监听器.
-     */
-    private fun initListener() {
-
-        supportTv!!.setOnClickListener { view -> SupportActivity.start(view.context) }
-        feedbackTv!!.setOnClickListener { PgyFeedback.getInstance().showDialog(this@SettingsActivity) }
-
-        versionTv!!.setOnClickListener { updateHelper!!.check(true) }
-
-
+        supportTv.onClick { startActivity<SupportActivity>() }
+        feedbackTv.onClick { PgyFeedback.getInstance().showDialog(this@SettingsActivity) }
+        versionTv.onClick { updateHelper!!.check(true)  }
     }
 
 
@@ -88,20 +75,6 @@ class SettingsActivity : BaseActivity() {
     }
 
 
-    internal inner class MyCountDown
-    (millisInFuture: Long, countDownInterval: Long) : CountDownTimer(millisInFuture, countDownInterval) {
-
-        override fun onTick(millisUntilFinished: Long) {
-            title = String.format("设置(%s秒)", millisUntilFinished / 1000)
-
-        }
-
-        override fun onFinish() {
-            onBackPressed()
-
-        }
-    }
-
     companion object {
         val REQUEST_CODE = "requestCode"
         val REQUEST_MAIN = 1
@@ -113,13 +86,6 @@ class SettingsActivity : BaseActivity() {
             context.startActivity(intent)
         }
 
-        fun startNewTask(context: Context, requestCode: Int) {
-            val intent = Intent(context, SettingsActivity::class.java)
-            intent.putExtra(REQUEST_CODE, requestCode)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(intent)
-
-        }
     }
 
 }

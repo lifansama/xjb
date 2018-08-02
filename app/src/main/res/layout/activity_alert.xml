@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.AlertActivity">
+    <RelativeLayout
+        android:id="@+id/backRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp">
+
+
+        <EditText
+            android:id="@+id/textSpaceEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:hint="写下需要提醒你的事情"
+            android:maxLines="2"
+            android:textColorHint="@color/grey_500"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/setDateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textSpaceEt"
+            android:layout_centerHorizontal="true"
+            android:padding="8dp"
+            android:text="点击设置到期时间" />
+    </RelativeLayout>
+</LinearLayout>

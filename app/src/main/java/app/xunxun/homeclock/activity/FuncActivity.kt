@@ -17,11 +17,12 @@ import app.xunxun.homeclock.utils.LauncherSettings
 import app.xunxun.homeclock.widget.DateTimePickerDialog
 import app.xunxun.homeclock.widget.OnDateTimeSetListenner
 import kotlinx.android.synthetic.main.activity_func.*
+import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.startActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FuncActivity : BaseActivity() {
-    private var dateTimePickerDialog: DateTimePickerDialog? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,28 +32,7 @@ class FuncActivity : BaseActivity() {
 
         protectScreenCb!!.isChecked = EnableProtectScreenPreferencesDao.get(this)
 
-        dateTimePickerDialog = DateTimePickerDialog(this)
-        dateTimePickerDialog!!.setOnDateTimeSetListenner(object : OnDateTimeSetListenner {
-            override fun onDateTimeSeted(date: Date?) {
 
-                if (date != null) {
-                    FocusTimePreferencesDao.set(this@FuncActivity, date.time)
-
-                    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
-                    setDateTv!!.text = String.format("到期时间:%s", simpleDateFormat.format(date))
-                } else {
-                    FocusTimePreferencesDao.set(this@FuncActivity, 0)
-                    setDateTv!!.text = "点击设置到期时间"
-                }
-            }
-        })
-
-        if (FocusTimePreferencesDao.get(this@FuncActivity) > 0) {
-            val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
-            setDateTv!!.text = String.format("到期时间:%s", simpleDateFormat.format(Date(FocusTimePreferencesDao.get(this@FuncActivity))))
-        } else {
-            setDateTv!!.text = "点击设置到期时间"
-        }
 
         keepScreenOnCb!!.setOnCheckedChangeListener { compoundButton, isCheck -> KeepScreenOnPreferencesDao.set(compoundButton.context, isCheck) }
         keepScreenOnCb!!.isChecked = KeepScreenOnPreferencesDao.get(this)
@@ -87,7 +67,7 @@ class FuncActivity : BaseActivity() {
                 MyService.stopService(this@FuncActivity)
             }
         }
-        setDateTv!!.setOnClickListener { dateTimePickerDialog!!.show() }
+        alertTv.onClick { startActivity<AlertActivity>() }
         if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
             sensorRb!!.isChecked = true
         } else if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
@@ -122,23 +102,7 @@ class FuncActivity : BaseActivity() {
         lockScreenShowCb!!.isChecked = LockScreenShowOnPreferencesDao.get(this)
         notifyStayCb!!.isChecked = NotifyStayPreferencesDao.get(this)
         LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this))
-        if (!TextUtils.isEmpty(TextSpaceContentPreferencesDao.get(this))) {
-            textSpaceEt!!.setText(TextSpaceContentPreferencesDao.get(this))
-        }
-        textSpaceEt!!.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                TextSpaceContentPreferencesDao.set(this@FuncActivity, s.toString())
-
-            }
-        })
 
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
