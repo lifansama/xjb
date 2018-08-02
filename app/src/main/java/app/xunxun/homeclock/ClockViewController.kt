@@ -28,17 +28,11 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.TypefaceSpan
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Display
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 
@@ -66,7 +60,6 @@ import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao
 import app.xunxun.homeclock.preferences.BackgroundModePreferencesDao
 import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao
 import app.xunxun.homeclock.preferences.EnableVibrateWholeTimePreferencesDao
-import app.xunxun.homeclock.preferences.EnableShakeFeedbackPreferencesDao
 import app.xunxun.homeclock.preferences.EnableVoiceWholeTimePreferencesDao
 import app.xunxun.homeclock.preferences.FocusTimePreferencesDao
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao
@@ -228,9 +221,6 @@ class ClockViewController(private val activity: Activity) {
         val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         batteryChangeReceiver = BatteryChangeReceiver()
         activity.registerReceiver(batteryChangeReceiver, intentFilter)
-        if (EnableShakeFeedbackPreferencesDao.get(activity)) {
-            shakeFeedback()
-        }
 
         try {
             val screenMode = Settings.System.getInt(activity.contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE)
@@ -257,9 +247,6 @@ class ClockViewController(private val activity: Activity) {
             timerTask = null
         }
         activity.unregisterReceiver(batteryChangeReceiver)
-        if (EnableShakeFeedbackPreferencesDao.get(activity)) {
-            PgyFeedbackShakeManager.unregister()
-        }
 
         if (isHaveWriteSettinsPermisson) {
             setScreenMode(ScreenBrightnessPreferencesDao.getSysMode(activity))
@@ -288,15 +275,6 @@ class ClockViewController(private val activity: Activity) {
 
         // 保存设置的屏幕亮度值
         Settings.System.putInt(activity.contentResolver, Settings.System.SCREEN_BRIGHTNESS, value.toInt())
-    }
-
-    /**
-     * 摇一摇反馈.
-     */
-    private fun shakeFeedback() {
-        PgyFeedbackShakeManager.setShakingThreshold(1000)
-        PgyFeedbackShakeManager.register(activity)
-
     }
 
     fun onDestroy() {

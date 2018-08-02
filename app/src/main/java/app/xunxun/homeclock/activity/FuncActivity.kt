@@ -31,7 +31,6 @@ class FuncActivity : BaseActivity() {
 
         protectScreenCb!!.isChecked = EnableProtectScreenPreferencesDao.get(this)
 
-        maohaoShanShuoCb!!.isChecked = IsMaoHaoShanShuoPreferencesDao.get(this)
         dateTimePickerDialog = DateTimePickerDialog(this)
         dateTimePickerDialog!!.setOnDateTimeSetListenner(object : OnDateTimeSetListenner {
             override fun onDateTimeSeted(date: Date?) {
@@ -73,7 +72,6 @@ class FuncActivity : BaseActivity() {
                 compoundButton.context.startActivity(selector)
             }
         }
-        enableShakeFeedbackCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableShakeFeedbackPreferencesDao.set(buttonView.context, isChecked) }
         enableSpeakWholeTimeCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableVibrateWholeTimePreferencesDao.set(buttonView.context, isChecked) }
         enableVoiceWholeTimeCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableVoiceWholeTimePreferencesDao.set(buttonView.context, isChecked) }
         protectScreenCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -90,12 +88,6 @@ class FuncActivity : BaseActivity() {
             }
         }
         setDateTv!!.setOnClickListener { dateTimePickerDialog!!.show() }
-        maohaoShanShuoCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            IsMaoHaoShanShuoPreferencesDao.set(buttonView.context, isChecked)
-            if (isChecked) {
-                showAlert("冒号闪烁需要在不显示秒针时起作用。")
-            }
-        }
         if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
             sensorRb!!.isChecked = true
         } else if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
@@ -125,7 +117,6 @@ class FuncActivity : BaseActivity() {
 
             }
         }
-        enableShakeFeedbackCb!!.isChecked = EnableShakeFeedbackPreferencesDao.get(this)
         enableSpeakWholeTimeCb!!.isChecked = EnableVibrateWholeTimePreferencesDao.get(this)
         enableVoiceWholeTimeCb!!.isChecked = EnableVibrateWholeTimePreferencesDao.get(this)
         lockScreenShowCb!!.isChecked = LockScreenShowOnPreferencesDao.get(this)

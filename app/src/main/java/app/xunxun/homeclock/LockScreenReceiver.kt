@@ -17,8 +17,8 @@ class LockScreenReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        Log.v("LockScreenReceiver", "onReceive: " + intent.action!!)
-        Log.v("LockScreenReceiver", "onReceive lastAction: " + lastAction!!)
+        Log.v("LockScreenReceiver", "onReceive: ${intent.action}")
+        Log.v("LockScreenReceiver", "onReceive lastAction:$lastAction ")
         if (intent.action == "android.intent.action.SCREEN_OFF") {
             val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             if (telephonyManager.callState == TelephonyManager.CALL_STATE_IDLE) {

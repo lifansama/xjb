@@ -4,11 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.support.v7.app.AlertDialog
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.SeekBar
+import android.widget.TextView
 import app.xunxun.homeclock.EventNames
 import app.xunxun.homeclock.R
 import app.xunxun.homeclock.preferences.*
@@ -16,14 +19,14 @@ import app.xunxun.homeclock.utils.RealPathUtil
 import app.xunxun.homeclock.widget.ColorPickerDialog
 import com.fourmob.colorpicker.ColorPickerSwatch
 import com.umeng.analytics.MobclickAgent
-import kotlinx.android.synthetic.main.activity_func.*
-import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.activity_style.*
+import org.jetbrains.anko.sdk25.coroutines.onCheckedChange
 
 class StyleActivity : BaseActivity() {
     private var backgroundColorPickerDialog: ColorPickerDialog? = null
     private var textColorPickerDialog: ColorPickerDialog? = null
     private var colors: IntArray? = null
+    private var tempBackMode: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,15 +35,14 @@ class StyleActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         colors = resources.getIntArray(R.array.colors)
 
-        val mode = BackgroundModePreferencesDao.get(this)
-        if (mode == BackgroundModePreferencesDao.MODE_COLOR) {
-            backgroundColorRb!!.isChecked = true
+        maohaoShanShuoCb!!.isChecked = IsMaoHaoShanShuoPreferencesDao.get(this)
+        setShowDateCb(IsShowDatePreferencesDao.get(this))
+        setShowLunarCb(IsShowLunarPreferencesDao.get(this))
+        setShowWeekCb(IsShowWeekPreferencesDao.get(this))
+        showBatteryCb.isChecked = IsShowBatteryPreferencesDao.get(this)
 
-        } else if (mode == BackgroundModePreferencesDao.MODE_ONLINE_IMAGE) {
-            backgroundPicRb!!.isChecked = true
-        } else if (mode == BackgroundModePreferencesDao.MODE_LOCAL_IMAGE) {
-            localBackgroundPicRb!!.isChecked = true
-        }
+        tempBackMode = BackgroundModePreferencesDao.get(this)
+        renderBackModeRb()
         backgroundColorTv!!.setOnClickListener { backgroundColorPickerDialog!!.show() }
         textColorPickerDialog = ColorPickerDialog(this)
         textColorPickerDialog!!.initialize(R.string.txt_select_color, colors!!, TextColorPreferencesDao.get(this), 4, 2)
@@ -114,40 +116,75 @@ class StyleActivity : BaseActivity() {
             linearLayout.addView(textView)
             linearLayout.addView(seekBar)
             AlertDialog.Builder(this@StyleActivity).setView(linearLayout).show()
+        }
 
-            showSecondCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-                ShowSecondPreferencesDao.set(buttonView.context, isChecked)
+        showSecondCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
+            ShowSecondPreferencesDao.set(buttonView.context, isChecked)
+        }
+        backgroundStyleRg.onCheckedChange { group, checkedId ->
+            val rb = findViewById(checkedId) as RadioButton
+            tempBackMode = BackgroundModePreferencesDao.get(group!!.context)
+            BackgroundModePreferencesDao.set(group!!.context, Integer.parseInt(rb.tag as String))
+
+            if (checkedId == R.id.backgroundPicRb) {
+                alert("背景图片一天一换")
+                backgroundColorTv.visibility = View.GONE
+            } else if (checkedId == R.id.localBackgroundPicRb) {
+                backgroundColorTv.visibility = View.GONE
+                openGallery()
+            } else {
+                backgroundColorTv.visibility = View.VISIBLE
             }
-            backgroundStyleRg!!.setOnCheckedChangeListener { group, checkedId ->
-                val rb = findViewById(checkedId) as RadioButton
-                BackgroundModePreferencesDao.set(group.context, Integer.parseInt(rb.tag as String))
+        }
 
-                if (checkedId == R.id.backgroundPicRb) {
-                    showAlert("背景图片一天一换")
-                } else if (checkedId == R.id.localBackgroundPicRb) {
-                    openGallery()
-                }
+        if (Is12TimePreferencesDao.get(this))
+            time_12Rb!!.isChecked = true
+        else
+            time_24Rb!!.isChecked = true
+
+        showBatteryCb!!.isChecked = IsShowBatteryPreferencesDao.get(this)
+
+        showSecondCb!!.isChecked = ShowSecondPreferencesDao.get(this)
+
+        maohaoShanShuoCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
+            IsMaoHaoShanShuoPreferencesDao.set(buttonView.context, isChecked)
+            if (isChecked) {
+                alert("冒号闪烁需要在不显示秒针时起作用。")
             }
-
-            if (Is12TimePreferencesDao.get(this))
-                time_12Rb!!.isChecked = true
-            else
-                time_24Rb!!.isChecked = true
-
-            showBatteryCb!!.isChecked = IsShowBatteryPreferencesDao.get(this)
-
-            showSecondCb!!.isChecked = ShowSecondPreferencesDao.get(this)
         }
     }
 
-    private fun showAlert(msg: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("温馨提醒")
-        builder.setMessage(msg)
-        builder.setPositiveButton("知道了", null)
-        builder.show()
+    private fun renderBackModeRb() {
+        val mode = BackgroundModePreferencesDao.get(this)
+        if (mode == BackgroundModePreferencesDao.MODE_COLOR) {
+            backgroundColorRb!!.isChecked = true
+            backgroundColorTv.visibility = View.VISIBLE
+
+        } else if (mode == BackgroundModePreferencesDao.MODE_ONLINE_IMAGE) {
+            backgroundPicRb!!.isChecked = true
+            backgroundColorTv.visibility = View.GONE
+        } else if (mode == BackgroundModePreferencesDao.MODE_LOCAL_IMAGE) {
+            localBackgroundPicRb!!.isChecked = true
+            backgroundColorTv.visibility = View.GONE
+
+        }
+    }
+
+    private fun setShowDateCb(isShow: Boolean) {
+        showDateCb!!.isChecked = isShow
 
     }
+
+    private fun setShowWeekCb(isShow: Boolean) {
+
+        showWeekCb!!.isChecked = isShow
+    }
+
+    private fun setShowLunarCb(isShow: Boolean) {
+        showLunarCb!!.isChecked = isShow
+
+    }
+
 
     private fun openGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK)
@@ -158,17 +195,30 @@ class StyleActivity : BaseActivity() {
         startActivityForResult(intent, 200)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 200) {
             if (resultCode == Activity.RESULT_OK) {
-                val uri = data.data
+                val uri = data!!.data
                 val path = RealPathUtil.getRealPathFromURI(this, uri)
                 //                File newFile = Compressor.getDefault(this).compressToFile(new File(path));
                 LocalImageFilePathPreferencesDao.set(this, path!!)
-                Toast.makeText(this, "选图成功，后退查看效果", Toast.LENGTH_SHORT).show()
+                alert("选图成功，后退查看效果")
+            } else {
+                BackgroundModePreferencesDao.set(this, tempBackMode)
+                renderBackModeRb()
+
             }
         }
     }
+
+}
+
+fun Activity.alert(msg: String) {
+    val builder = AlertDialog.Builder(this)
+    builder.setTitle("温馨提醒")
+    builder.setMessage(msg)
+    builder.setPositiveButton("知道了", null)
+    builder.show()
 
 }
