@@ -98,7 +98,7 @@ class FuncActivity : BaseActivity() {
             }
         }
         enableSpeakWholeTimeCb!!.isChecked = EnableVibrateWholeTimePreferencesDao.get(this)
-        enableVoiceWholeTimeCb!!.isChecked = EnableVibrateWholeTimePreferencesDao.get(this)
+        enableVoiceWholeTimeCb!!.isChecked = EnableVoiceWholeTimePreferencesDao.get(this)
         lockScreenShowCb!!.isChecked = LockScreenShowOnPreferencesDao.get(this)
         notifyStayCb!!.isChecked = NotifyStayPreferencesDao.get(this)
         LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this))
