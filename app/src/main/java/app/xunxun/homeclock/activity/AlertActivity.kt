@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import app.xunxun.homeclock.R
+import app.xunxun.homeclock.pref.SimplePref
 import app.xunxun.homeclock.preferences.FocusTimePreferencesDao
 import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao
 import app.xunxun.homeclock.widget.DateTimePickerDialog

@@ -38,7 +38,6 @@ import android.widget.TextView
 
 //import com.crashlytics.android.Crashlytics;
 import com.pgyersdk.crash.PgyCrashManager
-import com.pgyersdk.feedback.PgyFeedbackShakeManager
 import com.squareup.picasso.Picasso
 
 import java.io.File
@@ -56,11 +55,10 @@ import app.xunxun.homeclock.api.Api
 import app.xunxun.homeclock.helper.SoundPoolHelper
 import app.xunxun.homeclock.helper.UpdateHelper
 import app.xunxun.homeclock.model.Pic
-import app.xunxun.homeclock.preferences.BackgroundColorPreferencesDao
-import app.xunxun.homeclock.preferences.BackgroundModePreferencesDao
-import app.xunxun.homeclock.preferences.EnableProtectScreenPreferencesDao
-import app.xunxun.homeclock.preferences.EnableVibrateWholeTimePreferencesDao
-import app.xunxun.homeclock.preferences.EnableVoiceWholeTimePreferencesDao
+import app.xunxun.homeclock.pref.MODE_COLOR
+import app.xunxun.homeclock.pref.MODE_LOCAL_IMAGE
+import app.xunxun.homeclock.pref.MODE_ONLINE_IMAGE
+import app.xunxun.homeclock.pref.SimplePref
 import app.xunxun.homeclock.preferences.FocusTimePreferencesDao
 import app.xunxun.homeclock.preferences.Is12TimePreferencesDao
 import app.xunxun.homeclock.preferences.IsMaoHaoShanShuoPreferencesDao
@@ -322,13 +320,13 @@ class ClockViewController(private val activity: Activity) {
      * @param color
      */
     private fun setBackgroundColor(color: Int) {
-        val mode = BackgroundModePreferencesDao.get(activity)
+        val mode = SimplePref.create(activity).backgroundMode().get()
 
-        if (mode == BackgroundModePreferencesDao.MODE_ONLINE_IMAGE) {
+        if (mode == MODE_ONLINE_IMAGE) {
             getPic()
-        } else if (mode == BackgroundModePreferencesDao.MODE_COLOR) {
+        } else if (mode == MODE_COLOR) {
             activity.activity_main!!.setBackgroundColor(color)
-        } else if (mode == BackgroundModePreferencesDao.MODE_LOCAL_IMAGE) {
+        } else if (mode == MODE_LOCAL_IMAGE) {
             activity.activity_main!!.setBackgroundColor(Color.argb(100, 0, 0, 0))
             val path = LocalImageFilePathPreferencesDao.get(activity)
             if (!TextUtils.isEmpty(path)) {
@@ -412,7 +410,7 @@ class ClockViewController(private val activity: Activity) {
 
         activity.textSpaceTv!!.text = TextSpaceContentPreferencesDao.get(activity)
 
-        backgroundColor = BackgroundColorPreferencesDao.get(activity)
+        backgroundColor = SimplePref.create(activity).backgroundColor().get()
         foregroundColor = TextColorPreferencesDao.get(activity)
 
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -648,7 +646,7 @@ class ClockViewController(private val activity: Activity) {
             super.handleMessage(msg)
             if (msg.what == 1) {
                 setDateTime()
-                if (EnableProtectScreenPreferencesDao.get(activity) && System.currentTimeMillis() - lastTime > 1000 * 60 * 5) {
+                if (SimplePref.create(activity).enableProtectScreen().get() && System.currentTimeMillis() - lastTime > 1000 * 60 * 5) {
                     val params = activity.timeLl!!.layoutParams as RelativeLayout.LayoutParams
                     val random = Random()
                     val newTopMarginMax = if (activity.centerRl!!.height <= 0 || activity.timeLl!!.height <= 0) screenHeight / 2 else activity.centerRl!!.height - activity.timeLl!!.height

@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.view.View
 import app.xunxun.homeclock.MyService
 import app.xunxun.homeclock.R
+import app.xunxun.homeclock.pref.SimplePref
 import app.xunxun.homeclock.preferences.*
 import app.xunxun.homeclock.utils.LauncherSettings
 import app.xunxun.homeclock.widget.DateTimePickerDialog
@@ -30,7 +31,7 @@ class FuncActivity : BaseActivity() {
         setContentView(R.layout.activity_func)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        protectScreenCb!!.isChecked = EnableProtectScreenPreferencesDao.get(this)
+        protectScreenCb!!.isChecked = SimplePref.create(this).enableProtectScreen().get()
 
 
 
@@ -55,7 +56,7 @@ class FuncActivity : BaseActivity() {
         enableSpeakWholeTimeCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableVibrateWholeTimePreferencesDao.set(buttonView.context, isChecked) }
         enableVoiceWholeTimeCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableVoiceWholeTimePreferencesDao.set(buttonView.context, isChecked) }
         protectScreenCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            EnableProtectScreenPreferencesDao.set(buttonView.context, isChecked)
+            SimplePref.create(buttonView.context).enableProtectScreen().set(isChecked)
             if (isChecked)
                 showAlert("开启防烧屏后文字会5分钟换一次位置，如果字太大影响移动后的显示请自行调小。")
         }

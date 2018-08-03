@@ -14,6 +14,10 @@ import android.widget.SeekBar
 import android.widget.TextView
 import app.xunxun.homeclock.EventNames
 import app.xunxun.homeclock.R
+import app.xunxun.homeclock.pref.MODE_COLOR
+import app.xunxun.homeclock.pref.MODE_LOCAL_IMAGE
+import app.xunxun.homeclock.pref.MODE_ONLINE_IMAGE
+import app.xunxun.homeclock.pref.SimplePref
 import app.xunxun.homeclock.preferences.*
 import app.xunxun.homeclock.utils.RealPathUtil
 import app.xunxun.homeclock.widget.ColorPickerDialog
@@ -41,7 +45,7 @@ class StyleActivity : BaseActivity() {
         setShowWeekCb(IsShowWeekPreferencesDao.get(this))
         showBatteryCb.isChecked = IsShowBatteryPreferencesDao.get(this)
 
-        tempBackMode = BackgroundModePreferencesDao.get(this)
+        tempBackMode = SimplePref.create(this).backgroundMode().get()
         renderBackModeRb()
         backgroundColorTv!!.setOnClickListener { backgroundColorPickerDialog!!.show() }
         textColorPickerDialog = ColorPickerDialog(this)
@@ -49,11 +53,11 @@ class StyleActivity : BaseActivity() {
 
         backgroundColorPickerDialog = ColorPickerDialog(this)
 
-        backgroundColorPickerDialog!!.initialize(R.string.txt_select_color, colors!!, BackgroundColorPreferencesDao.get(this), 4, 2)
+        backgroundColorPickerDialog!!.initialize(R.string.txt_select_color, colors!!, SimplePref.create(this).backgroundColor().get(), 4, 2)
         backgroundColorPickerDialog!!.setOnColorSelectedListener(object : ColorPickerSwatch.OnColorSelectedListener {
             override fun onColorSelected(color: Int) {
                 backgroundColorRb!!.isChecked = true
-                BackgroundColorPreferencesDao.set(this@StyleActivity, color)
+                SimplePref.create(this@StyleActivity).backgroundColor().set(color)
                 MobclickAgent.onEvent(this@StyleActivity, EventNames.EVENT_CHANGE_BACKGROUND_COLOR)
             }
         })
@@ -123,8 +127,8 @@ class StyleActivity : BaseActivity() {
         }
         backgroundStyleRg.onCheckedChange { group, checkedId ->
             val rb = findViewById(checkedId) as RadioButton
-            tempBackMode = BackgroundModePreferencesDao.get(group!!.context)
-            BackgroundModePreferencesDao.set(group!!.context, Integer.parseInt(rb.tag as String))
+            tempBackMode = SimplePref.create(group!!.context).backgroundMode().get()
+            SimplePref.create(group!!.context).backgroundMode().set(Integer.parseInt(rb.tag as String))
 
             if (checkedId == R.id.backgroundPicRb) {
                 alert("背景图片一天一换")
@@ -155,15 +159,15 @@ class StyleActivity : BaseActivity() {
     }
 
     private fun renderBackModeRb() {
-        val mode = BackgroundModePreferencesDao.get(this)
-        if (mode == BackgroundModePreferencesDao.MODE_COLOR) {
+        val mode = SimplePref.create(this).backgroundMode().get()
+        if (mode == MODE_COLOR) {
             backgroundColorRb!!.isChecked = true
             backgroundColorTv.visibility = View.VISIBLE
 
-        } else if (mode == BackgroundModePreferencesDao.MODE_ONLINE_IMAGE) {
+        } else if (mode == MODE_ONLINE_IMAGE) {
             backgroundPicRb!!.isChecked = true
             backgroundColorTv.visibility = View.GONE
-        } else if (mode == BackgroundModePreferencesDao.MODE_LOCAL_IMAGE) {
+        } else if (mode == MODE_LOCAL_IMAGE) {
             localBackgroundPicRb!!.isChecked = true
             backgroundColorTv.visibility = View.GONE
 
@@ -205,7 +209,7 @@ class StyleActivity : BaseActivity() {
                 LocalImageFilePathPreferencesDao.set(this, path!!)
                 alert("选图成功，后退查看效果")
             } else {
-                BackgroundModePreferencesDao.set(this, tempBackMode)
+                SimplePref.create(this).backgroundMode().set(tempBackMode)
                 renderBackModeRb()
 
             }
