@@ -33,14 +33,12 @@ import app.xunxun.homeclock.activity.MainActivity
 import app.xunxun.homeclock.activity.SettingsActivity
 import app.xunxun.homeclock.api.Api
 import app.xunxun.homeclock.helper.SoundPoolHelper
-import app.xunxun.homeclock.helper.UpdateHelper
 import app.xunxun.homeclock.model.Pic
 import app.xunxun.homeclock.pref.MODE_COLOR
 import app.xunxun.homeclock.pref.MODE_LOCAL_IMAGE
 import app.xunxun.homeclock.pref.MODE_ONLINE_IMAGE
 import app.xunxun.homeclock.pref.SimplePref
 import app.xunxun.homeclock.utils.FloatToast
-import com.pgyersdk.crash.PgyCrashManager
 import com.squareup.picasso.Picasso
 import io.github.xhinliang.lunarcalendar.LunarCalendar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -73,7 +71,6 @@ class ClockViewController(private val activity: Activity) {
     private var screenWidth: Int = 0
     private var screenHeight: Int = 0
     private var currentLight: Int = 0 // 当前屏幕的亮度
-    private var updateHelper: UpdateHelper? = null
     private var gestureDetector: GestureDetector? = null
     private var toast: FloatToast? = null
     private var soundPoolHelper: SoundPoolHelper? = null
@@ -111,8 +108,6 @@ class ClockViewController(private val activity: Activity) {
         display.getMetrics(metrics)
         screenWidth = metrics.widthPixels
         screenHeight = metrics.heightPixels
-        updateHelper = UpdateHelper(activity)
-        updateHelper!!.check(false)
         gestureDetector = GestureDetector(activity, MyGestureListener())
         val flag = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_SETTINGS)
         if (flag != PackageManager.PERMISSION_GRANTED) {
@@ -231,7 +226,6 @@ class ClockViewController(private val activity: Activity) {
     }
 
     fun onDestroy() {
-        PgyCrashManager.unregister()
         soundPoolHelper!!.release()
 
     }

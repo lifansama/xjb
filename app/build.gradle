@@ -60,11 +60,11 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$supportLib"
     implementation 'com.android.support:design:25.4.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     testImplementation 'junit:junit:4.12'
     implementation project(':colorpickerlibrary')
     implementation 'com.umeng.analytics:analytics:6.1.4'
     implementation 'com.github.XhinLiang:LunarCalendar:1.2.2'
-    implementation 'com.pgyersdk:sdk:2.5.6'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.squareup.retrofit2:retrofit:2.2.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.2.0'

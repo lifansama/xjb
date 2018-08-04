@@ -5,9 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import app.xunxun.homeclock.R
-import app.xunxun.homeclock.helper.UpdateHelper
 import app.xunxun.homeclock.pref.SimplePref
-import com.pgyersdk.feedback.PgyFeedback
 import kotlinx.android.synthetic.main.activity_settings.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.startActivity
@@ -16,7 +14,6 @@ import org.jetbrains.anko.startActivity
  * 设置页面.
  */
 class SettingsActivity : BaseActivity() {
-    private var updateHelper: UpdateHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +22,11 @@ class SettingsActivity : BaseActivity() {
 
         init()
 
-        updateHelper = UpdateHelper(this)
         styleTv.onClick { startActivity<StyleActivity>() }
         funcTv.onClick { startActivity<FuncActivity>() }
         supportTv.onClick { startActivity<SupportActivity>() }
-        feedbackTv.onClick { PgyFeedback.getInstance().showDialog(this@SettingsActivity) }
-        versionTv.onClick { updateHelper!!.check(true)  }
+        feedbackTv.onClick { startActivity<FeedbackActivity>() }
+        versionTv.onClick { alert("如需更新请前往酷安市场") }
     }
 
 
