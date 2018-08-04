@@ -39,9 +39,6 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
-#pgy
--dontwarn com.pgyersdk.**
--keep class com.pgyersdk.** { *; }
 #retrofit
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
@@ -69,3 +66,5 @@ public static final int *;
 
 # all classes in a package
 -keep class app.xunxun.homeclock.model.** { *; }
+#support
+-keep class android.support.** { *; }

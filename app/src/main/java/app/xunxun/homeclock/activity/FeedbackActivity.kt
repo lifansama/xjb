@@ -13,6 +13,6 @@ class FeedbackActivity : BaseActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        Picasso.with(this).load(R.drawable.mmqrcode1533356155072).into(qrcode)
+        Picasso.with(this).load(R.drawable.mmqrcode).into(qrcode)
     }
 }
