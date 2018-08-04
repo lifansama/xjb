@@ -1,21 +1,14 @@
 package app.xunxun.homeclock.activity
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.KeyEvent
-import android.view.MotionEvent
-import android.view.WindowManager
 
 import com.umeng.analytics.MobclickAgent
 
 import app.xunxun.homeclock.ClockViewController
 import app.xunxun.homeclock.pref.SimplePref
-import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao
 import app.xunxun.homeclock.utils.DoubleClickExit
 import app.xunxun.homeclock.utils.LauncherSettings
 import org.jetbrains.anko.toast
@@ -39,7 +32,7 @@ class MainActivity : BaseActivity() {
         clockViewController = ClockViewController(this)
         clockViewController!!.onCreate(savedInstanceState)
         doubleClickExit = DoubleClickExit(this)
-        LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this))
+        LauncherSettings.setLauncher(this, SimplePref.create(this).isLauncher().get())
     }
 
     override fun onBackPressed() {

@@ -1,5 +1,7 @@
 package app.xunxun.homeclock
 
+//import com.crashlytics.android.Crashlytics;
+
 import android.Manifest
 import android.app.Activity
 import android.app.Service
@@ -12,12 +14,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
-import android.os.BatteryManager
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.os.Vibrator
+import android.os.*
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -28,26 +25,9 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.TypefaceSpan
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.GestureDetector
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.RelativeLayout
 import android.widget.TextView
-
-//import com.crashlytics.android.Crashlytics;
-import com.pgyersdk.crash.PgyCrashManager
-import com.squareup.picasso.Picasso
-
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Random
-import java.util.Timer
-import java.util.TimerTask
-
 import app.xunxun.homeclock.activity.LauncherActivity
 import app.xunxun.homeclock.activity.MainActivity
 import app.xunxun.homeclock.activity.SettingsActivity
@@ -59,22 +39,9 @@ import app.xunxun.homeclock.pref.MODE_COLOR
 import app.xunxun.homeclock.pref.MODE_LOCAL_IMAGE
 import app.xunxun.homeclock.pref.MODE_ONLINE_IMAGE
 import app.xunxun.homeclock.pref.SimplePref
-import app.xunxun.homeclock.preferences.FocusTimePreferencesDao
-import app.xunxun.homeclock.preferences.Is12TimePreferencesDao
-import app.xunxun.homeclock.preferences.IsMaoHaoShanShuoPreferencesDao
-import app.xunxun.homeclock.preferences.IsShowBatteryPreferencesDao
-import app.xunxun.homeclock.preferences.IsShowDatePreferencesDao
-import app.xunxun.homeclock.preferences.IsShowLunarPreferencesDao
-import app.xunxun.homeclock.preferences.IsShowWeekPreferencesDao
-import app.xunxun.homeclock.preferences.LocalImageFilePathPreferencesDao
-import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao
-import app.xunxun.homeclock.preferences.ScreenBrightnessPreferencesDao
-import app.xunxun.homeclock.preferences.ScreenOrientationPreferencesDao
-import app.xunxun.homeclock.preferences.ShowSecondPreferencesDao
-import app.xunxun.homeclock.preferences.TextColorPreferencesDao
-import app.xunxun.homeclock.preferences.TextSizePreferencesDao
-import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao
 import app.xunxun.homeclock.utils.FloatToast
+import com.pgyersdk.crash.PgyCrashManager
+import com.squareup.picasso.Picasso
 import io.github.xhinliang.lunarcalendar.LunarCalendar
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
@@ -82,13 +49,15 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by fengdianxun on 2017/1/19.
  */
 
 class ClockViewController(private val activity: Activity) {
-
 
 
     private var timer: Timer? = null
@@ -117,11 +86,11 @@ class ClockViewController(private val activity: Activity) {
         }
 
     fun onCreate(savedInstanceState: Bundle?) {
-        if (ScreenOrientationPreferencesDao.get(activity) == ActivityInfo.SCREEN_ORIENTATION_SENSOR)
+        if (SimplePref.create(activity).screenOrientation().get() == ActivityInfo.SCREEN_ORIENTATION_SENSOR)
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        else if (ScreenOrientationPreferencesDao.get(activity) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        else if (SimplePref.create(activity).screenOrientation().get() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        else if (ScreenOrientationPreferencesDao.get(activity) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+        else if (SimplePref.create(activity).screenOrientation().get() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         hideNavigationBar()
@@ -134,7 +103,7 @@ class ClockViewController(private val activity: Activity) {
         initListner()
         init()
         vibrator = activity.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
-        if (LockScreenShowOnPreferencesDao.get(activity)) {
+        if (SimplePref.create(activity).lockScreenShowOn().get()) {
             MyService.startService(activity)
         }
         val display = activity.windowManager.defaultDisplay
@@ -162,10 +131,10 @@ class ClockViewController(private val activity: Activity) {
      */
     private fun speak(filename: String) {
 
-        if (EnableVibrateWholeTimePreferencesDao.get(activity)) {
+        if (SimplePref.create(activity).enableVibrateWholeTime().get()) {
             vibrator!!.vibrate(1000)
         }
-        if (EnableVoiceWholeTimePreferencesDao.get(activity)) {
+        if (SimplePref.create(activity).enableVoiceWholeTime().get()) {
             soundPoolHelper!!.play(filename)
         }
     }
@@ -220,16 +189,6 @@ class ClockViewController(private val activity: Activity) {
         batteryChangeReceiver = BatteryChangeReceiver()
         activity.registerReceiver(batteryChangeReceiver, intentFilter)
 
-        try {
-            val screenMode = Settings.System.getInt(activity.contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE)
-            val screenBrightness = Settings.System.getInt(activity.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
-            ScreenBrightnessPreferencesDao.setSysMode(activity, screenMode)
-            ScreenBrightnessPreferencesDao.setSysValue(activity, screenBrightness)
-            currentLight = screenBrightness
-        } catch (e: Settings.SettingNotFoundException) {
-            e.printStackTrace()
-        }
-
 
     }
 
@@ -246,10 +205,6 @@ class ClockViewController(private val activity: Activity) {
         }
         activity.unregisterReceiver(batteryChangeReceiver)
 
-        if (isHaveWriteSettinsPermisson) {
-            setScreenMode(ScreenBrightnessPreferencesDao.getSysMode(activity))
-            setScreenBrightness(ScreenBrightnessPreferencesDao.getSysValue(activity).toFloat())
-        }
     }
 
     /**
@@ -328,7 +283,7 @@ class ClockViewController(private val activity: Activity) {
             activity.activity_main!!.setBackgroundColor(color)
         } else if (mode == MODE_LOCAL_IMAGE) {
             activity.activity_main!!.setBackgroundColor(Color.argb(100, 0, 0, 0))
-            val path = LocalImageFilePathPreferencesDao.get(activity)
+            val path = SimplePref.create(activity).localImageFilePath().get()
             if (!TextUtils.isEmpty(path)) {
                 val file = File(path)
                 Picasso.with(activity).load(file).into(activity.backIv)
@@ -403,30 +358,30 @@ class ClockViewController(private val activity: Activity) {
      * 初始化.
      */
     private fun init() {
-        setTextViewVisibility(activity.dateTv!!, IsShowDatePreferencesDao.get(activity))
-        setTextViewVisibility(activity.weekTv!!, IsShowWeekPreferencesDao.get(activity))
-        setTextViewVisibility(activity.lunarTv!!, IsShowLunarPreferencesDao.get(activity))
-        setTextViewVisibility(activity.batteryTv!!, IsShowBatteryPreferencesDao.get(activity))
+        setTextViewVisibility(activity.dateTv!!, SimplePref.create(activity).isShowDate().get())
+        setTextViewVisibility(activity.weekTv!!, SimplePref.create(activity).isShowWeek().get())
+        setTextViewVisibility(activity.lunarTv!!, SimplePref.create(activity).isShowLunar().get())
+        setTextViewVisibility(activity.batteryTv!!, SimplePref.create(activity).isShowBattery().get())
 
-        activity.textSpaceTv!!.text = TextSpaceContentPreferencesDao.get(activity)
+        activity.textSpaceTv!!.text = SimplePref.create(activity).textSpaceContent().get()
 
         backgroundColor = SimplePref.create(activity).backgroundColor().get()
-        foregroundColor = TextColorPreferencesDao.get(activity)
+        foregroundColor = SimplePref.create(activity).textColor().get()
 
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            activity.timeTv!!.textSize = TextSizePreferencesDao.get(activity).toFloat()
+            activity.timeTv!!.textSize = SimplePref.create(activity).textSize().get().toFloat()
         } else if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            activity.timeTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.7).toFloat()
+            activity.timeTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.7).toFloat()
         }
 
-        activity.batteryTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.13).toFloat()
-        activity.battery2Tv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.13).toFloat()
-        activity.lunarTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.15).toFloat()
-        activity.dateTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.2).toFloat()
-        activity.weekTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.15).toFloat()
-        activity.ampmTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.5).toFloat()
-        activity.textSpaceTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.25).toFloat()
-        activity.focusTimeTv!!.textSize = (TextSizePreferencesDao.get(activity) * 0.2).toFloat()
+        activity.batteryTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.13).toFloat()
+        activity.battery2Tv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.13).toFloat()
+        activity.lunarTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.15).toFloat()
+        activity.dateTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.2).toFloat()
+        activity.weekTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.15).toFloat()
+        activity.ampmTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.5).toFloat()
+        activity.textSpaceTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.25).toFloat()
+        activity.focusTimeTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.2).toFloat()
 
     }
 
@@ -463,8 +418,8 @@ class ClockViewController(private val activity: Activity) {
         activity.lunarTv!!.text = String.format("%s月%s", lunarCalendar.lunarMonth, lunarCalendar.lunarDay)
 
 
-        if (FocusTimePreferencesDao.get(activity) > 0) {
-            activity.focusTimeTv!!.text = diffDate(now, Date(FocusTimePreferencesDao.get(activity)))
+        if (SimplePref.create(activity).focusTime().get() > 0) {
+            activity.focusTimeTv!!.text = diffDate(now, Date(SimplePref.create(activity).focusTime().get()))
             activity.focusTimeTv!!.visibility = View.VISIBLE
         } else {
             activity.focusTimeTv!!.visibility = View.GONE
@@ -531,7 +486,7 @@ class ClockViewController(private val activity: Activity) {
      * @param hour12
      */
     private fun setTime(now: Date, hour24: Int, minute: Int, hour12: Int, second: Int) {
-        if (Is12TimePreferencesDao.get(activity)) {
+        if (SimplePref.create(activity).is12Time().get()) {
             if (activity.timeTv != null) {
                 val spannable = getAmPmTextSpannable(hour24, minute, hour12, second)
 
@@ -540,10 +495,10 @@ class ClockViewController(private val activity: Activity) {
 
         } else {
             if (activity.timeTv != null) {
-                if (ShowSecondPreferencesDao.get(activity)) {
+                if (SimplePref.create(activity).showSecond().get()) {
                     activity.timeTv!!.text = time24SDF.format(now)
                 } else {
-                    if (IsMaoHaoShanShuoPreferencesDao.get(activity)) {
+                    if (SimplePref.create(activity).isMaoHaoShanShuo().get()) {
                         if (second % 2 == 0) {
                             activity.timeTv!!.text = time24NoSecondSDF.format(now)
                         } else {
@@ -574,13 +529,13 @@ class ClockViewController(private val activity: Activity) {
         var time: String? = null
         var start = 5
         var end = 7
-        if (ShowSecondPreferencesDao.get(activity)) {
+        if (SimplePref.create(activity).showSecond().get()) {
             time = String.format("%02d:%02d:%02d%s", hour12, minute, second, ampm)
             start = 8
             end = 10
 
         } else {
-            if (IsMaoHaoShanShuoPreferencesDao.get(activity)) {
+            if (SimplePref.create(activity).isMaoHaoShanShuo().get()) {
                 if (second % 2 == 0) {
                     time = String.format("%02d:%02d%s", hour12, minute, ampm)
                 } else {
@@ -663,7 +618,7 @@ class ClockViewController(private val activity: Activity) {
 
 
                     activity.batteryTv!!.visibility = View.GONE
-                    activity.battery2Tv!!.visibility = if (IsShowBatteryPreferencesDao.get(activity)) View.VISIBLE else View.GONE
+                    activity.battery2Tv!!.visibility = if (SimplePref.create(activity).isShowBattery().get()) View.VISIBLE else View.GONE
 
 
                     val params1 = activity.dateLl!!.layoutParams as RelativeLayout.LayoutParams

@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.view.MenuItem
 import app.xunxun.homeclock.R
 import app.xunxun.homeclock.helper.UpdateHelper
-import app.xunxun.homeclock.preferences.IsLauncherPreferencesDao
+import app.xunxun.homeclock.pref.SimplePref
 import com.pgyersdk.feedback.PgyFeedback
 import kotlinx.android.synthetic.main.activity_settings.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
@@ -55,7 +53,7 @@ class SettingsActivity : BaseActivity() {
 
 
     override fun onBackPressed() {
-        if (IsLauncherPreferencesDao.get(this)) {
+        if (SimplePref.create(this).isLauncher().get()) {
             val requestCode = intent.getIntExtra(REQUEST_CODE, -1)
             if (requestCode == REQUEST_MAIN) {
                 MainActivity.start(this)

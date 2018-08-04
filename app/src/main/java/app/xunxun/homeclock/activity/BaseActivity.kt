@@ -10,7 +10,7 @@ import android.view.MenuItem
 import android.view.WindowManager
 import app.xunxun.homeclock.MyApplication
 import app.xunxun.homeclock.R
-import app.xunxun.homeclock.preferences.KeepScreenOnPreferencesDao
+import app.xunxun.homeclock.pref.SimplePref
 import com.umeng.analytics.MobclickAgent
 import org.jetbrains.anko.clearTop
 import org.jetbrains.anko.intentFor
@@ -30,7 +30,7 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initialTitle = title
 
-        if (KeepScreenOnPreferencesDao.get(this)) {
+        if (SimplePref.create(this).keepScreenOn().get()) {
             Log.v("onCreate", "FLAG_KEEP_SCREEN_ON")
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 

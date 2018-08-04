@@ -6,22 +6,15 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.View
 import app.xunxun.homeclock.MyService
 import app.xunxun.homeclock.R
 import app.xunxun.homeclock.pref.SimplePref
-import app.xunxun.homeclock.preferences.*
 import app.xunxun.homeclock.utils.LauncherSettings
-import app.xunxun.homeclock.widget.DateTimePickerDialog
-import app.xunxun.homeclock.widget.OnDateTimeSetListenner
 import kotlinx.android.synthetic.main.activity_func.*
+import org.jetbrains.anko.sdk25.coroutines.onCheckedChange
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.startActivity
-import java.text.SimpleDateFormat
-import java.util.*
 
 class FuncActivity : BaseActivity() {
 
@@ -35,14 +28,14 @@ class FuncActivity : BaseActivity() {
 
 
 
-        keepScreenOnCb!!.setOnCheckedChangeListener { compoundButton, isCheck -> KeepScreenOnPreferencesDao.set(compoundButton.context, isCheck) }
-        keepScreenOnCb!!.isChecked = KeepScreenOnPreferencesDao.get(this)
+        keepScreenOnCb!!.setOnCheckedChangeListener { compoundButton, isCheck -> SimplePref.create(this).keepScreenOn().set(isCheck) }
+        keepScreenOnCb!!.isChecked = SimplePref.create(this).keepScreenOn().get()
 
 
 
-        setLauncherCb!!.isChecked = IsLauncherPreferencesDao.get(this)
+        setLauncherCb!!.isChecked = SimplePref.create(this).isLauncher().get()
         setLauncherCb!!.setOnCheckedChangeListener { compoundButton, isCheck ->
-            IsLauncherPreferencesDao.set(compoundButton.context, isCheck)
+            SimplePref.create(this).isLauncher().set(isCheck)
 
 
             LauncherSettings.setLauncher(compoundButton.context, isCheck)
@@ -53,15 +46,19 @@ class FuncActivity : BaseActivity() {
                 compoundButton.context.startActivity(selector)
             }
         }
-        enableSpeakWholeTimeCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableVibrateWholeTimePreferencesDao.set(buttonView.context, isChecked) }
-        enableVoiceWholeTimeCb!!.setOnCheckedChangeListener { buttonView, isChecked -> EnableVoiceWholeTimePreferencesDao.set(buttonView.context, isChecked) }
+        enableSpeakWholeTimeCb.onCheckedChange { buttonView, isChecked ->
+            SimplePref.create(buttonView!!.context).enableVibrateWholeTime().set(isChecked)
+        }
+        enableVoiceWholeTimeCb.onCheckedChange { buttonView, isChecked ->
+            SimplePref.create(buttonView!!.context).enableVoiceWholeTime().set(isChecked)
+        }
         protectScreenCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
             SimplePref.create(buttonView.context).enableProtectScreen().set(isChecked)
             if (isChecked)
                 showAlert("开启防烧屏后文字会5分钟换一次位置，如果字太大影响移动后的显示请自行调小。")
         }
         lockScreenShowCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            LockScreenShowOnPreferencesDao.set(buttonView.context, isChecked)
+            SimplePref.create(buttonView.context).lockScreenShowOn().set(isChecked)
             if (isChecked) {
                 MyService.startService(this@FuncActivity)
             } else {
@@ -69,28 +66,29 @@ class FuncActivity : BaseActivity() {
             }
         }
         alertTv.onClick { startActivity<AlertActivity>() }
-        if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
+        
+        if (SimplePref.create(this).screenOrientation().get() == ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
             sensorRb!!.isChecked = true
-        } else if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        } else if (SimplePref.create(this).screenOrientation().get() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             landscapeRb!!.isChecked = true
-        } else if (ScreenOrientationPreferencesDao.get(this) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+        } else if (SimplePref.create(this).screenOrientation().get() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
             portraitRb!!.isChecked = true
         }
         screenOrientationRg!!.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId == R.id.sensorRb) {
-                ScreenOrientationPreferencesDao.set(group.context, ActivityInfo.SCREEN_ORIENTATION_SENSOR)
+                SimplePref.create(this).screenOrientation().set(ActivityInfo.SCREEN_ORIENTATION_SENSOR)
 
             } else if (checkedId == R.id.landscapeRb) {
-                ScreenOrientationPreferencesDao.set(group.context, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                SimplePref.create(this).screenOrientation().set(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 
             } else if (checkedId == R.id.portraitRb) {
-                ScreenOrientationPreferencesDao.set(group.context, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                SimplePref.create(this).screenOrientation().set(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
             }
         }
         screenBrightCb!!.visibility = View.GONE
         notifyStayCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            NotifyStayPreferencesDao.set(buttonView.context, isChecked)
+            SimplePref.create(buttonView!!.context).notifyStay().set(isChecked)
             if (isChecked) {
                 MyService.startService(buttonView.context)
             } else {
@@ -98,14 +96,15 @@ class FuncActivity : BaseActivity() {
 
             }
         }
-        enableSpeakWholeTimeCb!!.isChecked = EnableVibrateWholeTimePreferencesDao.get(this)
-        enableVoiceWholeTimeCb!!.isChecked = EnableVoiceWholeTimePreferencesDao.get(this)
-        lockScreenShowCb!!.isChecked = LockScreenShowOnPreferencesDao.get(this)
-        notifyStayCb!!.isChecked = NotifyStayPreferencesDao.get(this)
-        LauncherSettings.setLauncher(this, IsLauncherPreferencesDao.get(this))
+        enableSpeakWholeTimeCb!!.isChecked = SimplePref.create(this).enableVibrateWholeTime().get()
+        enableVoiceWholeTimeCb!!.isChecked = SimplePref.create(this).enableVoiceWholeTime().get()
+        lockScreenShowCb!!.isChecked = SimplePref.create(this).lockScreenShowOn().get()
+        notifyStayCb!!.isChecked = SimplePref.create(this).notifyStay().get()
+        LauncherSettings.setLauncher(this, SimplePref.create(this).isLauncher().get())
 
 
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
@@ -116,6 +115,7 @@ class FuncActivity : BaseActivity() {
             }
         }
     }
+
     private fun showAlert(msg: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("温馨提醒")

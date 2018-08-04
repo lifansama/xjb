@@ -1,14 +1,11 @@
 package app.xunxun.homeclock.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import app.xunxun.homeclock.R
 import app.xunxun.homeclock.pref.SimplePref
-import app.xunxun.homeclock.preferences.FocusTimePreferencesDao
-import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao
 import app.xunxun.homeclock.widget.DateTimePickerDialog
 import app.xunxun.homeclock.widget.OnDateTimeSetListenner
 import kotlinx.android.synthetic.main.activity_alert.*
@@ -27,26 +24,26 @@ class AlertActivity : BaseActivity() {
             override fun onDateTimeSeted(date: Date?) {
 
                 if (date != null) {
-                    FocusTimePreferencesDao.set(this@AlertActivity, date.time)
+                    SimplePref.create(this@AlertActivity).focusTime().set(date.time)
 
                     val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
                     setDateTv!!.text = String.format("到期时间:%s", simpleDateFormat.format(date))
                 } else {
-                    FocusTimePreferencesDao.set(this@AlertActivity, 0)
+                    SimplePref.create(this@AlertActivity).focusTime().set(0)
                     setDateTv!!.text = "点击设置到期时间"
                 }
             }
         })
 
-        if (FocusTimePreferencesDao.get(this@AlertActivity) > 0) {
+        if (SimplePref.create(this@AlertActivity).focusTime().get() > 0) {
             val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
-            setDateTv!!.text = String.format("到期时间:%s", simpleDateFormat.format(Date(FocusTimePreferencesDao.get(this@AlertActivity))))
+            setDateTv!!.text = String.format("到期时间:%s", simpleDateFormat.format(Date(SimplePref.create(this@AlertActivity).focusTime().get())))
         } else {
             setDateTv!!.text = "点击设置到期时间"
         }
         setDateTv!!.setOnClickListener { dateTimePickerDialog!!.show() }
-        if (!TextUtils.isEmpty(TextSpaceContentPreferencesDao.get(this))) {
-            textSpaceEt!!.setText(TextSpaceContentPreferencesDao.get(this))
+        if (!TextUtils.isEmpty(SimplePref.create(this).textSpaceContent().get())) {
+            textSpaceEt!!.setText(SimplePref.create(this).textSpaceContent().get())
         }
         textSpaceEt!!.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -58,7 +55,7 @@ class AlertActivity : BaseActivity() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                TextSpaceContentPreferencesDao.set(this@AlertActivity, s.toString())
+                SimplePref.create(this@AlertActivity).textSpaceContent().set(s.toString())
 
             }
         })

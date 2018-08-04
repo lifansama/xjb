@@ -1,6 +1,5 @@
 package app.xunxun.homeclock
 
-import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -13,9 +12,7 @@ import android.text.TextUtils
 import android.widget.RemoteViews
 
 import app.xunxun.homeclock.activity.SettingsActivity
-import app.xunxun.homeclock.preferences.LockScreenShowOnPreferencesDao
-import app.xunxun.homeclock.preferences.NotifyStayPreferencesDao
-import app.xunxun.homeclock.preferences.TextSpaceContentPreferencesDao
+import app.xunxun.homeclock.pref.SimplePref
 
 class MyService : Service() {
 
@@ -37,9 +34,10 @@ class MyService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        if (LockScreenShowOnPreferencesDao.get(this)) {
+        if (SimplePref.create(this).lockScreenShowOn().get()) {
             val remoteViews = RemoteViews(packageName, R.layout.activity_notify)
-            val text = if (TextUtils.isEmpty(TextSpaceContentPreferencesDao.get(this))) "点击写下提醒" else TextSpaceContentPreferencesDao.get(this)
+            val text = if (TextUtils.isEmpty(SimplePref.create(this).textSpaceContent().get())) "点击写下提醒" else
+                SimplePref.create(this).textSpaceContent().get()
             remoteViews.setTextViewText(R.id.textSpaceTv, text)
             val pendingIntent = PendingIntent.getActivity(this, 1, Intent(this, SettingsActivity::class.java), PendingIntent.FLAG_CANCEL_CURRENT)
             remoteViews.setOnClickPendingIntent(R.id.rootFl, pendingIntent)
@@ -57,7 +55,7 @@ class MyService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
-        if (!NotifyStayPreferencesDao.get(this) || LockScreenShowOnPreferencesDao.get(this)) {
+        if (!SimplePref.create(this).notifyStay().get() || SimplePref.create(this).lockScreenShowOn().get()) {
             stopForeground(true)
         }
     }
@@ -65,14 +63,14 @@ class MyService : Service() {
     companion object {
 
         fun startService(context: Context) {
-            if (NotifyStayPreferencesDao.get(context)) {
+            if (SimplePref.create(context).notifyStay().get()) {
                 context.startService(Intent(context, MyService::class.java))
             }
 
         }
 
         fun stopService(context: Context) {
-            if (!NotifyStayPreferencesDao.get(context)) {
+            if (!SimplePref.create(context).notifyStay().get()) {
                 context.stopService(Intent(context, MyService::class.java))
             }
         }

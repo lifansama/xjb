@@ -18,7 +18,6 @@ import app.xunxun.homeclock.pref.MODE_COLOR
 import app.xunxun.homeclock.pref.MODE_LOCAL_IMAGE
 import app.xunxun.homeclock.pref.MODE_ONLINE_IMAGE
 import app.xunxun.homeclock.pref.SimplePref
-import app.xunxun.homeclock.preferences.*
 import app.xunxun.homeclock.utils.RealPathUtil
 import app.xunxun.homeclock.widget.ColorPickerDialog
 import com.fourmob.colorpicker.ColorPickerSwatch
@@ -39,17 +38,17 @@ class StyleActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         colors = resources.getIntArray(R.array.colors)
 
-        maohaoShanShuoCb!!.isChecked = IsMaoHaoShanShuoPreferencesDao.get(this)
-        setShowDateCb(IsShowDatePreferencesDao.get(this))
-        setShowLunarCb(IsShowLunarPreferencesDao.get(this))
-        setShowWeekCb(IsShowWeekPreferencesDao.get(this))
-        showBatteryCb.isChecked = IsShowBatteryPreferencesDao.get(this)
+        maohaoShanShuoCb!!.isChecked = SimplePref.create(this).isMaoHaoShanShuo().get()
+        setShowDateCb(SimplePref.create(this).isShowDate().get())
+        setShowLunarCb(SimplePref.create(this).isShowLunar().get())
+        setShowWeekCb(SimplePref.create(this).isShowWeek().get())
+        showBatteryCb.isChecked = SimplePref.create(this).isShowBattery().get()
 
         tempBackMode = SimplePref.create(this).backgroundMode().get()
         renderBackModeRb()
         backgroundColorTv!!.setOnClickListener { backgroundColorPickerDialog!!.show() }
         textColorPickerDialog = ColorPickerDialog(this)
-        textColorPickerDialog!!.initialize(R.string.txt_select_color, colors!!, TextColorPreferencesDao.get(this), 4, 2)
+        textColorPickerDialog!!.initialize(R.string.txt_select_color, colors!!, SimplePref.create(this).textColor().get(), 4, 2)
 
         backgroundColorPickerDialog = ColorPickerDialog(this)
 
@@ -63,27 +62,27 @@ class StyleActivity : BaseActivity() {
         })
         textColorPickerDialog!!.setOnColorSelectedListener(object : ColorPickerSwatch.OnColorSelectedListener {
             override fun onColorSelected(color: Int) {
-                TextColorPreferencesDao.set(this@StyleActivity, color)
+                SimplePref.create(this@StyleActivity).textColor().set(color)
                 MobclickAgent.onEvent(this@StyleActivity, EventNames.EVENT_CHANGE_TEXT_COLOR)
             }
         })
         textColorTv!!.setOnClickListener { textColorPickerDialog!!.show() }
 
         timeStyleRg!!.setOnCheckedChangeListener { radioGroup, id ->
-            Is12TimePreferencesDao.set(radioGroup.context, id == R.id.time_12Rb)
+            SimplePref.create(this@StyleActivity).is12Time().set(id == R.id.time_12Rb)
         }
 
         showDateCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            IsShowDatePreferencesDao.set(buttonView.context, isChecked)
+            SimplePref.create(this@StyleActivity).isShowDate().set(isChecked)
         }
         showLunarCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            IsShowLunarPreferencesDao.set(buttonView.context, isChecked)
+            SimplePref.create(this@StyleActivity).isShowLunar().set(isChecked)
         }
         showWeekCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            IsShowWeekPreferencesDao.set(buttonView.context, isChecked)
+            SimplePref.create(this@StyleActivity).isShowWeek().set(isChecked)
         }
         showBatteryCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            IsShowBatteryPreferencesDao.set(buttonView.context, isChecked)
+            SimplePref.create(this@StyleActivity).isShowBattery().set(isChecked)
         }
 
         textSizeTv!!.setOnClickListener {
@@ -97,7 +96,7 @@ class StyleActivity : BaseActivity() {
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
 
                     textView.text = seekBar.progress.toString()
-                    TextSizePreferencesDao.set(this@StyleActivity, seekBar.progress)
+                    SimplePref.create(this@StyleActivity).textSize().set(seekBar.progress)
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -115,15 +114,15 @@ class StyleActivity : BaseActivity() {
             textView.gravity = Gravity.CENTER
             textView.textSize = 32f
             textView.setTextColor(Color.BLACK)
-            textView.text = TextSizePreferencesDao.get(this@StyleActivity).toString()
-            seekBar.progress = TextSizePreferencesDao.get(this@StyleActivity)
+            textView.text = SimplePref.create(this@StyleActivity).textSize().get().toString()
+            seekBar.progress = SimplePref.create(this@StyleActivity).textSize().get()
             linearLayout.addView(textView)
             linearLayout.addView(seekBar)
             AlertDialog.Builder(this@StyleActivity).setView(linearLayout).show()
         }
 
         showSecondCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            ShowSecondPreferencesDao.set(buttonView.context, isChecked)
+            SimplePref.create(this@StyleActivity).showSecond().set(isChecked)
         }
         backgroundStyleRg.onCheckedChange { group, checkedId ->
             val rb = findViewById(checkedId) as RadioButton
@@ -141,17 +140,17 @@ class StyleActivity : BaseActivity() {
             }
         }
 
-        if (Is12TimePreferencesDao.get(this))
+        if (SimplePref.create(this).is12Time().get())
             time_12Rb!!.isChecked = true
         else
             time_24Rb!!.isChecked = true
 
-        showBatteryCb!!.isChecked = IsShowBatteryPreferencesDao.get(this)
+        showBatteryCb!!.isChecked = SimplePref.create(this).isShowBattery().get()
 
-        showSecondCb!!.isChecked = ShowSecondPreferencesDao.get(this)
+        showSecondCb!!.isChecked = SimplePref.create(this).showSecond().get()
 
         maohaoShanShuoCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            IsMaoHaoShanShuoPreferencesDao.set(buttonView.context, isChecked)
+            SimplePref.create(this).isMaoHaoShanShuo().set(isChecked)
             if (isChecked) {
                 alert("冒号闪烁需要在不显示秒针时起作用。")
             }
@@ -206,7 +205,7 @@ class StyleActivity : BaseActivity() {
                 val uri = data!!.data
                 val path = RealPathUtil.getRealPathFromURI(this, uri)
                 //                File newFile = Compressor.getDefault(this).compressToFile(new File(path));
-                LocalImageFilePathPreferencesDao.set(this, path!!)
+                SimplePref.create(this).localImageFilePath().set(path!!)
                 alert("选图成功，后退查看效果")
             } else {
                 SimplePref.create(this).backgroundMode().set(tempBackMode)
