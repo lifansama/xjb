@@ -4,14 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
-
-import com.umeng.analytics.MobclickAgent
-
 import app.xunxun.homeclock.ClockViewController
 import app.xunxun.homeclock.pref.SimplePref
 import app.xunxun.homeclock.utils.DoubleClickExit
 import app.xunxun.homeclock.utils.LauncherSettings
-import org.jetbrains.anko.toast
+import com.umeng.analytics.MobclickAgent
 
 /**
  * 主界面.
@@ -26,8 +23,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         disableCountDown = true
         super.onCreate(savedInstanceState)
-       val backgroundColorSpan =  SimplePref.create(this).backgroundColor().get()
-        toast(backgroundColorSpan.toString())
 
         clockViewController = ClockViewController(this)
         clockViewController!!.onCreate(savedInstanceState)
