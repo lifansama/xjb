@@ -11,9 +11,9 @@
 
     <ImageView
         android:id="@+id/backIv"
-        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
 
     <RelativeLayout
         android:id="@+id/activity_main"
@@ -39,10 +39,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:visibility="gone"
                 android:text="电量:100%"
                 android:textColor="#fff"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -74,22 +74,27 @@
                 android:layout_height="wrap_content"
                 android:textColor="#fff"
                 android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/weatherTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="26sp" />
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/centerRl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/dateLl"
-            >
+            android:layout_below="@+id/dateLl">
 
             <LinearLayout
                 android:id="@+id/timeLl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -123,22 +128,24 @@
 
 
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/textSpaceTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    tools:text="XX"
                     android:textColor="#fff"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    tools:text="XX" />
+
                 <TextView
                     android:id="@+id/focusTimeTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    tools:text="「剩余10天」"
                     android:textColor="#fff"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    tools:text="「剩余10天」" />
             </LinearLayout>
 
         </RelativeLayout>

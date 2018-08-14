@@ -32,7 +32,9 @@ import app.xunxun.homeclock.activity.LauncherActivity
 import app.xunxun.homeclock.activity.MainActivity
 import app.xunxun.homeclock.activity.SettingsActivity
 import app.xunxun.homeclock.api.PicApi
+import app.xunxun.homeclock.api.wea
 import app.xunxun.homeclock.helper.SoundPoolHelper
+import app.xunxun.homeclock.helper.WeatherHelper
 import app.xunxun.homeclock.model.Pic
 import app.xunxun.homeclock.pref.MODE_COLOR
 import app.xunxun.homeclock.pref.MODE_LOCAL_IMAGE
@@ -42,6 +44,9 @@ import app.xunxun.homeclock.utils.FloatToast
 import com.squareup.picasso.Picasso
 import io.github.xhinliang.lunarcalendar.LunarCalendar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.textColor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -118,6 +123,26 @@ class ClockViewController(private val activity: Activity) {
 
         soundPoolHelper = SoundPoolHelper(activity)
         soundPoolHelper!!.load()
+        this.loadWeather()
+    }
+
+    fun loadWeather() {
+        async(UI) {
+            try {
+                val weatherHelper = WeatherHelper()
+                val weather = weatherHelper.weather()
+                weather?.let {
+                    val temperature = it.current.temperature
+                    val wea = it.current.wea(activity)
+                    val text = "$wea|${temperature.value}${temperature.unit}"
+                    Log.v("text", text)
+                    activity.weatherTv.text = text
+                }
+                Log.v("weather", weather.toString())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
 
@@ -253,6 +278,7 @@ class ClockViewController(private val activity: Activity) {
         activity.battery2Tv!!.setTextColor(color)
         activity.textSpaceTv!!.setTextColor(color)
         activity.focusTimeTv!!.setTextColor(color)
+        activity.weatherTv.textColor = color
     }
 
     /**
@@ -296,13 +322,20 @@ class ClockViewController(private val activity: Activity) {
         val api = retrofit.create(PicApi::class.java)
         api.pic.enqueue(object : Callback<Pic> {
             override fun onResponse(call: Call<Pic>, response: Response<Pic>) {
-                if (response.isSuccessful && response.body() != null && !response.body().images!!.isEmpty()) {
+                if (response.isSuccessful && response.body() != null) {
+                    val resp = response.body()
+                    resp?.images?.let {
+                        if (!it.isEmpty()) {
 
-                    val imagesEntity = response.body().images!![0]
-                    val url = imagesEntity.url
+                            val imagesEntity = it[0]
+                            val url = imagesEntity.url
 
-                    activity.activity_main!!.setBackgroundColor(Color.argb(100, 0, 0, 0))
-                    Picasso.with(activity).load(String.format("%s%s", "http://www.bing.com/", url)).into(activity.backIv)
+                            activity.activity_main!!.setBackgroundColor(Color.argb(100, 0, 0, 0))
+                            Picasso.with(activity).load(String.format("%s%s", "http://www.bing.com/", url)).into(activity.backIv)
+                        }
+
+                    }
+
 
                 }
             }
@@ -371,6 +404,7 @@ class ClockViewController(private val activity: Activity) {
         activity.batteryTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.13).toFloat()
         activity.battery2Tv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.13).toFloat()
         activity.lunarTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.15).toFloat()
+        activity.weatherTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.15).toFloat()
         activity.dateTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.2).toFloat()
         activity.weekTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.15).toFloat()
         activity.ampmTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.5).toFloat()
