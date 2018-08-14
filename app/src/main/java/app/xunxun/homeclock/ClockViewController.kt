@@ -31,7 +31,7 @@ import android.widget.TextView
 import app.xunxun.homeclock.activity.LauncherActivity
 import app.xunxun.homeclock.activity.MainActivity
 import app.xunxun.homeclock.activity.SettingsActivity
-import app.xunxun.homeclock.api.Api
+import app.xunxun.homeclock.api.PicApi
 import app.xunxun.homeclock.helper.SoundPoolHelper
 import app.xunxun.homeclock.model.Pic
 import app.xunxun.homeclock.pref.MODE_COLOR
@@ -293,7 +293,7 @@ class ClockViewController(private val activity: Activity) {
                 .baseUrl("http://www.bing.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-        val api = retrofit.create(Api::class.java)
+        val api = retrofit.create(PicApi::class.java)
         api.pic.enqueue(object : Callback<Pic> {
             override fun onResponse(call: Call<Pic>, response: Response<Pic>) {
                 if (response.isSuccessful && response.body() != null && !response.body().images!!.isEmpty()) {
