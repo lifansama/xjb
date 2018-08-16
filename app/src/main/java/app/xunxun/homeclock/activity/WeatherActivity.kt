@@ -12,8 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import app.xunxun.homeclock.R
-import app.xunxun.homeclock.dao.City
 import app.xunxun.homeclock.dao.WeatherDao
+import app.xunxun.homeclock.model.City
 import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.item_city.view.*
 import org.jetbrains.anko.sdk25.coroutines.onClick

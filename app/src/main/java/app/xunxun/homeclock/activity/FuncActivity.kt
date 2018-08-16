@@ -11,8 +11,8 @@ import android.util.Log
 import android.view.View
 import app.xunxun.homeclock.MyService
 import app.xunxun.homeclock.R
-import app.xunxun.homeclock.dao.City
 import app.xunxun.homeclock.dao.WeatherDao
+import app.xunxun.homeclock.model.City
 import app.xunxun.homeclock.pref.SimplePref
 import app.xunxun.homeclock.utils.LauncherSettings
 import kotlinx.android.synthetic.main.activity_func.*

@@ -1,7 +1,7 @@
 package app.xunxun.homeclock.helper
 
-import app.xunxun.homeclock.api.Weather
 import app.xunxun.homeclock.api.WeatherApi
+import app.xunxun.homeclock.model.Weather
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

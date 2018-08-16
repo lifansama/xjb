@@ -68,3 +68,12 @@ public static final int *;
 -keep class app.xunxun.homeclock.model.** { *; }
 #support
 -keep class android.support.** { *; }
+-keep class org.apache.commons.** { *; }
+-keep class com.jakewharton.** { *; }
+-keep class javax.annotation.** { *; }
+-keep class okhttp3.** { *; }
+-dontwarn okio.**
+-dontwarn com.squareup.okhttp3.**
+-keep class com.squareup.okhttp3.** { *; }
+-keep interface com.squareup.okhttp3.* { *; }
+-dontwarn javax.annotation.**

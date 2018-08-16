@@ -2,6 +2,7 @@ package app.xunxun.homeclock.dao
 
 import android.content.Context
 import app.xunxun.homeclock.helper.DBHelper
+import app.xunxun.homeclock.model.City
 import java.io.Serializable
 
 object WeatherDao {
@@ -40,4 +41,3 @@ object WeatherDao {
     }
 }
 
-data class City(val id: Int, val name: String, val cityNum: String) : Serializable
