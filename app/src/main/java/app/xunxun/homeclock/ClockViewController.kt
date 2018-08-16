@@ -33,6 +33,7 @@ import app.xunxun.homeclock.activity.MainActivity
 import app.xunxun.homeclock.activity.SettingsActivity
 import app.xunxun.homeclock.api.PicApi
 import app.xunxun.homeclock.api.wea
+import app.xunxun.homeclock.dao.WeatherDao
 import app.xunxun.homeclock.helper.SoundPoolHelper
 import app.xunxun.homeclock.helper.WeatherHelper
 import app.xunxun.homeclock.model.Pic
@@ -79,6 +80,10 @@ class ClockViewController(private val activity: Activity) {
     private var gestureDetector: GestureDetector? = null
     private var toast: FloatToast? = null
     private var soundPoolHelper: SoundPoolHelper? = null
+    /**
+     * 最后更新天气的时间.
+     */
+    private var latestWeatherUpdateTime: Long = 0
 
     private val isHaveWriteSettinsPermisson: Boolean
         get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -123,26 +128,29 @@ class ClockViewController(private val activity: Activity) {
 
         soundPoolHelper = SoundPoolHelper(activity)
         soundPoolHelper!!.load()
-        this.loadWeather()
     }
 
     fun loadWeather() {
-        async(UI) {
-            try {
-                val weatherHelper = WeatherHelper()
-                val weather = weatherHelper.weather()
-                weather?.let {
-                    val temperature = it.current.temperature
-                    val wea = it.current.wea(activity)
-                    val text = "$wea|${temperature.value}${temperature.unit}"
-                    Log.v("text", text)
-                    activity.weatherTv.text = text
+        val cityNum = SimplePref.create(activity).city().get()
+        if (cityNum.isNotEmpty())
+            async(UI) {
+                try {
+                    val weatherHelper = WeatherHelper()
+                    val weather = weatherHelper.weather(cityNum)
+                    weather?.let {
+                        val temperature = it.current.temperature
+                        val wea = it.current.wea(activity)
+                        val city = WeatherDao.city(activity, cityNum)
+                        val text = "${city?.name} | $wea | ${temperature.value}${temperature.unit}"
+                        Log.v("text", text)
+                        activity.weatherTv.text = text
+                        latestWeatherUpdateTime = System.currentTimeMillis()
+                    }
+                    Log.v("weather", weather.toString())
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-                Log.v("weather", weather.toString())
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
-        }
     }
 
 
@@ -629,6 +637,11 @@ class ClockViewController(private val activity: Activity) {
             super.handleMessage(msg)
             if (msg.what == 1) {
                 setDateTime()
+
+                //查看是否1显示没更新天气了
+                if (System.currentTimeMillis() - latestWeatherUpdateTime > 1000 * 60 * 60) {
+                    loadWeather()
+                }
                 if (SimplePref.create(activity).enableProtectScreen().get() && System.currentTimeMillis() - lastTime > 1000 * 60 * 5) {
                     val params = activity.timeLl!!.layoutParams as RelativeLayout.LayoutParams
                     val random = Random()

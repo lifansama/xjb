@@ -1,16 +1,16 @@
 package app.xunxun.homeclock
 
-import android.app.Activity
-import android.app.Application
-
 //import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.Crashlytics
-import com.umeng.analytics.MobclickAgent
 
 //import io.fabric.sdk.android.Fabric;
-import java.util.ArrayList
 
+import android.app.Activity
+import android.app.Application
+import app.xunxun.homeclock.helper.DBHelper
+import com.crashlytics.android.Crashlytics
+import com.umeng.analytics.MobclickAgent
 import io.fabric.sdk.android.Fabric
+import java.util.*
 
 /**
  * Created by fengdianxun on 2017/1/24.
@@ -22,6 +22,8 @@ class MyApplication : Application() {
         super.onCreate()
         MobclickAgent.setCatchUncaughtExceptions(false)
         Fabric.with(this, Crashlytics())
+        val dbHelper = DBHelper(this)
+        dbHelper.copy()
     }
 
     fun pushActivity(activity: Activity) {

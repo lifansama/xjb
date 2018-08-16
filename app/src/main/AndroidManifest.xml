@@ -96,6 +96,9 @@
         <activity
             android:name=".activity.FeedbackActivity"
             android:label="反馈" />
+        <activity
+            android:name=".activity.WeatherActivity"
+            android:label="天气"></activity>
     </application>
 
 </manifest>

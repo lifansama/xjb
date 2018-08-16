@@ -142,6 +142,12 @@ interface PrefService {
     @PrefString(key = "TextSpaceContentPreferencesDao", defaultValue = "")
     fun textSpaceContent(): Call<String>
 
+    /**
+     * 城市天气.
+     */
+    @PrefString(key = "weatherCityCode", defaultValue = "")
+    fun city(): Call<String>
+
 }
 
 

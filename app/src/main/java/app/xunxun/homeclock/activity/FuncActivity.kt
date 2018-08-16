@@ -1,17 +1,22 @@
 package app.xunxun.homeclock.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.View
 import app.xunxun.homeclock.MyService
 import app.xunxun.homeclock.R
+import app.xunxun.homeclock.dao.City
+import app.xunxun.homeclock.dao.WeatherDao
 import app.xunxun.homeclock.pref.SimplePref
 import app.xunxun.homeclock.utils.LauncherSettings
 import kotlinx.android.synthetic.main.activity_func.*
+import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.sdk25.coroutines.onCheckedChange
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.startActivity
@@ -66,7 +71,7 @@ class FuncActivity : BaseActivity() {
             }
         }
         alertTv.onClick { startActivity<AlertActivity>() }
-        
+
         if (SimplePref.create(this).screenOrientation().get() == ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
             sensorRb!!.isChecked = true
         } else if (SimplePref.create(this).screenOrientation().get() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
@@ -102,16 +107,42 @@ class FuncActivity : BaseActivity() {
         notifyStayCb!!.isChecked = SimplePref.create(this).notifyStay().get()
         LauncherSettings.setLauncher(this, SimplePref.create(this).isLauncher().get())
 
+        val cityCode = SimplePref.create(this@FuncActivity).city().get()
+        weatherTv.isChecked = cityCode.isNotEmpty()
+        if (cityCode.isEmpty()) {
+            weatherTv.text = "天气"
+        } else {
+            val city = WeatherDao.city(this@FuncActivity, cityCode)
+            weatherTv.text = "天气[${city?.name}]"
+
+        }
+        weatherTv.onCheckedChange { _, isChecked ->
+            if (isChecked) {
+                startActivityForResult(intentFor<WeatherActivity>(), 101)
+            } else {
+                SimplePref.create(this@FuncActivity).city().clear()
+                weatherTv.text = "天气"
+            }
+        }
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.v("onActivityResult", "requestCode $requestCode resultCode $resultCode data $data")
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.System.canWrite(this)) {
                     screenBrightCb!!.isChecked = false
                 }
+            }
+        } else if (requestCode == 101) {
+            if (resultCode == Activity.RESULT_OK) {
+                val city = data?.getSerializableExtra("city") as City
+                weatherTv.text = "天气[${city.name}]"
+                SimplePref.create(this@FuncActivity).city().set(city.cityNum)
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                weatherTv.isChecked = false
             }
         }
     }
