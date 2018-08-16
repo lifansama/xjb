@@ -24,6 +24,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleInstance"
             android:screenOrientation="sensor"
             android:theme="@style/Theme.AppCompat.NoActionBar.FullScreen">
@@ -35,6 +36,7 @@
         </activity>
         <activity
             android:name=".activity.LauncherActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleInstance"
             android:screenOrientation="sensor"
             android:theme="@style/Theme.AppCompat.NoActionBar.FullScreen">

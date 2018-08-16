@@ -128,6 +128,7 @@ class ClockViewController(private val activity: Activity) {
 
         soundPoolHelper = SoundPoolHelper(activity)
         soundPoolHelper!!.load()
+        loadWeather()
     }
 
     fun loadWeather() {

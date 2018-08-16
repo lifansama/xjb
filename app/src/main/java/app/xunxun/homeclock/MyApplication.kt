@@ -1,16 +1,17 @@
 package app.xunxun.homeclock
 
-//import com.crashlytics.android.Crashlytics;
-
-//import io.fabric.sdk.android.Fabric;
-
 import android.app.Activity
 import android.app.Application
 import app.xunxun.homeclock.helper.DBHelper
+
+//import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.Crashlytics
 import com.umeng.analytics.MobclickAgent
+
+//import io.fabric.sdk.android.Fabric;
+import java.util.ArrayList
+
 import io.fabric.sdk.android.Fabric
-import java.util.*
 
 /**
  * Created by fengdianxun on 2017/1/24.

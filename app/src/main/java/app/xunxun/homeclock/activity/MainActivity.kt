@@ -2,6 +2,7 @@ package app.xunxun.homeclock.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.KeyEvent
 import app.xunxun.homeclock.ClockViewController
@@ -57,6 +58,10 @@ class MainActivity : BaseActivity() {
         super.onDestroy()
         clockViewController!!.onDestroy()
         clockViewController = null
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
     }
 
     companion object {
