@@ -2,6 +2,7 @@ package app.xunxun.homeclock.pref
 
 import android.content.Context
 import android.preference.PreferenceManager
+import android.util.Log
 import com.google.gson.Gson
 import java.lang.reflect.Type
 
@@ -20,6 +21,7 @@ class Call<T>(private val context: Context, private val key: String, private val
             is String -> editor.putString(key, value as String)
             is Int -> editor.putInt(key, value as Int)
             is Boolean -> editor.putBoolean(key, value as Boolean)
+            is Long -> editor.putLong(key, value as Long)
             else -> editor.putString(key, Gson().toJson(value))
 
         }
@@ -51,6 +53,8 @@ class Call<T>(private val context: Context, private val key: String, private val
     fun get(): T {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         var value = prefs.all[key]
+        Log.v("pref", "key:$key value:$value")
+
         return (value ?: defaultValue) as T
     }
 
