@@ -52,10 +52,6 @@ class LauncherActivity : BaseActivity() {
 
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-    }
-
 
     companion object {
 
