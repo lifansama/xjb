@@ -232,7 +232,11 @@ class ClockViewController(private val activity: Activity) {
             timerTask!!.cancel()
             timerTask = null
         }
-        activity.unregisterReceiver(batteryChangeReceiver)
+        try {
+            activity.unregisterReceiver(batteryChangeReceiver)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
     }
 
