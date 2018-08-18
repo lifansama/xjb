@@ -8,6 +8,11 @@ import java.io.FileOutputStream
 const val DB_NAME = "weather.db"
 
 class DBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, 1) {
+
+    init {
+        copy()
+    }
+
     override fun onCreate(db: SQLiteDatabase?) {
     }
 

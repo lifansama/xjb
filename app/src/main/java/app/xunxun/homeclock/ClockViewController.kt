@@ -119,9 +119,9 @@ class ClockViewController(private val activity: Activity) {
         screenWidth = metrics.widthPixels
         screenHeight = metrics.heightPixels
         gestureDetector = GestureDetector(activity, MyGestureListener())
-        val flag = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_SETTINGS)
+        val flag = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
         if (flag != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.WRITE_SETTINGS), 101)
+            ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 101)
         }
 
         toast = FloatToast()
