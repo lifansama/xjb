@@ -33,7 +33,7 @@ class MyService : Service() {
         registerReceiver(receiver, intentFilter)
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (SimplePref.create(this).lockScreenShowOn().get()) {
             val remoteViews = RemoteViews(packageName, R.layout.activity_notify)
             val text = if (TextUtils.isEmpty(SimplePref.create(this).textSpaceContent().get())) "点击写下提醒" else
