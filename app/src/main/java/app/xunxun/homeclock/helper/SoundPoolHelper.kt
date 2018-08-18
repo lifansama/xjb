@@ -45,7 +45,7 @@ class SoundPoolHelper(val context: Context) {
     }
 
     fun play(fileName: String) {
-        val id = soundPool.play(sounds[fileName]!!, 1.0f, 1.0f, 100, 0, 1.0f)
+        sounds[fileName]?.let { soundPool.play(it, 1.0f, 1.0f, 100, 0, 1.0f) }
     }
 
     fun release() {
