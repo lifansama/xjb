@@ -14,9 +14,13 @@ import app.xunxun.homeclock.activity.LauncherActivity
 object LauncherSettings {
 
     fun setLauncher(context: Context, isCheck: Boolean) {
-        val packageManager = context.packageManager
-        val componentName = ComponentName(context, LauncherActivity::class.java)
-        val flag = if (isCheck) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-        packageManager.setComponentEnabledSetting(componentName, flag, PackageManager.DONT_KILL_APP)
+        try {
+            val packageManager = context.packageManager
+            val componentName = ComponentName(context, LauncherActivity::class.java)
+            val flag = if (isCheck) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            packageManager.setComponentEnabledSetting(componentName, flag, PackageManager.DONT_KILL_APP)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
