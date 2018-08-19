@@ -155,6 +155,12 @@ interface PrefService {
     @PrefBoolean(key = "autoBack", defaultValue = true)
     fun autoBack(): Call<Boolean>
 
+    /**
+     * 报时频率，默认是每1小时.
+     */
+    @PrefBoolean(key = "is60timeRate", defaultValue = true)
+    fun is60timeRate(): Call<Boolean>
+
 }
 
 

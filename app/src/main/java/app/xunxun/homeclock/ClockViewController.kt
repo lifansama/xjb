@@ -466,7 +466,7 @@ class ClockViewController(private val activity: Activity) {
             activity.focusTimeTv!!.visibility = View.GONE
         }
         if (isWholeTime(minute, second)) {
-            val file = getFileByTime(hour24, hour12)
+            val file = getFileByTime(hour24, hour12, minute)
             speak(file)
         }
 
@@ -493,12 +493,12 @@ class ClockViewController(private val activity: Activity) {
     }
 
     /**
-     * 到整点了.
+     * 到整点或者半点了.
      *
      * @return
      */
     private fun isWholeTime(minute: Int, second: Int): Boolean {
-        return minute == 0 && second == 0
+        return (minute == 0 || minute == 30) && second == 0
     }
 
     /**
@@ -508,13 +508,14 @@ class ClockViewController(private val activity: Activity) {
      * @param hour12
      * @return
      */
-    private fun getFileByTime(hour24: Int, hour12: Int): String {
+    private fun getFileByTime(hour24: Int, hour12: Int, minute: Int): String {
         var hour24 = hour24
         var hour12 = hour12
         if (hour24 == 0) hour24 = 24
         if (hour12 == 0) hour12 = 12
         val ampm = if (hour24 > 12) "pm" else "am"
-        return String.format("clock_%s%d", ampm, hour12)
+        val minuteStr = if (minute == 30) "_30" else ""
+        return String.format("clock_%s%d%s", ampm, hour12, minuteStr)
 
     }
 

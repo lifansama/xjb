@@ -24,5 +24,10 @@ class TimeActivity : BaseActivity() {
         enableVoiceWholeTimeCb.onCheckedChange { buttonView, isChecked ->
             SimplePref.create(buttonView!!.context).enableVoiceWholeTime().set(isChecked)
         }
+        if (SimplePref.create(this).is60timeRate().get())
+            time60rb.isChecked = true
+        else
+            time30rb.isChecked = true
+        timeRg.setOnCheckedChangeListener { group, checkedId -> SimplePref.create(this).is60timeRate().set(R.id.time60rb == checkedId) }
     }
 }

@@ -1,40 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activity.TimeActivity">
-    <LinearLayout
+
+
+    <CheckBox
+        android:id="@+id/enableSpeakWholeTimeCb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:background="@drawable/press_item"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:text="震动"
+        android:textColor="@color/grey_800"
+        android:textSize="18sp" />
 
-        >
 
-        <CheckBox
-            android:id="@+id/enableSpeakWholeTimeCb"
-            android:layout_width="0dp"
+    <CheckBox
+        android:id="@+id/enableVoiceWholeTimeCb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/press_item"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+
+        android:text="报时"
+        android:textColor="@color/grey_800"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/grey_400" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="频率"
+        android:textColor="@color/grey_700"
+        android:textSize="14sp" />
+
+    <RadioGroup
+        android:id="@+id/timeRg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/time60rb"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/press_item"
+            android:checked="true"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
-            android:text="整点震动"
-            android:textColor="@color/grey_800"
+            android:text="每一小时"
             android:textSize="18sp" />
 
-        <CheckBox
-            android:id="@+id/enableVoiceWholeTimeCb"
-            android:layout_width="0dp"
+        <RadioButton
+            android:id="@+id/time30rb"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/press_item"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
-
-            android:text="整点报时"
-            android:textColor="@color/grey_800"
+            android:text="每半小时"
             android:textSize="18sp" />
-    </LinearLayout>
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/grey_400" />
 </LinearLayout>

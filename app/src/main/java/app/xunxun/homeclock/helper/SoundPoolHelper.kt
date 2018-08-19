@@ -34,7 +34,9 @@ class SoundPoolHelper(val context: Context) {
         val fileNames = arrayListOf<String>()
         for (i in 1..12) {
             fileNames.add("clock_am$i")
+            fileNames.add("clock_am${i}_30")
             fileNames.add("clock_pm$i")
+            fileNames.add("clock_pm${i}_30")
         }
         for (fileName in fileNames) {
             val res = context.resources.getIdentifier(fileName, "raw", context.packageName)
