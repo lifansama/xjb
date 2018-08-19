@@ -51,12 +51,6 @@ class FuncActivity : BaseActivity() {
                 compoundButton.context.startActivity(selector)
             }
         }
-        enableSpeakWholeTimeCb.onCheckedChange { buttonView, isChecked ->
-            SimplePref.create(buttonView!!.context).enableVibrateWholeTime().set(isChecked)
-        }
-        enableVoiceWholeTimeCb.onCheckedChange { buttonView, isChecked ->
-            SimplePref.create(buttonView!!.context).enableVoiceWholeTime().set(isChecked)
-        }
         protectScreenCb!!.setOnCheckedChangeListener { buttonView, isChecked ->
             SimplePref.create(buttonView.context).enableProtectScreen().set(isChecked)
             if (isChecked)
@@ -71,6 +65,7 @@ class FuncActivity : BaseActivity() {
             }
         }
         alertTv.onClick { startActivity<AlertActivity>() }
+        timeTv.onClick { startActivity<TimeActivity>() }
 
         if (SimplePref.create(this).screenOrientation().get() == ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
             sensorRb!!.isChecked = true
@@ -101,8 +96,6 @@ class FuncActivity : BaseActivity() {
 
             }
         }
-        enableSpeakWholeTimeCb!!.isChecked = SimplePref.create(this).enableVibrateWholeTime().get()
-        enableVoiceWholeTimeCb!!.isChecked = SimplePref.create(this).enableVoiceWholeTime().get()
         lockScreenShowCb!!.isChecked = SimplePref.create(this).lockScreenShowOn().get()
         notifyStayCb!!.isChecked = SimplePref.create(this).notifyStay().get()
         LauncherSettings.setLauncher(this, SimplePref.create(this).isLauncher().get())
@@ -124,6 +117,8 @@ class FuncActivity : BaseActivity() {
                 weatherTv.text = "天气"
             }
         }
+        autoBackCb.isChecked = SimplePref.create(this).autoBack().get()
+        autoBackCb.onCheckedChange { buttonView, isChecked -> SimplePref.create(this@FuncActivity).autoBack().set(isChecked) }
 
     }
 

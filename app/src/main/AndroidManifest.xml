@@ -98,7 +98,10 @@
             android:label="反馈" />
         <activity
             android:name=".activity.WeatherActivity"
-            android:label="天气"></activity>
+            android:label="天气" />
+        <activity
+            android:name=".activity.TimeActivity"
+            android:label="整点报时" />
     </application>
 
 </manifest>

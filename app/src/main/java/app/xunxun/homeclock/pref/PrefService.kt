@@ -148,6 +148,13 @@ interface PrefService {
     @PrefString(key = "weatherCityCode", defaultValue = "")
     fun city(): Call<String>
 
+
+    /**
+     * 自动返回.
+     */
+    @PrefBoolean(key = "autoBack", defaultValue = true)
+    fun autoBack(): Call<Boolean>
+
 }
 
 

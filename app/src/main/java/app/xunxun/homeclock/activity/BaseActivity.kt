@@ -39,7 +39,7 @@ open class BaseActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         val app = application as MyApplication
         app.pushActivity(this)
-        if (!disableCountDown) {
+        if (!disableCountDown && SimplePref.create(this).autoBack().get()) {
             countDownTimer = MyCountDown((60 * 1000).toLong(), 1000)
         }
 
