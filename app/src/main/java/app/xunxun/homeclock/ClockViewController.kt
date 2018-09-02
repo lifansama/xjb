@@ -163,7 +163,7 @@ class ClockViewController(private val activity: Activity) {
         if (SimplePref.create(activity).is60timeRate().get() && minute == 0) {
 
             vibratevoice(filename)
-        } else if (!SimplePref.create(activity).is60timeRate().get() && minute == 30) {
+        } else if (!SimplePref.create(activity).is60timeRate().get()) {
             vibratevoice(filename)
 
 
