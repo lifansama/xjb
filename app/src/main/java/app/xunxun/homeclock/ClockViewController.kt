@@ -158,7 +158,20 @@ class ClockViewController(private val activity: Activity) {
     /**
      * 说话.
      */
-    private fun speak(filename: String) {
+    private fun speak(filename: String,minute: Int) {
+        if (SimplePref.create(activity).is60timeRate().get()&&minute==0){
+
+            vibratevoice(filename)
+        }else if (!SimplePref.create(activity).is60timeRate().get() && minute == 30 ){
+            vibratevoice(filename)
+
+
+        }
+
+
+    }
+
+    private fun vibratevoice(filename: String){
 
         if (SimplePref.create(activity).enableVibrateWholeTime().get()) {
             vibrator!!.vibrate(1000)
@@ -467,7 +480,7 @@ class ClockViewController(private val activity: Activity) {
         }
         if (isWholeTime(minute, second)) {
             val file = getFileByTime(hour24, hour12, minute)
-            speak(file)
+            speak(file,minute)
         }
 
 
