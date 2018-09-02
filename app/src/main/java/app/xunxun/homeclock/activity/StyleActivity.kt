@@ -155,6 +155,14 @@ class StyleActivity : BaseActivity() {
                 alert("冒号闪烁需要在不显示秒针时起作用。")
             }
         }
+        if (SimplePref.create(this).isLedFont().get()){
+            ledFont.isChecked = true
+        }else{
+            sysFont.isChecked = true
+        }
+        fontsRg.setOnCheckedChangeListener { group, checkedId ->
+            SimplePref.create(this).isLedFont().set(R.id.ledFont == checkedId)
+        }
     }
 
     private fun renderBackModeRb() {

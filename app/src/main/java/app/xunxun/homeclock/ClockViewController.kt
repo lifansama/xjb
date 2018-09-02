@@ -99,7 +99,9 @@ class ClockViewController(private val activity: Activity) {
         hideNavigationBar()
         activity.setContentView(R.layout.activity_main)
 //        ButterKnife.bind(this, activity)
-        initTypeFace()
+        if (SimplePref.create(activity).isLedFont().get()) {
+            initTypeFace()
+        }
 
 
         handler = MyHandler()

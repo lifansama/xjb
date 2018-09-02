@@ -64,6 +64,41 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/grey_400" />
+        <RadioGroup
+            android:id="@+id/fontsRg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/sysFont"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:tag="0"
+                android:text="系统字体"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/ledFont"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:tag="1"
+                android:text="数码管字体"
+                android:textSize="18sp" />
+
+        </RadioGroup>
+   <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_400" />
 
 
         <LinearLayout

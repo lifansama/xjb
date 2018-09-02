@@ -160,6 +160,11 @@ interface PrefService {
      */
     @PrefBoolean(key = "is60timeRate", defaultValue = true)
     fun is60timeRate(): Call<Boolean>
+    /**
+     * 是不是led字体.
+     */
+    @PrefBoolean(key = "isLedFont", defaultValue = true)
+    fun isLedFont(): Call<Boolean>
 
 }
 
