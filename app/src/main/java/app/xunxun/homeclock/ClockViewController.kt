@@ -18,11 +18,7 @@ import android.os.*
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.text.Spannable
-import android.text.SpannableString
 import android.text.TextUtils
-import android.text.style.RelativeSizeSpan
-import android.text.style.TypefaceSpan
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
@@ -144,6 +140,7 @@ class ClockViewController(private val activity: Activity) {
                         val city = WeatherDao.city(activity, cityNum)
                         val text = "${city?.name} | $wea | ${temperature.value}${temperature.unit}"
                         Log.v("text", text)
+                        activity.weatherTv.visibility = View.VISIBLE
                         activity.weatherTv.text = text
                         latestWeatherUpdateTime = System.currentTimeMillis()
                     }
@@ -295,11 +292,10 @@ class ClockViewController(private val activity: Activity) {
      * @param color
      */
     private fun setForegroundColor(color: Int) {
-        activity.timeTv!!.setTextColor(color)
+        activity.timview!!.setTextColor(color)
         activity.dateTv!!.setTextColor(color)
         activity.weekTv!!.setTextColor(color)
         activity.lunarTv!!.setTextColor(color)
-        activity.ampmTv!!.setTextColor(color)
         activity.batteryTv!!.setTextColor(color)
         activity.battery2Tv!!.setTextColor(color)
         activity.textSpaceTv!!.setTextColor(color)
@@ -402,7 +398,7 @@ class ClockViewController(private val activity: Activity) {
     private fun initTypeFace() {
 
         val typeFace = Typeface.createFromAsset(activity.assets, "fonts/ds_digi.ttf")
-        activity.timeTv!!.typeface = typeFace
+        activity.timview!!.setTypeface(typeFace)
         activity.dateTv!!.typeface = typeFace
 
     }
@@ -422,9 +418,9 @@ class ClockViewController(private val activity: Activity) {
         foregroundColor = SimplePref.create(activity).textColor().get()
 
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            activity.timeTv!!.textSize = SimplePref.create(activity).textSize().get().toFloat()
+            activity.timview.setTimeTextSize(SimplePref.create(activity).textSize().get().toFloat())
         } else if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            activity.timeTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.7).toFloat()
+            activity.timview.setTimeTextSize((SimplePref.create(activity).textSize().get() * 0.7).toFloat())
         }
 
         activity.batteryTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.13).toFloat()
@@ -433,7 +429,7 @@ class ClockViewController(private val activity: Activity) {
         activity.weatherTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.15).toFloat()
         activity.dateTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.2).toFloat()
         activity.weekTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.15).toFloat()
-        activity.ampmTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.5).toFloat()
+        activity.timview.setAmpmTextSize((SimplePref.create(activity).textSize().get() * 0.5).toFloat())
         activity.textSpaceTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.25).toFloat()
         activity.focusTimeTv!!.textSize = (SimplePref.create(activity).textSize().get() * 0.2).toFloat()
 
@@ -460,15 +456,16 @@ class ClockViewController(private val activity: Activity) {
         val second = calendar.get(Calendar.SECOND)
         val hour12 = calendar.get(Calendar.HOUR)
 
-        setTime(now, hour24, minute, hour12, second)
+        activity.timview.setTime()
+//        setTime(now, hour24, minute, hour12, second)
 
-        if (activity.dateTv != null)
-            activity.dateTv!!.text = dateSDF.format(now)
-        if (activity.weekTv != null)
-            activity.weekTv!!.text = weekSDF.format(now)
+            activity.dateTv?.visibility = View.VISIBLE
+            activity.dateTv?.text = dateSDF.format(now)
+            activity.weekTv?.visibility = View.VISIBLE
+            activity.weekTv?.text = weekSDF.format(now)
 
         val lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH))
-
+        activity.lunarTv.visibility = View.VISIBLE
         activity.lunarTv!!.text = String.format("%s月%s", lunarCalendar.lunarMonth, lunarCalendar.lunarDay)
 
 
@@ -533,41 +530,6 @@ class ClockViewController(private val activity: Activity) {
     }
 
     /**
-     * 设置时间.
-     *
-     * @param now
-     * @param hour24
-     * @param minute
-     * @param hour12
-     */
-    private fun setTime(now: Date, hour24: Int, minute: Int, hour12: Int, second: Int) {
-        if (SimplePref.create(activity).is12Time().get()) {
-            if (activity.timeTv != null) {
-                val spannable = getAmPmTextSpannable(hour24, minute, hour12, second)
-
-                activity.timeTv!!.text = spannable
-            }
-
-        } else {
-            if (activity.timeTv != null) {
-                if (SimplePref.create(activity).showSecond().get()) {
-                    activity.timeTv!!.text = time24SDF.format(now)
-                } else {
-                    if (SimplePref.create(activity).isMaoHaoShanShuo().get()) {
-                        if (second % 2 == 0) {
-                            activity.timeTv!!.text = time24NoSecondSDF.format(now)
-                        } else {
-                            activity.timeTv!!.text = time24NoSecondNOMaoHaoSDF.format(now)
-                        }
-                    } else {
-                        activity.timeTv!!.text = time24NoSecondSDF.format(now)
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * 获取ampm模式应该显示的文字.
      *
      * @param hour24
@@ -575,39 +537,6 @@ class ClockViewController(private val activity: Activity) {
      * @param hour12
      * @return
      */
-    private fun getAmPmTextSpannable(hour24: Int, minute: Int, hour12: Int, second: Int): Spannable {
-        var hour12 = hour12
-        if (hour12 == 0 && hour24 == 12) {
-            hour12 = 12
-        }
-        val ampm = if (hour24 >= 12) "PM" else "AM"
-        var time: String? = null
-        var start = 5
-        var end = 7
-        if (SimplePref.create(activity).showSecond().get()) {
-            time = String.format("%02d:%02d:%02d%s", hour12, minute, second, ampm)
-            start = 8
-            end = 10
-
-        } else {
-            if (SimplePref.create(activity).isMaoHaoShanShuo().get()) {
-                if (second % 2 == 0) {
-                    time = String.format("%02d:%02d%s", hour12, minute, ampm)
-                } else {
-                    time = String.format("%02d %02d%s", hour12, minute, ampm)
-                }
-            } else {
-                time = String.format("%02d:%02d%s", hour12, minute, ampm)
-
-            }
-            start = 5
-            end = 7
-        }
-        val spannable = SpannableString(time)
-        spannable.setSpan(RelativeSizeSpan(0.6f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        spannable.setSpan(TypefaceSpan("default"), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        return spannable
-    }
 
 
     /**
@@ -642,6 +571,8 @@ class ClockViewController(private val activity: Activity) {
 
                 //把它转成百分比
                 if (activity.batteryTv != null) {
+                    activity.batteryTv?.visibility = View.VISIBLE
+                    activity.battery2Tv?.visibility = View.VISIBLE
                     activity.batteryTv!!.text = String.format("%s:%d%%", if (isCharging) "充电中" else "电量", level * 100 / scale)
                     activity.battery2Tv!!.text = String.format("%s:%d%%", if (isCharging) "充电中" else "电量", level * 100 / scale)
                 }
