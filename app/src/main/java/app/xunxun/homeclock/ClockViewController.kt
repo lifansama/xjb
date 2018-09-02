@@ -140,6 +140,7 @@ class ClockViewController(private val activity: Activity) {
                         val city = WeatherDao.city(activity, cityNum)
                         val text = "${city?.name} | $wea | ${temperature.value}${temperature.unit}"
                         Log.v("text", text)
+                        activity.weatherTv.visibility = View.VISIBLE
                         activity.weatherTv.text = text
                         latestWeatherUpdateTime = System.currentTimeMillis()
                     }
@@ -148,6 +149,8 @@ class ClockViewController(private val activity: Activity) {
                     e.printStackTrace()
                 }
             }
+        else
+            activity.weatherTv.visibility = View.GONE
     }
 
 
