@@ -140,7 +140,6 @@ class ClockViewController(private val activity: Activity) {
                         val city = WeatherDao.city(activity, cityNum)
                         val text = "${city?.name} | $wea | ${temperature.value}${temperature.unit}"
                         Log.v("text", text)
-                        activity.weatherTv.visibility = View.VISIBLE
                         activity.weatherTv.text = text
                         latestWeatherUpdateTime = System.currentTimeMillis()
                     }
@@ -155,11 +154,11 @@ class ClockViewController(private val activity: Activity) {
     /**
      * 说话.
      */
-    private fun speak(filename: String,minute: Int) {
-        if (SimplePref.create(activity).is60timeRate().get()&&minute==0){
+    private fun speak(filename: String, minute: Int) {
+        if (SimplePref.create(activity).is60timeRate().get() && minute == 0) {
 
             vibratevoice(filename)
-        }else if (!SimplePref.create(activity).is60timeRate().get() && minute == 30 ){
+        } else if (!SimplePref.create(activity).is60timeRate().get() && minute == 30) {
             vibratevoice(filename)
 
 
@@ -168,7 +167,7 @@ class ClockViewController(private val activity: Activity) {
 
     }
 
-    private fun vibratevoice(filename: String){
+    private fun vibratevoice(filename: String) {
 
         if (SimplePref.create(activity).enableVibrateWholeTime().get()) {
             vibrator!!.vibrate(1000)
@@ -457,15 +456,10 @@ class ClockViewController(private val activity: Activity) {
         val hour12 = calendar.get(Calendar.HOUR)
 
         activity.timview.setTime()
-//        setTime(now, hour24, minute, hour12, second)
-
-            activity.dateTv?.visibility = View.VISIBLE
-            activity.dateTv?.text = dateSDF.format(now)
-            activity.weekTv?.visibility = View.VISIBLE
-            activity.weekTv?.text = weekSDF.format(now)
+        activity.dateTv?.text = dateSDF.format(now)
+        activity.weekTv?.text = weekSDF.format(now)
 
         val lunarCalendar = LunarCalendar.getInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH))
-        activity.lunarTv.visibility = View.VISIBLE
         activity.lunarTv!!.text = String.format("%s月%s", lunarCalendar.lunarMonth, lunarCalendar.lunarDay)
 
 
@@ -477,7 +471,7 @@ class ClockViewController(private val activity: Activity) {
         }
         if (isWholeTime(minute, second)) {
             val file = getFileByTime(hour24, hour12, minute)
-            speak(file,minute)
+            speak(file, minute)
         }
 
 
@@ -571,8 +565,6 @@ class ClockViewController(private val activity: Activity) {
 
                 //把它转成百分比
                 if (activity.batteryTv != null) {
-                    activity.batteryTv?.visibility = View.VISIBLE
-                    activity.battery2Tv?.visibility = View.VISIBLE
                     activity.batteryTv!!.text = String.format("%s:%d%%", if (isCharging) "充电中" else "电量", level * 100 / scale)
                     activity.battery2Tv!!.text = String.format("%s:%d%%", if (isCharging) "充电中" else "电量", level * 100 / scale)
                 }
