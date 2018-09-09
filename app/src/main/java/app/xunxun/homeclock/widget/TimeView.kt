@@ -6,12 +6,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
-import app.xunxun.homeclock.ClockViewController
 import app.xunxun.homeclock.R
 import app.xunxun.homeclock.pref.SimplePref
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.view_time.view.*
 import org.jetbrains.anko.forEachChild
 import org.jetbrains.anko.textColor
@@ -23,7 +20,7 @@ class TimeView(context: Context?, attrs: AttributeSet?) : FrameLayout(context, a
     var maohaoShanShuo: Boolean = false
 
     init {
-      LayoutInflater.from(context).inflate(R.layout.view_time, this, true)
+        LayoutInflater.from(context).inflate(R.layout.view_time, this, true)
     }
 
     fun setTypeface(typeface: Typeface) {
@@ -42,7 +39,7 @@ class TimeView(context: Context?, attrs: AttributeSet?) : FrameLayout(context, a
         secondTv.textSize = textsize
     }
 
-    fun setAmpmTextSize(textsize: Float){
+    fun setAmpmTextSize(textsize: Float) {
         ampmTv.textSize = textsize
     }
 
@@ -63,9 +60,16 @@ class TimeView(context: Context?, attrs: AttributeSet?) : FrameLayout(context, a
         val hour12 = calendar.get(Calendar.HOUR)
 
         secondTv.visibility = if (showSecond) View.VISIBLE else View.GONE
-        secondTv.text = String.format("%02d",second)
-        minuteTv.text = String.format("%02d",minute)
-        hourTv.text = String.format("%02d",if (is12Hour) hour12 else hour24)
+        secondTv.text = String.format("%02d", second)
+        minuteTv.text = String.format("%02d", minute)
+        val hour = if (is12Hour) {
+            if (hour12 == 0) {
+                hour24
+            } else {
+                hour12
+            }
+        } else hour24
+        hourTv.text = String.format("%02d", hour)
         maohao1Tv.visibility = if (maohaoShanShuo && second % 2 == 0) View.INVISIBLE else View.VISIBLE
         maohao2Tv.visibility = if (showSecond) View.VISIBLE else View.GONE
         ampmTv.text = if (hour24 >= 12) "PM" else "AM"

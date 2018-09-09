@@ -53,8 +53,6 @@ class Call<T>(private val context: Context, private val key: String, private val
     fun get(): T {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         var value = prefs.all[key]
-        Log.v("pref", "key:$key value:$value")
-
         return (value ?: defaultValue) as T
     }
 
